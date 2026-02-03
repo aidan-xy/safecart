@@ -4,7 +4,7 @@
 * Give a trustworthy/suspicious classification of a listing (using a preliminary “hardcoded” algorithm)
     * Determine how to categorize trustworthiness
     * Consider sorting by Top Seller (already flagged on eBay); Secondary sort: by other determined categories
-* Function on one website - ebay for now
+* Function on one website - AliExpress for now
 
 ## P1
 * Display ratings on the search page, as well as the page of individual listings
