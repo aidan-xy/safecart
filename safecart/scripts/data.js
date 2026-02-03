@@ -1,8 +1,10 @@
 chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
     chrome.tabs.sendMessage(tabs[0].id, {action: "getData"}, (response) => {
         if(response) {
+
             document.getElementById("title").textContent = response.title;
-            document.getElementById("rating").textContent = response.rating;
+            document.getElementById("rating").textContent = response.productRating;
+
             const reviewList = document.getElementById("reviews-list");
             const responseReview = response.reviews;
             reviewList.innerHTML = "";
