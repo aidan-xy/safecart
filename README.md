@@ -1,1 +1,28 @@
-# safecart
+# SafeCart Browser Extension
+
+## Project Idea and Goals
+SafeCart is a browser extension designed to help users safely navigate online marketplaces (currently focused on AliExpress). It analyzes publicly available data about listings and sellers to provide a **trustworthiness rating**, helping users avoid scams or low-quality products.
+
+**Goals:**
+- Automatically evaluate listings and flag suspicious vendors.
+- Provide a clear, interpretable trust score per listing.
+- Display trust metrics on both search results and individual listing pages.
+- Lay the foundation for machine learning-based evaluations in the future.
+
+---
+
+## Repository Layout
+- NOTE: This section can and likely will be changed and adjusted throughout development
+- `safecart/` – Core extension source code
+    - `frontend/` – UI injection, extension popup, badges, icons, popups
+    - `backend/` – Data gathering, scoring algorithms, hard-coded evaluation logic
+- `documentation/` – Developer guides, test plans, requirements, and meeting notes
+- `weekly status reports/` – Team sprint updates
+- `README.md` – Project overview and instructions
+
+---
+
+## Living Document
+Our detailed development plan, including team structure, use cases, feature priorities, software architecture, and testing strategy, is available here: [Living Document](https://docs.google.com/document/d/1RP_SkYVXHQKIgePIt1XsPocgwo44w8h7hUF4WwmrRl4/edit?usp=sharing)
+
+---
