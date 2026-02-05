@@ -48,7 +48,7 @@ function trustScore(
     ageNorm = 1.0;
   }
 
-  const priceWeight = 0.25;
+  const priceWeight = 0.25; // can change
   
   const MAX_REVIEW_WEIGHT = 0.5;
   const MIN_REVIEW_WEIGHT = 0.3;
@@ -73,7 +73,7 @@ function trustScore(
                          (MAX_REVIEW_WEIGHT - MIN_REVIEW_WEIGHT) * combinedRatioNorm;
 
   const remainingWeight = 1 - (priceWeight + reviewWeight);
-  const soldWeight = remainingWeight / 2;
+  const soldWeight = remainingWeight / 2; // this equally weights age/sold
   const ageWeight = remainingWeight / 2;
 
   const trustNorm =
@@ -86,14 +86,15 @@ function trustScore(
 }
 
 /**
- * Compute a trustworthiness score [0, 1], simplified down version
+ * Compute a trustworthiness score [0, 1], simplified down version. This function assumes good 
+ * values and does not handle edge cases.
  *
- * @param {number} productRating - Average review score [0, 5]
- * @param {number} numSold - Total units sold
- * @param {number} numRating - Total ratings
- * @param {number} ageYears - Age of seller in years, -1 if cannot determine
- * @param {number} reviewImages - Total number of images
- * @returns {number} Trust score in [1, 10000]
+ * @param {number} productRating - Average review score in [0, 5]
+ * @param {number} numSold - Total units sold (> 0)
+ * @param {number} numRating - Total ratings (> 0)
+ * @param {number} ageYears - Age of seller in years (> 0), -1 if cannot determine
+ * @param {number} reviewImages - Total number of images (> 0)
+ * @returns {number} Trust score in [0, 1]
  */
 function simpleTrustScore(
   productRating,
