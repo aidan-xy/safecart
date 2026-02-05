@@ -90,7 +90,7 @@ function trustScore(
  * @param {number} productRating - Average review score [0, 5]
  * @param {number} numSold - Total units sold
  * @param {number} numRating - Total ratings
- * @param {number} ageYears - Age of seller in years
+ * @param {number} ageYears - Age of seller in years, -1 if cannot determine
  * @param {number} reviewImages - Total number of images
  * @returns {number} Trust score in [1, 10000]
  */
@@ -117,7 +117,9 @@ function simpleTrustScore(
   }
 
   let ageNorm;
-  if (ageYears < 1) {
+  if (ageYears < 0) { // cannot determine age
+    ageNorm = -1;
+  } else if (ageYears < 1) {
     ageNorm = 0.1 + 0.5 * ageYears;
   } else if (ageYears < 5) {
     ageNorm = 0.6 + 0.4 * ((ageYears - 1) / 4);
@@ -145,9 +147,17 @@ function simpleTrustScore(
   const combinedRatioNorm = (reviewRatioNorm + imageRatioNorm) / 2;
 
   const reviewWeight = MIN_REVIEW_WEIGHT +
-                         (MAX_REVIEW_WEIGHT - MIN_REVIEW_WEIGHT) * combinedRatioNorm;
-  const soldWeight = (1 - reviewWeight) / 2;
-  const ageWeight = (1 - reviewWeight) / 2;
+    (MAX_REVIEW_WEIGHT - MIN_REVIEW_WEIGHT) * combinedRatioNorm;
+  
+  let soldWeight;
+  let ageWeight;
+  if (ageNorm < 0) { // cannot determine age
+    soldWeight = 1 - reviewWeight;
+    ageWeight = 0;
+  } else {
+    soldWeight = (1 - reviewWeight) / 2;
+    ageWeight = (1 - reviewWeight) / 2;
+  }
 
   const trustNorm =
     reviewWeight * reviewNorm +
