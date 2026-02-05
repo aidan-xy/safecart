@@ -1,14 +1,15 @@
 /**
- * Compute a trustworthiness score [0, 1]
+ * Compute a trustworthiness score [0, 1]. This function assumes good values and does not handle
+ * edge cases.
  *
- * @param {number} listingPrice - Listing price
- * @param {number} marketPrice - Estimated market price
+ * @param {number} listingPrice - Listing price (> 0)
+ * @param {number} marketPrice - Estimated market price (> 0)
  * @param {number} productRating - Average review score [0, 5]
- * @param {number} numSold - Total units sold
- * @param {number} ageYears - Seller age in years
- * @param {number} numRating - Total ratings
- * @param {number} reviewImages - Total number of images
- * @returns {number} Trust score in [1, 10000]
+ * @param {number} numSold - Total units sold (> 0)
+ * @param {number} ageYears - Seller age in years (>= 0)
+ * @param {number} numRating - Total ratings (> 0)
+ * @param {number} reviewImages - Total number of images (> 0)
+ * @returns {number} Trust score in [0, 1]
  */
 function trustScore(
   listingPrice,
@@ -155,7 +156,7 @@ function simpleTrustScore(
     soldWeight = 1 - reviewWeight;
     ageWeight = 0;
   } else {
-    soldWeight = (1 - reviewWeight) / 2;
+    soldWeight = (1 - reviewWeight) / 2; // this equally weights age/sold
     ageWeight = (1 - reviewWeight) / 2;
   }
 
