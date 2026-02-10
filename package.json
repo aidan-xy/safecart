@@ -8,7 +8,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "jsx-runtime": "^1.2.0",
+    "tailwind-merge": "^3.4.0",
     "typescript": "^5.9.3"
   }
 }
