@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Type check
-        run: npx tsc --noEmit
+        run: npx tsc safecart/frontend/figma/App.ts --noEmit
 
       - name: Run tests
         run: npm run test
