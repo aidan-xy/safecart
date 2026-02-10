@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import fs from "fs";
 
 async function dumpFullResponse(url: string) {
   const browser = await puppeteer.launch({
@@ -21,6 +22,7 @@ async function dumpFullResponse(url: string) {
   const html = await page.content();
 
   console.log(html);
+  fs.writeFileSync("response.html", html, "utf-8");
 
   await browser.close();
 }
