@@ -20,8 +20,6 @@ async function dumpFullResponse(url: string) {
 
   // Get the FULL rendered HTML
   const html = await page.content();
-
-  console.log(html);
   fs.writeFileSync("response.html", html, "utf-8");
 
   await browser.close();
