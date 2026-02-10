@@ -8,7 +8,7 @@
  * @param {number} numSold - Total units sold (> 0)
  * @param {number} ageYears - Seller age in years (>= 0)
  * @param {number} numRating - Total ratings (> 0)
- * @param {number} reviewImages - Total number of images (> 0)
+ * @param {number} reviewImages - Total number of images (>= 0)
  * @returns {number} Trust score in [0, 1]
  */
 function trustScore(
