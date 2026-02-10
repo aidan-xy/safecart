@@ -4,11 +4,11 @@
     "module": "CommonJS",
     "strict": true,
     "esModuleInterop": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
 
     "rootDir": ".",
     "outDir": "dist"
   },
-  "include": ["safecart/**/*.ts"],
+  "include": ["safecart/**/*.ts", "safecart/**/*.tsx"],
   "exclude": ["node_modules"]
 }
