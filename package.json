@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@types/node": "^25.2.2",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "jest": "^30.2.0"
@@ -10,6 +11,7 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "jsx-runtime": "^1.2.0",
+    "puppeteer": "^24.37.2",
     "tailwind-merge": "^3.4.0",
     "typescript": "^5.9.3"
   }
