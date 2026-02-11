@@ -2,6 +2,19 @@ const scanner = require("../scripts/scanner");
 const localHtmlPage = require("localHTMLpage/SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone.html");
 const fs = requires("fs")
 
+global.chrome = {
+  storage: {
+    local: {
+      get: jest.fn(),
+      set: jest.fn(),
+    }
+  },
+  runtime: {
+    sendMessage: jest.fn(),
+  }
+  // Add whatever chrome APIs your code uses
+};
+
 describe('parsingTest', () => {
 
   const html = fs.readFileSync("./SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone.html","utf-8");
