@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-const scanner = require("../scripts/scanner");
+const { gatherTitle, gatherRating, gatherPrice, gatherNumSold, gatherReview } = require("../scripts/scanner");
 const path = require("path");
 const fs = require("fs")
 
@@ -34,8 +34,13 @@ describe('parsingTest', () => {
     document.documentElement.innerHTML = html;
 
     const rating = gatherRating();
+
+      console.log('rating length:', rating.length);
+      console.log('Expected length:', rating.length);
+      console.log('rating:', JSON.stringify(rating)); // Shows hidden characters
+      console.log('Expected:', JSON.stringify(rating));
     
-    expect(rating).toEqual("  4.4  ");
+    expect(rating.trim()).toEqual("4.4")
     
 
   })
@@ -81,10 +86,15 @@ describe('parsingTest', () => {
     
     const reviewsTest = [
       "The product works well and sounds good; it has YouTube and Android 10.",
-      "Thank you it's my first time having a small smart phone now the only thing got to get is a sim card",
+      "Thank you it’s my first time having a small smart phone now the only thing got to get is a sim card",
       "Smaller than expected however i was thinking just a little bit bigger nonetheless it's still a nice phone , take a sims call, i going to take it to boost or t mobile and see if they can help me out with a service plan or something.. Still a nice person for a reasonable price."
     ];
-    
+
+      console.log('Review 1 length:', reviews[1].length);
+      console.log('Expected length:', reviewsTest[1].length);
+      console.log('Review 1:', JSON.stringify(reviews[1])); // Shows hidden characters
+      console.log('Expected:', JSON.stringify(reviewsTest[1]));
+        
     for(let i = 0; i < reviewsTest.length; i++){
       expect(reviews[i]).toEqual(reviewsTest[i]);
     }

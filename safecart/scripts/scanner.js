@@ -66,3 +66,11 @@ function gatherNumSold() {
 //   }
 //     return true;
 // })
+
+module.exports = {
+  gatherTitle,
+  gatherRating,
+  gatherPrice,
+  gatherNumSold,
+  gatherReview
+};
