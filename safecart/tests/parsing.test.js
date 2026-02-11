@@ -17,11 +17,9 @@ describe('parsingTest', () => {
     );
 
     document.documentElement.innerHTML = html;
-
     const title = gatherTitle();
 
     expect(title).toEqual("SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone");
-
   })
 
 
@@ -34,15 +32,7 @@ describe('parsingTest', () => {
     document.documentElement.innerHTML = html;
 
     const rating = gatherRating();
-
-      console.log('rating length:', rating.length);
-      console.log('Expected length:', rating.length);
-      console.log('rating:', JSON.stringify(rating)); // Shows hidden characters
-      console.log('Expected:', JSON.stringify(rating));
-    
-    expect(rating.trim()).toEqual("4.4")
-    
-
+    expect(rating.trim()).toEqual("4.4");   
   })
 
   test('parsing price correctly', () => {
@@ -55,9 +45,7 @@ describe('parsingTest', () => {
 
 
     const price = gatherPrice();
-
-    expect(price).toEqual("$32.27");
-  
+    expect(price).toEqual("$32.27");  
   })
 
   test('parsing numberSold correctly', () => {
@@ -69,10 +57,7 @@ describe('parsingTest', () => {
     document.documentElement.innerHTML = html;
 
     const numSold = gatherNumSold();
-
     expect(numSold).toEqual("800+ sold");
-    
-
   })
 
   test('parsing reviews correctly', () => {
@@ -89,11 +74,6 @@ describe('parsingTest', () => {
       "Thank you it’s my first time having a small smart phone now the only thing got to get is a sim card",
       "Smaller than expected however i was thinking just a little bit bigger nonetheless it's still a nice phone , take a sims call, i going to take it to boost or t mobile and see if they can help me out with a service plan or something.. Still a nice person for a reasonable price."
     ];
-
-      console.log('Review 1 length:', reviews[1].length);
-      console.log('Expected length:', reviewsTest[1].length);
-      console.log('Review 1:', JSON.stringify(reviews[1])); // Shows hidden characters
-      console.log('Expected:', JSON.stringify(reviewsTest[1]));
         
     for(let i = 0; i < reviewsTest.length; i++){
       expect(reviews[i]).toEqual(reviewsTest[i]);
