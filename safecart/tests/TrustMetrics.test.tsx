@@ -1,7 +1,6 @@
 // TrustMetrics.test.tsx
-import React from "react";
 import { render, screen } from "@testing-library/react";
-import { TrustMetrics } from "./TrustMetrics"; // adjust the path if needed
+import { TrustMetrics } from "../frontend/popup/components/TrustMetrics"; // adjust the path if needed
 
 describe("TrustMetrics component", () => {
   const metricsMock = [
@@ -58,4 +57,3 @@ describe("TrustMetrics component", () => {
     ).toBeInTheDocument();
   });
 });
-
