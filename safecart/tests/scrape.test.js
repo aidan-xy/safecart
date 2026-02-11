@@ -1,4 +1,4 @@
-const dumpFullResponse = require("../../dist/safecart/scripts/scrape");
+const dumpFullResponse = require("../scripts/scrape");
 
 describe('scrape whole page tests', () => {
   // testing on example.com, a fixed page that is expected not to change
