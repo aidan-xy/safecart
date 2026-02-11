@@ -10,19 +10,19 @@
  * @returns {number} Trust score in [0, 1]
  */
 function simpleTrustScore(
-  productRating,
-  numSold,
-  ageYears,
-  numRating,
-  reviewImages
-) {
+  productRating : number,
+  numSold : number,
+  ageYears : number,
+  numRating : number,
+  reviewImages : number
+) : number {
   // linear mapping
-  const r = Math.max(1, productRating); // assume productRating <= 5
-  const reviewNorm = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
+  const r : number = Math.max(1, productRating); // assume productRating <= 5
+  const reviewNorm : number = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
 
   // piecewise linear that penalizes < 100 sold higher
-  const n = Math.max(0, Math.floor(numSold));
-  let soldNorm;
+  const n : number = Math.max(0, Math.floor(numSold));
+  let soldNorm : number;
   if (n < 100) {
     soldNorm = n / 200;
   } else if (n >= 1000) {
@@ -31,7 +31,7 @@ function simpleTrustScore(
     soldNorm = 0.5 + 0.5 * (n - 100) / 900;
   }
 
-  let ageNorm;
+  let ageNorm : number;
   if (ageYears < 0) { // cannot determine age
     ageNorm = -1;
   } else if (ageYears < 1) {
@@ -42,30 +42,30 @@ function simpleTrustScore(
     ageNorm = 1.0;
   }
 
-  const MAX_REVIEW_WEIGHT = 0.8;
-  const MIN_REVIEW_WEIGHT = 0.6;
-  const REVIEW_RATIO_TARGET = 0.4;
-  const IMAGE_RATIO_TARGET = 0.2;
+  const MAX_REVIEW_WEIGHT : number = 0.8;
+  const MIN_REVIEW_WEIGHT : number = 0.6;
+  const REVIEW_RATIO_TARGET : number = 0.4;
+  const IMAGE_RATIO_TARGET : number = 0.2;
 
-  const reviewRatio = numRating / numSold;
-  const imageRatio = reviewImages / numRating;
+  const reviewRatio : number = numRating / numSold;
+  const imageRatio : number = reviewImages / numRating;
 
   // reviewWeight ranges from MIN_REVIEW_WEIGHT - MAX_REVIEW_WEIGHT. 
   // A listing with >=REVIEW_RATIO_TARGET reviewRatio and >=IMAGE_RATIO_TARGET imageRatio will
   // be weighted MAX_REVIEW_WEIGHT, scaled linearly.
   
   // Normalize the ratios to [0, 1]
-  const reviewRatioNorm = Math.min(reviewRatio / REVIEW_RATIO_TARGET, 1);
-  const imageRatioNorm = Math.min(imageRatio / IMAGE_RATIO_TARGET, 1);
+  const reviewRatioNorm : number = Math.min(reviewRatio / REVIEW_RATIO_TARGET, 1);
+  const imageRatioNorm : number = Math.min(imageRatio / IMAGE_RATIO_TARGET, 1);
 
   // This equally values the two ratios. Can be weighted if needed.
-  const combinedRatioNorm = (reviewRatioNorm + imageRatioNorm) / 2;
+  const combinedRatioNorm : number = (reviewRatioNorm + imageRatioNorm) / 2;
 
-  const reviewWeight = MIN_REVIEW_WEIGHT +
+  const reviewWeight : number = MIN_REVIEW_WEIGHT +
     (MAX_REVIEW_WEIGHT - MIN_REVIEW_WEIGHT) * combinedRatioNorm;
   
-  let soldWeight;
-  let ageWeight;
+  let soldWeight : number;
+  let ageWeight : number;
   if (ageNorm < 0) { // cannot determine age
     soldWeight = 1 - reviewWeight;
     ageWeight = 0;
@@ -74,7 +74,7 @@ function simpleTrustScore(
     ageWeight = (1 - reviewWeight) / 2;
   }
 
-  const trustNorm =
+  const trustNorm : number =
     reviewWeight * reviewNorm +
     soldWeight   * soldNorm +
     ageWeight    * ageNorm;

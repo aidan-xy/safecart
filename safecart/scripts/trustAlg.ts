@@ -12,14 +12,14 @@
  * @returns {number} Trust score in [0, 1]
  */
 function trustScore(
-  listingPrice,
-  marketPrice,
-  productRating,
-  numSold,
-  ageYears,
-  numRating,
-  reviewImages
-) {
+  listingPrice : number,
+  marketPrice : number,
+  productRating : number,
+  numSold : number,
+  ageYears : number,
+  numRating : number,
+  reviewImages : number
+) : number {
   // linear mapping
   const r = Math.max(1, productRating); // assume productRating <= 5
   const reviewNorm = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
