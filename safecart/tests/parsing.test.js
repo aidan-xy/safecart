@@ -1,25 +1,10 @@
 const scanner = require("../scripts/scanner");
-const localHtmlPage = require("localHTMLpage/SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone.html");
+const path = require("path");
 const fs = require("fs")
-
-global.chrome = {
-  storage: {
-    local: {
-      get: jest.fn(),
-      set: jest.fn(),
-    }
-  },
-  runtime: {
-    onMessage: {
-      addListener: jest.fn() 
-    },
-    sendMessage: jest.fn(),
-  }
-};
 
 describe('parsingTest', () => {
 
-  const html = fs.readFileSync("./SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone.html","utf-8");
+  const html = fs.readFileSync(path.resolve(__dirname, "./SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone.html","utf-8"));
 
   document.documentElement.innerHTML = html;
 
