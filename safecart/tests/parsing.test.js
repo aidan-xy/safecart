@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 const scanner = require("../scripts/scanner");
 const path = require("path");
 const fs = require("fs")
