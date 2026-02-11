@@ -9,9 +9,6 @@
     "rootDir": ".",
     "outDir": "dist"
   },
-  "include": ["safecart/**/*.ts",
-    "safecart/**/*.tsx",
-    "safecart/tests/**/*.ts",
-    "safecart/tests/**/*.tsx"],
+  "include": ["safecart/**/*.ts", "safecart/**/*.tsx"],
   "exclude": ["node_modules"]
 }
