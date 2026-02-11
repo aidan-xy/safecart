@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 const dumpFullResponse = require("../scripts/scrape");
 
 describe('scrape whole page tests', () => {
