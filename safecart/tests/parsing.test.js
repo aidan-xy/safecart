@@ -4,7 +4,7 @@ const fs = require("fs")
 
 describe('parsingTest', () => {
 
-  const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone.html","utf-8"));
+  const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/SOYES XS19 Mini Smartphone 3.88in 2GB RAM 16GB ROM Android10.0 With Facial Recognition Dual SIM Standby 3G Network Small Phone.html"),"utf-8");
 
   document.documentElement.innerHTML = html;
 
