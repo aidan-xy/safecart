@@ -7,7 +7,7 @@
  * @param {number} ageYears - Age of seller in years (> 0), -1 if cannot determine
  * @param {number} numRating - Total ratings (> 0)
  * @param {number} reviewImages - Total number of images (>= 0)
- * @returns {number} Trust score in [0, 1]
+ * @returns {Record} with keys = name of metric and value = norm from [0, 100]
  */
 function simpleTrustScore(
   productRating : number,
@@ -15,7 +15,7 @@ function simpleTrustScore(
   ageYears : number,
   numRating : number,
   reviewImages : number
-) : number {
+) : Record<string, number> {
   // linear mapping
   const r : number = Math.max(1, productRating); // assume productRating <= 5
   const reviewNorm : number = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
@@ -79,7 +79,17 @@ function simpleTrustScore(
     soldWeight   * soldNorm +
     ageWeight    * ageNorm;
 
-  return trustNorm;
+  return {
+    "score": normToPercent(trustNorm),
+    "Product Rating": normToPercent(reviewNorm),
+    "Sales Volume": normToPercent(soldNorm),
+    "Seller Age": normToPercent(ageNorm)
+  };
+}
+
+// Takes a norm [0, 1] -> [0, 100] rounded to the nearest integer
+function normToPercent(norm : number) : number  {
+  return Math.round(norm * 100);
 }
 
 module.exports = simpleTrustScore;
