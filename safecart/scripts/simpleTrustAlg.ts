@@ -7,7 +7,7 @@
  * @param {number} ageYears - Age of seller in years (> 0), -1 if cannot determine
  * @param {number} numRating - Total ratings (> 0)
  * @param {number} reviewImages - Total number of images (>= 0)
- * @returns {Record} with keys = name of metric and value = norm from [0, 100]
+ * @returns {Record<string, number>} with keys = name of metric and value = norm from [0, 100]
  */
 function simpleTrustScore(
   productRating : number,
