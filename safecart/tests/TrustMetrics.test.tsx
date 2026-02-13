@@ -1,5 +1,6 @@
 // TrustMetrics.test.tsx
 import { render, screen } from "@testing-library/react";
+import '@testing-library/jest-dom';
 import { TrustMetrics } from "../frontend/popup/components/TrustMetrics"; // adjust the path if needed
 
 describe("TrustMetrics component", () => {
