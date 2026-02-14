@@ -5,10 +5,10 @@
     "strict": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "types": ["chrome","jest"], 
+    "types": ["chrome", "jest", "@testing-library/jest-dom"], 
     "rootDir": ".",
     "outDir": "safecart/dist"
   },
-  "include": ["safecart/**/*.ts", "safecart/**/*.tsx"],
+  "include": ["safecart/**/*.ts", "safecart/**/*.tsx", "src/setupTests.ts"],
   "exclude": ["node_modules"]
 }
