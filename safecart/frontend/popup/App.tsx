@@ -39,12 +39,7 @@ const mockTrustData = {
   ]
 };
 
-type TrustData = {
-  score: number;
-  metrics: { name: string; score: number }[];
-};
-
-export default function App({trustData}: { trustData: TrustData}) {
+export default function App() {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -69,7 +64,7 @@ export default function App({trustData}: { trustData: TrustData}) {
 
       {/* Trust Score Display */}
       <div className="p-5">
-        <TrustScore score={trustData.score} />
+        <TrustScore score={mockTrustData.score} />
         
         {/* Action Button */}
         <button
@@ -90,7 +85,7 @@ export default function App({trustData}: { trustData: TrustData}) {
         {/* Detailed Metrics */}
         {showDetails && (
           <div className="mt-4 animate-fadeIn">
-            <TrustMetrics metrics={trustData.metrics} />
+            <TrustMetrics metrics={mockTrustData.metrics} />
           </div>
         )}
       </div>
