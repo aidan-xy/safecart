@@ -39,11 +39,12 @@ const mockTrustData = {
   ]
 };
 
-export default function App(trustData: {
-    score: number;
-    metrics: {name: string;
-      score: number;}[]
-    }) {
+type TrustData = {
+  score: number;
+  metrics: { name: string; score: number }[];
+};
+
+export default function App({trustData}: { trustData: TrustData}) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
