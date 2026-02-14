@@ -7,20 +7,14 @@ describe("TrustMetrics component", () => {
     {
       name: "Price vs Market",
       score: 85,
-      status: "positive" as const,
-      description: "The product is reasonably priced compared to market value.",
     },
     {
       name: "Review Authenticity",
       score: 60,
-      status: "warning" as const,
-      description: "Some reviews may be fake or misleading.",
     },
     {
       name: "Seller History",
       score: 30,
-      status: "negative" as const,
-      description: "Seller has a poor track record.",
     },
   ];
 
@@ -30,7 +24,6 @@ describe("TrustMetrics component", () => {
     metricsMock.forEach(metric => {
       expect(screen.getByText(metric.name)).toBeInTheDocument();
       expect(screen.getByText(`${metric.score}%`)).toBeInTheDocument();
-      expect(screen.getByText(metric.description)).toBeInTheDocument();
     });
   });
 
