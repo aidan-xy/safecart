@@ -7,16 +7,21 @@
  * @param {number} ageYears - Age of seller in years (> 0), -1 if cannot determine
  * @param {number} numRating - Total ratings (> 0)
  * @param {number} reviewImages - Total number of images (>= 0)
- * @returns {Record<string, number>} with keys = name of metric and value = norm from [0, 100]
+ * @returns {{
+ *   score: number;
+ *   metrics: {
+ *     name: string;
+ *     score: number;
+ *   }[]
+ * }}
  */
-function simpleTrustScore(
+export function simpleTrustScore(
   productRating : number,
   numSold : number,
   ageYears : number,
   numRating : number,
   reviewImages : number
-) : {
-    score: number;
+) : {score: number;
     metrics: {name: string;
       score: number;}[]
     }{
