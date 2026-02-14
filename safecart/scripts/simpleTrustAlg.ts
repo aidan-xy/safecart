@@ -15,7 +15,11 @@ function simpleTrustScore(
   ageYears : number,
   numRating : number,
   reviewImages : number
-) : Record<string, number> {
+) : {
+    score: number;
+    metrics: {name: string;
+      score: number;}[]
+    }{
   // linear mapping
   const r : number = Math.max(1, productRating); // assume productRating <= 5
   const reviewNorm : number = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
@@ -80,10 +84,12 @@ function simpleTrustScore(
     ageWeight    * ageNorm;
 
   return {
-    "score": normToPercent(trustNorm),
-    "Product Rating": normToPercent(reviewNorm),
-    "Sales Volume": normToPercent(soldNorm),
-    "Seller Age": normToPercent(ageNorm)
+    score: normToPercent(trustNorm),
+    metrics: [
+      {name:"Product Rating", score: normToPercent(reviewNorm)},
+      {name:"Sales Volume", score: normToPercent(soldNorm)},
+      {name:"Seller Age", score:normToPercent(ageNorm)}
+    ]
   };
 }
 
