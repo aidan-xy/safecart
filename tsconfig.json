@@ -7,7 +7,7 @@
     "jsx": "react-jsx",
 
     "rootDir": ".",
-    "outDir": "dist"
+    "outDir": "safecart/dist"
   },
   "include": ["safecart/**/*.ts", "safecart/**/*.tsx"],
   "exclude": ["node_modules"]
