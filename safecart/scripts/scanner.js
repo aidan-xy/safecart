@@ -79,7 +79,7 @@ function gatherAge() {
     age = ((today.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
     age = Math.round(age * 100)/100
   } else {
-    age = -1
+    age = 0
   }
   return age
 }
