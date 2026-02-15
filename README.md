@@ -9,16 +9,29 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 - Display trust metrics on both search results and individual listing pages.
 - Lay the foundation for machine learning-based evaluations in the future.
 
+**Current Capabilities:**
+- Can evaluate any Aliexpress listing for trustworthiness. Display's trust score/metrics to user in extension popup window.
+
 ---
 
 ## Repository Layout
 - NOTE: This section can and likely will be changed and adjusted throughout development
 - `safecart/` – Core extension source code
     - `frontend/` – UI injection, extension popup, badges, icons, popups
-    - `backend/` – Data gathering, scoring algorithms, hard-coded evaluation logic
+    - `scripts/` – Data gathering, scoring algorithms, evaluation logic
+    - `tests/` – Tests. Uses Jest for testing.
 - `documentation/` – Developer guides, test plans, requirements, and meeting notes
 - `weekly status reports/` – Team sprint updates
 - `README.md` – Project overview and instructions
+
+---
+
+## Building and Testing
+- Prerequisite: have node.js and npm installed
+- Clone the repo `git clone https://github.com/aidan-xy/safecart.git`
+- Install dependencies `npm install`
+- To run tests do `npm test`
+- To build and use, 
 
 ---
 

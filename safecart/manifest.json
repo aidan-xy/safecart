@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "page scanning mod",
-  "description": "this is for testing data gathering",
+  "name": "Safecart",
+  "description": "SafeCart is a browser extension designed to help users safely navigate online marketplaces (currently focused on AliExpress).",
   "version": "1.0",
   "icons": {
     "16": "images/icon-16.png",
