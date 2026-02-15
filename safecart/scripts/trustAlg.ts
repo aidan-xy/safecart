@@ -9,7 +9,13 @@
  * @param {number} ageYears - Seller age in years (>= 0)
  * @param {number} numRating - Total ratings (> 0)
  * @param {number} reviewImages - Total number of images (>= 0)
- * @returns {number} Trust score in [0, 1]
+ * @returns {{
+ *   score: number;
+ *   metrics: {
+ *     name: string;
+ *     score: number;
+ *   }[]
+ * }}
  */
 function trustScore(
   listingPrice : number,
@@ -19,7 +25,10 @@ function trustScore(
   ageYears : number,
   numRating : number,
   reviewImages : number
-) : number {
+) : {score: number;
+    metrics: {name: string;
+      score: number;}[]
+    }{
   // linear mapping
   const r = Math.max(1, productRating); // assume productRating <= 5
   const reviewNorm = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
@@ -29,7 +38,7 @@ function trustScore(
   const priceNorm = Math.max(0.1, 1 - Math.pow(priceDist / 0.5, 2));  
 
   // piecewise linear that penalizes < 100 sold higher
-  const n = Math.max(0, Math.floor(numSold));
+  const n = Math.max(1, Math.floor(numSold));
   let soldNorm;
   if (n < 100) {
     soldNorm = n / 200;
@@ -55,7 +64,7 @@ function trustScore(
   const REVIEW_RATIO_TARGET = 0.4;
   const IMAGE_RATIO_TARGET = 0.2;
 
-  const reviewRatio = numRating / numSold;
+  const reviewRatio = numRating / n;
   const imageRatio = reviewImages / numRating;
 
   // reviewWeight ranges from MIN_REVIEW_WEIGHT - MAX_REVIEW_WEIGHT. 
@@ -76,13 +85,26 @@ function trustScore(
   const soldWeight = remainingWeight / 2; // this equally weights age/sold
   const ageWeight = remainingWeight / 2;
 
-  const trustNorm =
+  const trustNorm : number =
     reviewWeight * reviewNorm +
     priceWeight  * priceNorm +
     soldWeight   * soldNorm +
     ageWeight    * ageNorm;
 
-  return trustNorm;
+  return {
+    score: normToPercent(trustNorm),
+    metrics: [
+      {name: "Product Rating", score: normToPercent(reviewNorm)},
+      {name: "Price Ratio", score: normToPercent(priceNorm)},
+      {name:"Sales Volume", score: normToPercent(soldNorm)},
+      {name:"Seller Age", score:normToPercent(ageNorm)}
+    ]
+  };
+}
+
+// Takes a norm [0, 1] -> [0, 100] rounded to the nearest integer
+function normToPercent(norm : number) : number  {
+  return Math.round(norm * 100);
 }
 
 module.exports = trustScore;
