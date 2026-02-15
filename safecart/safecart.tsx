@@ -10,20 +10,19 @@ import "./frontend/popup/globals.css";
 // Request data from scanner.js listener
 async function getProductData() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  
-  return new Promise((resolve, reject) => {
-    if (!tab.id) {
-      reject(new Error("No active tab found"));
-      return;
-    }
-    chrome.tabs.sendMessage(tab.id, { action: "getData" }, (response: any) => {
-      if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
-      } else {
-        resolve(response);
-      }
+        return new Promise((resolve, reject) => {
+        if (!tab.id) {
+            reject(new Error("No active tab found"));
+            return;
+        }
+        chrome.tabs.sendMessage(tab.id, { action: "getData" }, (response: any) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(response);
+            }
+        });
     });
-  });
 }
 
 // Store the response in a variable
@@ -41,19 +40,26 @@ getProductData()
   });
 
 function renderApp() {
-  // evaluation
-  const evaluation = simpleTrustScore(productData.rating,
-    productData.numSold,
-    productData.numSold,
-    productData.reviews.length,
-    0
-  );
-
-  // display frontend
-  const root = document.getElementById('root');
-  if (root != null){
-    ReactDOM.createRoot(root).render(
-      <App trustData={evaluation}/>
-    )
-  }
+    if(productData != null){
+        const evaluation = simpleTrustScore(productData.rating,
+          productData.numSold,
+          productData.numSold,
+          productData.reviews.length,
+          0
+        );
+        // display frontend
+        const root = document.getElementById('root');
+        if (root != null){
+            ReactDOM.createRoot(root).render(
+              <App trustData={evaluation}/>
+            )
+        }
+    } else {
+        const root = document.getElementById('root');
+        if (root != null){
+            ReactDOM.createRoot(root).render(
+              <p>Parsing failed</p>
+            )
+        }
+    }
 }

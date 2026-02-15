@@ -136,10 +136,9 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
                   style={{ width: `${metric.score}%` }}
                 />
               </div>
-
-              <p className="text-xs text-gray-600 leading-relaxed">
+              {/* <p className="text-xs text-gray-600 leading-relaxed">
                 TEMPORARY DESCRIPTION
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
