@@ -30,7 +30,7 @@ export function simpleTrustScore(
   const reviewNorm : number = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
 
   // piecewise linear that penalizes < 100 sold higher
-  const n : number = Math.max(0, Math.floor(numSold));
+  const n : number = Math.max(1, Math.floor(numSold));
   let soldNorm : number;
   if (n < 100) {
     soldNorm = n / 200;
@@ -54,10 +54,10 @@ export function simpleTrustScore(
   const MAX_REVIEW_WEIGHT : number = 0.8;
   const MIN_REVIEW_WEIGHT : number = 0.6;
   const REVIEW_RATIO_TARGET : number = 0.4;
-  const IMAGE_RATIO_TARGET : number = 0.2;
-
-  const reviewRatio : number = numRating / numSold;
-  const imageRatio : number = reviewImages / numRating;
+  const IMAGE_RATIO_TARGET: number = 0.2;
+  
+  const reviewRatio : number = numRating / n;
+  const imageRatio : number = reviewImages / Math.max(1, numRating);
 
   // reviewWeight ranges from MIN_REVIEW_WEIGHT - MAX_REVIEW_WEIGHT. 
   // A listing with >=REVIEW_RATIO_TARGET reviewRatio and >=IMAGE_RATIO_TARGET imageRatio will
