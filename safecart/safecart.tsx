@@ -37,15 +37,16 @@ getProductData()
   .catch((error) => {
     console.error("Failed to get product data:", error);
     renderApp();
-  });
+  });   
 
 function renderApp() {
     if(productData != null){
-        const evaluation = simpleTrustScore(productData.rating,
-          productData.numSold,
-          productData.numSold,
-          productData.reviews.length,
-          0
+        const evaluation = simpleTrustScore(
+            productData.productRating,
+            productData.numSold,
+            productData.ageYears,
+            productData.numRating,
+            productData.reviewImages
         );
         // display frontend
         const root = document.getElementById('root');

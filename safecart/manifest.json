@@ -20,7 +20,7 @@
   },  
   "content_scripts": [
     {
-      "js": ["scripts/scanner.js"],
+      "js": ["dist/scripts/scanner.js"],
       "matches": [
         "https://www.aliexpress.us/item/*",
         "https://www.aliexpress.com/item/*",

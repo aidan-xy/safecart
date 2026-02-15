@@ -11,8 +11,11 @@ export default defineConfig({
       name: 'copy-scripts',
       apply: 'build',
       writeBundle() {
-        mkdirSync('safecart/dist/scripts', { recursive: true });
-        copyFileSync('safecart/scripts/scanner.js', 'safecart/dist/scripts/scanner.js');
+        const srcDir = path.resolve(__dirname, 'safecart/scripts');
+        const destDir = path.resolve(__dirname, 'safecart/dist/scripts');
+        mkdirSync(destDir, { recursive: true });
+        copyFileSync(path.join(srcDir, 'scanner.js'), path.join(destDir, 'scanner.js'));
+        console.log('✓ Copied scanner.js to dist');
       }
     }
   ],
