@@ -1,7 +1,6 @@
 
 function gatherReview() {
   const reviews = document.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
-  console.log("got " + reviews);
   const reviewsArray = [];
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
@@ -13,13 +12,11 @@ function gatherReview() {
 
 function gatherTitle() {
   const title = document.querySelector('h1[data-pl="product-title"]');
-  console.log("got " + title);
   return title ? title.textContent : "no value yet"
 }
 
 function gatherRating() {
   const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
-  console.log("got " + productRatingHTML);
   if(!productRatingHTML){return 0}
   const productRating = productRatingHTML.textContent.match(/\d{1}.\d{1}/)
   return productRating ? parseFloat(productRating [0]): 0
@@ -27,7 +24,6 @@ function gatherRating() {
 
 function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
-  console.log("got " + listingPrice);
   if(!listingPrice){return 0}
   const match = listingPrice.textContent.match(/\d+\.\d{2}/)
   return match ? parseFloat(match[0]): 0
@@ -35,7 +31,6 @@ function gatherPrice() {
 
 function gatherNumSold() {
   const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
-  console.log("got " + numSoldHTML);
   if(!numSoldHTML){return 0}
   const numSold = numSoldHTML.textContent.match(/[\d,]+/)
   return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0 
@@ -43,7 +38,6 @@ function gatherNumSold() {
 
 function gatherNumberImage() {
   const numberImageImage = document.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
-  console.log("got " + numberImageImage);
   if(!numberImageImage){return 0}
   const numberImageImageParent = numberImageImage.parentElement
   if(!numberImageImageParent){return 0}
@@ -52,7 +46,6 @@ function gatherNumberImage() {
 }
 function gatherNumberRatings() {
   const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
-  console.log("got " + numberOfRatingsHTML);
   if(!numberOfRatingsHTML){return 0}
   const numberOfRatings = numberOfRatingsHTML.textContent.match(/\d+/)
   return numberOfRatings ? parseFloat(numberOfRatings[0]) : 0;
