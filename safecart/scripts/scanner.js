@@ -37,35 +37,35 @@ function gatherNumSold() {
 
 //listening for any query
 //commenting everything here since it is not needed yet
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
-//     //check if the request is called "get data"
-//   if(request.action === "getData") {
+    //check if the request is called "get data"
+  if(request.action === "getData") {
 
-//     gatherReview();
-//     gatherTitle();
-//     gatherRating();
-//     gatherPrice();
-//     gatherNumSold()
+    gatherReview();
+    gatherTitle();
+    gatherRating();
+    gatherPrice();
+    gatherNumSold()
 
-//     //creating a an array and extract all of the html from the reviews
-//     //then put it in the array
-//     const reviewsArray = [];
-//     if(reviews && reviews.length > 0) {
-//       for(let i = 0; i < reviews.length; i++) {
-//         reviewsArray.push(reviews[i].textContent);
-//       }
-//     }
+    //creating a an array and extract all of the html from the reviews
+    //then put it in the array
+    const reviewsArray = [];
+    if(reviews && reviews.length > 0) {
+      for(let i = 0; i < reviews.length; i++) {
+        reviewsArray.push(reviews[i].textContent);
+      }
+    }
 
-//     //send all of the information called above and the extracted array
-//     sendResponse({title: title ? title.textContent : "no value yet", 
-//     reviews: reviewsArray, 
-//     productRating: productRating ? productRating.textContent: 0, 
-//     listingPrice: listingPrice ? listingPrice.textContent: 0,
-//     numSold: numSold ? numSold.textContent: 0});
-//   }
-//     return true;
-// })
+    //send all of the information called above and the extracted array
+    sendResponse({title: title ? title.textContent : "no value yet", 
+    reviews: reviewsArray, 
+    productRating: productRating ? productRating.textContent: 0, 
+    listingPrice: listingPrice ? listingPrice.textContent: 0,
+    numSold: numSold ? numSold.textContent: 0});
+  }
+    return true;
+})
 
 module.exports = {
   gatherTitle,
