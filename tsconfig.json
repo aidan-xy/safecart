@@ -5,6 +5,7 @@
     "strict": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM"],
 
     "rootDir": ".",
     "outDir": "safecart/dist"
