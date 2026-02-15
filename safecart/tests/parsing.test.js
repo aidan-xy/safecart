@@ -32,7 +32,7 @@ describe('parsingTest', () => {
     document.documentElement.innerHTML = html;
 
     const rating = gatherRating();
-    expect(rating.trim()).toEqual("4.4");   
+    expect(rating).toEqual(4.4);   
   })
 
   test('parsing price correctly', () => {
@@ -45,7 +45,7 @@ describe('parsingTest', () => {
 
 
     const price = gatherPrice();
-    expect(price).toEqual("$32.27");  
+    expect(price).toEqual(32.27);  
   })
 
   test('parsing numberSold correctly', () => {
@@ -57,7 +57,7 @@ describe('parsingTest', () => {
     document.documentElement.innerHTML = html;
 
     const numSold = gatherNumSold();
-    expect(numSold).toEqual("800+ sold");
+    expect(numSold).toEqual(800);
   })
 
   test('parsing reviews correctly', () => {
