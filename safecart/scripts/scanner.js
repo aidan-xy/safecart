@@ -37,8 +37,8 @@ function gatherNumSold() {
   const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
   console.log("got " + numSoldHTML);
   if(!numSoldHTML){return 0}
-  const numSold = numSoldHTML.textContent.match(/\d+/)
-  return numSold ? parseInt(numSold[0]): 0 
+  const numSold = numSoldHTML.textContent.match(/[\d,]+/)
+  return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0 
 }
 
 function gatherNumberImage() {
