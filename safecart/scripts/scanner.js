@@ -57,14 +57,14 @@ function gatherOpenSinceDate() {
   if(ageHTML) {
     const eachInfo = ageHTML.querySelectorAll('td');
     for (let i = 0; i < eachInfo.length; i++) {
-      if (eachInfo[i].textContent.trim() === 'Open since:') {
+      if (eachInfo[i].textContent.trim() === 'Open since:' && eachInfo[i + 1].textContent.trim() != "") {
         date = eachInfo[i + 1]
         break
       }
     }
-    return date ? date.textContent.trim() : "march 22, 2006";
+    return date ? date.textContent.trim() : "";
   } else{
-    return "march 22, 2006"
+    return ""
   }
 
 }
@@ -72,7 +72,7 @@ function gatherOpenSinceDate() {
 function gatherAge() {
   const ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
-  if(ageHTML) {
+  if(ageHTML && gatherOpenSinceDate() !== "") {
     const dateStr = gatherOpenSinceDate();
     const targetDate = new Date(dateStr);
     const today = new Date();
