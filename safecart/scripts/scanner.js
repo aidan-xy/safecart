@@ -25,8 +25,8 @@ function gatherRating() {
 function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
   if(!listingPrice){return 0}
-  const match = listingPrice.textContent.match(/\d+\.\d{2}/)
-  return match ? parseFloat(match[0]): 0
+  const match = listingPrice.textContent.match(/[\d,]+\.\d{2}/)
+  return match ? parseFloat(match[0].replace(/,/g, '')): 0
 }
 
 function gatherNumSold() {
@@ -62,9 +62,9 @@ function gatherOpenSinceDate() {
         break
       }
     }
-    return date ? date.textContent.trim() : "march, 22 2006";
+    return date ? date.textContent.trim() : "march 22, 2006";
   } else{
-    return "march, 22 2006"
+    return "march 22, 2006"
   }
 
 }
@@ -116,5 +116,6 @@ module.exports = {
   gatherNumberImage,
   gatherNumberRatings,
   gatherAge,
-  gatherOpenSinceDate
+  gatherOpenSinceDate,
+  getAllInformationForSimpleAGI
 };
