@@ -68,7 +68,7 @@ function gatherOpenSinceDate() {
       }
     }
     console.log("Open since date element:", date);
-    return date ? date.textContent.trim() : "march, 22 2006";
+    return date ? date.textContent.trim() : "";
   } else{
     return ""
   }
