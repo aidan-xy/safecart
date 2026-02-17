@@ -4,8 +4,8 @@
 SafeCart is a browser extension designed to help users safely navigate online marketplaces (currently focused on AliExpress). It analyzes publicly available data about listings and sellers to provide a **trustworthiness rating**, helping users avoid scams or low-quality products.
 
 **Goals:**
-- Automatically evaluate listings and flag suspicious vendors.
-- Provide a clear, interpretable trust score per listing.
+- Automatically evaluate listings and flag suspicious vendors. (Complete)
+- Provide a clear, interpretable trust score per listing. (Complete)
 - Display trust metrics on both search results and individual listing pages.
 - Lay the foundation for machine learning-based evaluations in the future.
 
