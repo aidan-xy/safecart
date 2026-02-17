@@ -1,4 +1,5 @@
-
+//Gathering and parsing the element for the reviews element
+//output: array of strings
 function gatherReview() {
   const reviews = document.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
   const reviewsArray = [];
@@ -11,12 +12,16 @@ function gatherReview() {
   return reviewsArray
 }
 
+//Gathering and parsing the html for the title element
+//output: string
 function gatherTitle() {
   const title = document.querySelector('h1[data-pl="product-title"]');
   console.log("Title element: " +  (title ? title.textContent : "no value yet"));
   return title ? title.textContent : "no value yet"
 }
 
+//Gathering and parsing the html for the rating element
+//output: number
 function gatherRating() {
   const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
   if(!productRatingHTML){
@@ -28,6 +33,8 @@ function gatherRating() {
   return productRating ? parseFloat(productRating [0]): 0
 }
 
+//Gathering and parsing the html for the number sold element
+//output: number
 function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
   if(!listingPrice){
@@ -39,6 +46,8 @@ function gatherPrice() {
   return match ? parseFloat(match[0].replace(/,/g, '')): 0
 }
 
+//Gathering and parsing the html for the number sold element
+//output: number
 function gatherNumSold() {
   const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
   if(!numSoldHTML){
@@ -50,6 +59,8 @@ function gatherNumSold() {
   return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0 
 }
 
+//Gathering and parsing the html for the number of images element
+//output: number
 function gatherNumberImage() {
   const numberImageImage = document.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
   if(!numberImageImage){
@@ -61,6 +72,9 @@ function gatherNumberImage() {
   console.log("Number of images element: " + (numberImage ? parseInt(numberImage[0]) : 0));
   return numberImage ? parseInt(numberImage[0]) : 0;
 }
+
+//Gathering and parsing the html for the number of ratings element
+//output: number
 function gatherNumberRatings() {
   const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
   if(!numberOfRatingsHTML){
@@ -72,6 +86,8 @@ function gatherNumberRatings() {
   return numberOfRatings ? parseFloat(numberOfRatings[0]) : 0;
 }
 
+//Gathering and parsing the html for the open date element
+//output: string
 function gatherOpenSinceDate() {
   let date;
   ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
@@ -92,6 +108,8 @@ function gatherOpenSinceDate() {
 
 }
 
+//Calculating the age based on today dates and the store dates
+//output: number
 function gatherAge() {
   const ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
@@ -109,6 +127,8 @@ function gatherAge() {
   return age
 }
 
+//getting all the information for the simpleTrustAGI() class
+//output: record
 function getAllInformationForSimpleAGI() {
   const infoForSimpleAGI = {productRating : gatherRating(), 
                             numSold: gatherNumSold(), 
