@@ -27,9 +27,8 @@ function gatherRating() {
 function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
   if(!listingPrice){return 0}
-  const match = listingPrice.textContent.match(/\d+\.\d{2}/)
-  console.log("Price element:", listingPrice);
-  return match ? parseFloat(match[0]): 0
+  const match = listingPrice.textContent.match(/[\d,]+\.\d{2}/)
+  return match ? parseFloat(match[0].replace(/,/g, '')): 0
 }
 
 function gatherNumSold() {
@@ -63,15 +62,15 @@ function gatherOpenSinceDate() {
   if(ageHTML) {
     const eachInfo = ageHTML.querySelectorAll('td');
     for (let i = 0; i < eachInfo.length; i++) {
-      if (eachInfo[i].textContent.trim() === 'Open since:') {
+      if (eachInfo[i].textContent.trim() === 'Open since:' && eachInfo[i + 1].textContent.trim() != "") {
         date = eachInfo[i + 1]
         break
       }
     }
     console.log("Open since date element:", date);
-    return date ? date.textContent.trim() : "march, 22 2006";
+    return date ? date.textContent.trim() : "";
   } else{
-    return "march, 22 2006"
+    return ""
   }
 
 }
@@ -79,7 +78,7 @@ function gatherOpenSinceDate() {
 function gatherAge() {
   const ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
-  if(ageHTML) {
+  if(ageHTML && gatherOpenSinceDate() !== "") {
     const dateStr = gatherOpenSinceDate();
     const targetDate = new Date(dateStr);
     const today = new Date();
@@ -123,5 +122,6 @@ module.exports = {
   gatherNumberImage,
   gatherNumberRatings,
   gatherAge,
-  gatherOpenSinceDate
+  gatherOpenSinceDate,
+  getAllInformationForSimpleAGI
 };
