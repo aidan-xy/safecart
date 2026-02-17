@@ -5,6 +5,7 @@ function gatherReview() {
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
     reviewsArray.push(reviews[i].textContent);
+    console.log("recording review " + (i + 1) + " : " + reviews[i].textContent);
     }
   }
   return reviewsArray
@@ -12,47 +13,62 @@ function gatherReview() {
 
 function gatherTitle() {
   const title = document.querySelector('h1[data-pl="product-title"]');
-  console.log("Title element:", title);
+  console.log("Title element: " +  (title ? title.textContent : "no value yet"));
   return title ? title.textContent : "no value yet"
 }
 
 function gatherRating() {
   const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
-  if(!productRatingHTML){return 0}
+  if(!productRatingHTML){
+    console.log("could not see rating element")
+    return 0
+  }
   const productRating = productRatingHTML.textContent.match(/\d{1}.\d{1}/)
-  console.log("Rating element:", productRating);
+  console.log("Rating element: " +  (productRating ? parseFloat(productRating [0]): 0));
   return productRating ? parseFloat(productRating [0]): 0
 }
 
 function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
-  if(!listingPrice){return 0}
+  if(!listingPrice){
+    console.log("could not see product price element")
+    return 0
+  }
   const match = listingPrice.textContent.match(/[\d,]+\.\d{2}/)
+  console.log("Product price element: " + (match ? parseFloat(match[0]): 0));
   return match ? parseFloat(match[0].replace(/,/g, '')): 0
 }
 
 function gatherNumSold() {
   const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
-  if(!numSoldHTML){return 0}
+  if(!numSoldHTML){
+    console.log("could not see num sold element")
+    return 0
+  }
   const numSold = numSoldHTML.textContent.match(/[\d,]+/)
-  console.log("Num sold element:", numSoldHTML);
+  console.log("Num sold element: " + (numSold ? parseInt(numSold[0].replace(/,/g, '')): 0));
   return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0 
 }
 
 function gatherNumberImage() {
   const numberImageImage = document.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
-  if(!numberImageImage){return 0}
+  if(!numberImageImage){
+    console.log("could not see number of images element")
+    return 0
+  }
   const numberImageImageParent = numberImageImage.parentElement
-  if(!numberImageImageParent){return 0}
   const numberImage = numberImageImageParent.textContent.match(/\d+/)
-  console.log("Number of images element:", numberImageImageParent);
+  console.log("Number of images element: " + (numberImage ? parseInt(numberImage[0]) : 0));
   return numberImage ? parseInt(numberImage[0]) : 0;
 }
 function gatherNumberRatings() {
   const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
-  if(!numberOfRatingsHTML){return 0}
+  if(!numberOfRatingsHTML){
+    console.log("could not see number of ratings element")
+    return 0
+  }
   const numberOfRatings = numberOfRatingsHTML.textContent.match(/\d+/)
-  console.log("Number of ratings element:", numberOfRatingsHTML);
+  console.log("Number of ratings element: " + (numberOfRatings ? parseFloat(numberOfRatings[0]) : 0));
   return numberOfRatings ? parseFloat(numberOfRatings[0]) : 0;
 }
 
@@ -67,9 +83,10 @@ function gatherOpenSinceDate() {
         break
       }
     }
-    console.log("Open since date element:", date);
+    console.log("Open since date element: " +  (date ? date.textContent.trim() : ""));
     return date ? date.textContent.trim() : "";
   } else{
+    console.log("Could not see open since date element");
     return ""
   }
 
@@ -84,7 +101,9 @@ function gatherAge() {
     const today = new Date();
     age = ((today.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
     age = Math.round(age * 100)/100
+    console.log("caluclated age :" + age);
   } else {
+    console.log("could not caluclate age");
     age = 0
   }
   return age
