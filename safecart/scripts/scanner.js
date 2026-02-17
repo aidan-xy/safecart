@@ -108,7 +108,7 @@ function gatherAge() {
   } else {
     age = 0
   }
-  print("calculating the age of the company: " + age);
+  console.log("calculating the age of the company: " + age);
   return age
 }
 
