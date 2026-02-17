@@ -31,7 +31,7 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 - Clone the repo `git clone https://github.com/aidan-xy/safecart.git`
 - Install dependencies `npm install`
 - To run tests do `npm test`
-- To build, run `npx tsc` then `npm run build`
+- To build, run `npm run build`
 - After building, go to `chrome://extensions` then load unpacked from `safecart/safecart`
 
 ---
