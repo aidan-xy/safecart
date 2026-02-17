@@ -37,7 +37,7 @@ getProductData()
   .catch((error) => {
     console.error("Failed to get product data:", error);
     renderApp();
-  });   
+  });
 
 function renderApp() {
     if(productData != null){
@@ -48,9 +48,11 @@ function renderApp() {
             productData.numRating,
             productData.reviewImages
         );
+        console.log("Evaluation result:", evaluation);
         // display frontend
         const root = document.getElementById('root');
         if (root != null){
+            console.log("Rendering app");
             ReactDOM.createRoot(root).render(
               <App trustData={evaluation}/>
             )
