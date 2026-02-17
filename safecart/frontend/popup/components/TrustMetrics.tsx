@@ -165,7 +165,7 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
             {/*sales volume, review authenticity, and seller history to calculate */}
             {/*your trust score.*/}
             Our algorithm evaluates product ratings, sales volume, and seller age to calculate
-            your trust score.
+            a reliable trust score for the listing.
           </p>
         </div>
       </div>
