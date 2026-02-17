@@ -161,8 +161,10 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
             />
           </svg>
           <p className="text-xs text-blue-900 leading-relaxed">
-            Our algorithm evaluates price vs. market value, product ratings, 
-            sales volume, review authenticity, and seller history to calculate 
+            {/*Our algorithm evaluates price vs. market value, product ratings, */}
+            {/*sales volume, review authenticity, and seller history to calculate */}
+            {/*your trust score.*/}
+            Our algorithm evaluates product ratings, sales volume, and seller age to calculate
             your trust score.
           </p>
         </div>
