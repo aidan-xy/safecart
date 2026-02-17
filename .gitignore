@@ -1,6 +1,6 @@
 node_modules/
 dist/
 coverage/
-safecart/frontend/popup/components/.idea/
+.idea/
 
 response.html
