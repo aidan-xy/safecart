@@ -13,7 +13,6 @@ frontend/
     ├── Attributions.md
     ├── globals.css
     └── components/
-        ├── .idea/
         ├── TrustMetrics.tsx
         └── TrustScore.tsx
 
@@ -52,12 +51,6 @@ Contains all UI-related code for the SafeCart popup interface.
 ## popup/components/
 
 Contains reusable UI components used within the popup.
-
-### .idea/
-
-- Stores IDE configuration files and project metadata.
-- Does **not** affect SafeCart popup functionality.
-- Can be safely ignored for runtime purposes.
 
 ---
 
