@@ -46,7 +46,7 @@ describe("TrustMetrics component", () => {
   test("renders the info box at the bottom", () => {
     render(<TrustMetrics metrics={metricsMock} />);
     expect(
-      screen.getByText(/Our algorithm evaluates price vs. market value/i)
+        screen.getByText(/Our algorithm evaluates product ratings, sales volume, and seller age/i)
     ).toBeInTheDocument();
   });
 });
