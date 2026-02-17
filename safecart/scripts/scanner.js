@@ -5,6 +5,7 @@ function gatherReview() {
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
     reviewsArray.push(reviews[i].textContent);
+    console.log("recording reviews: " + reviews[i].textContent);
     }
   }
   return reviewsArray
@@ -12,47 +13,66 @@ function gatherReview() {
 
 function gatherTitle() {
   const title = document.querySelector('h1[data-pl="product-title"]');
-  console.log("Title element:", title);
+  console.log("recording the title: " + (title ? title.textContent : "no value yet"));
   return title ? title.textContent : "no value yet"
 }
 
 function gatherRating() {
   const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
-  if(!productRatingHTML){return 0}
+  if(!productRatingHTML){
+    console.log("recording the product ratings " + 0);
+    return 0
+  }
   const productRating = productRatingHTML.textContent.match(/\d{1}.\d{1}/)
-  console.log("Rating element:", productRating);
+  console.log("recording the product ratings " + (productRating ? parseFloat(productRating [0]): 0));
   return productRating ? parseFloat(productRating [0]): 0
 }
 
 function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
-  if(!listingPrice){return 0}
-  const match = listingPrice.textContent.match(/[\d,]+\.\d{2}/)
-  return match ? parseFloat(match[0].replace(/,/g, '')): 0
+  if(!listingPrice){
+    console.log("recording the product price: 0")
+    return 0
+  }
+  const match = listingPrice.textContent.match(/\d+\.\d{2}/)
+  console.log("recording the product price: " + (match ? parseFloat(match[0]): 0));
+  return match ? parseFloat(match[0]): 0
 }
 
 function gatherNumSold() {
   const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
-  if(!numSoldHTML){return 0}
+  if(!numSoldHTML){
+    console.log("recording the number sold: 0");
+    return 0
+  }
   const numSold = numSoldHTML.textContent.match(/[\d,]+/)
-  console.log("Num sold element:", numSoldHTML);
+  console.log("recording the number sold: " + (numSold ? parseInt(numSold[0].replace(/,/g, '')): 0));
   return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0 
 }
 
 function gatherNumberImage() {
   const numberImageImage = document.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
-  if(!numberImageImage){return 0}
+  if(!numberImageImage){
+    console.log("recording the number of images: 0");
+    return 0
+  }
   const numberImageImageParent = numberImageImage.parentElement
-  if(!numberImageImageParent){return 0}
+  if(!numberImageImageParent){
+    console.log("recording the number of images: 0");
+    return 0
+  }
   const numberImage = numberImageImageParent.textContent.match(/\d+/)
-  console.log("Number of images element:", numberImageImageParent);
+  console.log("recording the number of images: " + numberImage ? parseInt(numberImage[0]) : 0);
   return numberImage ? parseInt(numberImage[0]) : 0;
 }
 function gatherNumberRatings() {
   const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
-  if(!numberOfRatingsHTML){return 0}
+  if(!numberOfRatingsHTML){
+    console.log("recording the number of reviews: 0");
+    return 0
+  }
   const numberOfRatings = numberOfRatingsHTML.textContent.match(/\d+/)
-  console.log("Number of ratings element:", numberOfRatingsHTML);
+  console.log("recording the number of reviews: " + (numberOfRatings ? parseFloat(numberOfRatings[0]) : 0));
   return numberOfRatings ? parseFloat(numberOfRatings[0]) : 0;
 }
 
@@ -62,15 +82,16 @@ function gatherOpenSinceDate() {
   if(ageHTML) {
     const eachInfo = ageHTML.querySelectorAll('td');
     for (let i = 0; i < eachInfo.length; i++) {
-      if (eachInfo[i].textContent.trim() === 'Open since:' && eachInfo[i + 1].textContent.trim() != "") {
+      if (eachInfo[i].textContent.trim() === 'Open since:') {
         date = eachInfo[i + 1]
         break
       }
     }
-    console.log("Open since date element:", date);
-    return date ? date.textContent.trim() : "";
+    console.log("recording opening date: " + (date ? date.textContent.trim() : "can't find"))
+    return date ? date.textContent.trim() : "march, 22 2006";
   } else{
-    return ""
+    console.log("recording opening date: can't find")
+    return "march, 22 2006"
   }
 
 }
@@ -78,7 +99,7 @@ function gatherOpenSinceDate() {
 function gatherAge() {
   const ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
-  if(ageHTML && gatherOpenSinceDate() !== "") {
+  if(ageHTML) {
     const dateStr = gatherOpenSinceDate();
     const targetDate = new Date(dateStr);
     const today = new Date();
@@ -87,6 +108,7 @@ function gatherAge() {
   } else {
     age = 0
   }
+  console.log("calculating the age of the company: " + age);
   return age
 }
 
@@ -96,7 +118,7 @@ function getAllInformationForSimpleAGI() {
                             ageYears: gatherAge(),
                             numRating: gatherNumberRatings(),
                             reviewImages: gatherNumberImage()}
-  
+  console.log("calling the function to collect info for infoForSimpleAGI")
   return infoForSimpleAGI
 }
 
@@ -108,6 +130,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     //check if the request is called "get data"
   if(request.action === "getData") {
     const infoForSimpleAGI = getAllInformationForSimpleAGI();
+    console.log("sending info to controller")
     sendResponse(infoForSimpleAGI);
   }
   return true;
@@ -122,6 +145,5 @@ module.exports = {
   gatherNumberImage,
   gatherNumberRatings,
   gatherAge,
-  gatherOpenSinceDate,
-  getAllInformationForSimpleAGI
+  gatherOpenSinceDate
 };
