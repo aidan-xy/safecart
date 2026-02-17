@@ -12,6 +12,7 @@ function gatherReview() {
 
 function gatherTitle() {
   const title = document.querySelector('h1[data-pl="product-title"]');
+  console.log("Title element:", title);
   return title ? title.textContent : "no value yet"
 }
 
@@ -19,6 +20,7 @@ function gatherRating() {
   const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
   if(!productRatingHTML){return 0}
   const productRating = productRatingHTML.textContent.match(/\d{1}.\d{1}/)
+  console.log("Rating element:", productRating);
   return productRating ? parseFloat(productRating [0]): 0
 }
 
@@ -26,6 +28,7 @@ function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
   if(!listingPrice){return 0}
   const match = listingPrice.textContent.match(/\d+\.\d{2}/)
+  console.log("Price element:", listingPrice);
   return match ? parseFloat(match[0]): 0
 }
 
@@ -33,6 +36,7 @@ function gatherNumSold() {
   const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
   if(!numSoldHTML){return 0}
   const numSold = numSoldHTML.textContent.match(/[\d,]+/)
+  console.log("Num sold element:", numSoldHTML);
   return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0 
 }
 
@@ -42,12 +46,14 @@ function gatherNumberImage() {
   const numberImageImageParent = numberImageImage.parentElement
   if(!numberImageImageParent){return 0}
   const numberImage = numberImageImageParent.textContent.match(/\d+/)
+  console.log("Number of images element:", numberImageImageParent);
   return numberImage ? parseInt(numberImage[0]) : 0;
 }
 function gatherNumberRatings() {
   const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
   if(!numberOfRatingsHTML){return 0}
   const numberOfRatings = numberOfRatingsHTML.textContent.match(/\d+/)
+  console.log("Number of ratings element:", numberOfRatingsHTML);
   return numberOfRatings ? parseFloat(numberOfRatings[0]) : 0;
 }
 
@@ -62,6 +68,7 @@ function gatherOpenSinceDate() {
         break
       }
     }
+    console.log("Open since date element:", date);
     return date ? date.textContent.trim() : "march, 22 2006";
   } else{
     return "march, 22 2006"

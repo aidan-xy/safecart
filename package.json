@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "build": "vite build",
+    "build": "npx tsc & vite build",
     "dev": "vite"
   },
   "dependencies": {
