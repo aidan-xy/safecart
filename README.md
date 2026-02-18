@@ -40,3 +40,6 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 Our detailed development plan, including team structure, use cases, feature priorities, software architecture, and testing strategy, is available here: [Living Document](https://docs.google.com/document/d/1RP_SkYVXHQKIgePIt1XsPocgwo44w8h7hUF4WwmrRl4/edit?usp=sharing)
 
 ---
+
+## Release Tags
+Beta Release: `beta`
