@@ -2,6 +2,14 @@ const trustAlg = require("../scripts/trustAlg");
 const simpleTrustAlg = require("../scripts/simpleTrustAlg");
 
 describe('full alg tests', () => {
+  //  * @param {number} listingPrice - Listing price (> 0)
+  //  * @param {number} marketPrice - Estimated market price (> 0)
+  //  * @param {number} productRating - Average review score [0, 5]
+  //  * @param {number} numSold - Total units sold (> 0)
+  //  * @param {number} ageYears - Seller age in years (>= 0)
+  //  * @param {number} numRating - Total ratings (> 0)
+  //  * @param {number} reviewImages - Total number of images (>= 0)
+
   // "good" listings, expect above a certain score
   test('theoretical perfect listing', () => {
     expect(trustAlg(100, 100, 5, 1000, 5, 1000, 1000).score).toBeGreaterThanOrEqual(90);
@@ -23,6 +31,12 @@ describe('full alg tests', () => {
 });
 
 describe('simple alg tests', () => {
+  //  * @param {number} productRating - Average review score in [0, 5]
+  //  * @param {number} numSold - Total units sold (> 0)
+  //  * @param {number} ageYears - Age of seller in years (> 0), -1 if cannot determine
+  //  * @param {number} numRating - Total ratings (> 0)
+  //  * @param {number} reviewImages - Total number of images (>= 0)
+
   // "good" listings, expect above a certain score
   test('theoretical perfect listing', () => {
     expect(simpleTrustAlg(5, 1000, 5, 1000, 1000).score).toBeGreaterThanOrEqual(90);
