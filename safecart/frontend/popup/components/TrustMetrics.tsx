@@ -1,8 +1,6 @@
 interface Metric {
   name: string;
   score: number;
-  status: "positive" | "warning" | "negative";
-  description: string;
 }
 
 interface TrustMetricsProps {
@@ -10,75 +8,77 @@ interface TrustMetricsProps {
 }
 
 export function TrustMetrics({ metrics }: TrustMetricsProps) {
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "positive":
-        return (
-          <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-            <svg
-              className="w-4 h-4 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2.5}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-        );
-      case "warning":
-        return (
-          <div className="w-6 h-6 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
-            <svg
-              className="w-4 h-4 text-yellow-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2.5}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-          </div>
-        );
-      case "negative":
-        return (
-          <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-            <svg
-              className="w-4 h-4 text-red-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2.5}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </div>
-        );
+  // gets status icon based on 
+  const positiveScore = 75;
+  const warningScore = 50;
+
+  const getStatusIcon = (score: number) => {
+    if (score >= positiveScore) {
+      return (
+        <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+          <svg
+            className="w-4 h-4 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+      );
+    }
+    else if (score >= warningScore) {
+      return (
+        <div className="w-6 h-6 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
+          <svg
+            className="w-4 h-4 text-yellow-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+          <svg
+            className="w-4 h-4 text-red-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </div>
+      );
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "positive":
-        return "text-green-600";
-      case "warning":
-        return "text-yellow-600";
-      case "negative":
-        return "text-red-600";
-      default:
-        return "text-gray-600";
+  const getStatusColor = (score: number) => {
+    if (score >= positiveScore){
+      return "text-green-600";
+    } else if (score >= warningScore) {
+      return "text-yellow-600";
+    } else {
+      return "text-red-600";
     }
   };
 
@@ -109,7 +109,7 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
           className="bg-gray-50 rounded-lg p-3 border border-gray-200"
         >
           <div className="flex items-start gap-3">
-            {getStatusIcon(metric.status)}
+            {getStatusIcon(metric.score)}
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2 mb-1">
@@ -117,7 +117,7 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
                   {metric.name}
                 </h4>
                 <span
-                  className={`text-sm font-semibold ${getStatusColor(metric.status)}`}
+                  className={`text-sm font-semibold ${getStatusColor(metric.score)}`}
                 >
                   {metric.score}%
                 </span>
@@ -127,19 +127,18 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
               <div className="w-full h-1.5 bg-gray-200 rounded-full mb-2 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
-                    metric.status === "positive"
+                    metric.score >= positiveScore
                       ? "bg-green-500"
-                      : metric.status === "warning"
+                      : metric.score >= warningScore
                         ? "bg-yellow-500"
                         : "bg-red-500"
                   }`}
                   style={{ width: `${metric.score}%` }}
                 />
               </div>
-
-              <p className="text-xs text-gray-600 leading-relaxed">
-                {metric.description}
-              </p>
+              {/* <p className="text-xs text-gray-600 leading-relaxed">
+                TEMPORARY DESCRIPTION
+              </p> */}
             </div>
           </div>
         </div>
@@ -162,9 +161,11 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
             />
           </svg>
           <p className="text-xs text-blue-900 leading-relaxed">
-            Our algorithm evaluates price vs. market value, product ratings, 
-            sales volume, review authenticity, and seller history to calculate 
-            your trust score.
+            {/*Our algorithm evaluates price vs. market value, product ratings, */}
+            {/*sales volume, review authenticity, and seller history to calculate */}
+            {/*your trust score.*/}
+            Our algorithm evaluates product ratings, sales volume, and seller age to calculate
+            a reliable trust score for the listing.
           </p>
         </div>
       </div>

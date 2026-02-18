@@ -7,21 +7,30 @@
  * @param {number} ageYears - Age of seller in years (> 0), -1 if cannot determine
  * @param {number} numRating - Total ratings (> 0)
  * @param {number} reviewImages - Total number of images (>= 0)
- * @returns {number} Trust score in [0, 1]
+ * @returns {{
+ *   score: number;
+ *   metrics: {
+ *     name: string;
+ *     score: number;
+ *   }[]
+ * }}
  */
-function simpleTrustScore(
+export function simpleTrustScore(
   productRating : number,
   numSold : number,
   ageYears : number,
   numRating : number,
   reviewImages : number
-) : number {
+) : {score: number;
+    metrics: {name: string;
+      score: number;}[]
+    }{
   // linear mapping
   const r : number = Math.max(1, productRating); // assume productRating <= 5
   const reviewNorm : number = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
 
   // piecewise linear that penalizes < 100 sold higher
-  const n : number = Math.max(0, Math.floor(numSold));
+  const n : number = Math.max(1, Math.floor(numSold));
   let soldNorm : number;
   if (n < 100) {
     soldNorm = n / 200;
@@ -45,10 +54,10 @@ function simpleTrustScore(
   const MAX_REVIEW_WEIGHT : number = 0.8;
   const MIN_REVIEW_WEIGHT : number = 0.6;
   const REVIEW_RATIO_TARGET : number = 0.4;
-  const IMAGE_RATIO_TARGET : number = 0.2;
-
-  const reviewRatio : number = numRating / numSold;
-  const imageRatio : number = reviewImages / numRating;
+  const IMAGE_RATIO_TARGET: number = 0.2;
+  
+  const reviewRatio : number = numRating / n;
+  const imageRatio : number = reviewImages / Math.max(1, numRating);
 
   // reviewWeight ranges from MIN_REVIEW_WEIGHT - MAX_REVIEW_WEIGHT. 
   // A listing with >=REVIEW_RATIO_TARGET reviewRatio and >=IMAGE_RATIO_TARGET imageRatio will
@@ -79,7 +88,19 @@ function simpleTrustScore(
     soldWeight   * soldNorm +
     ageWeight    * ageNorm;
 
-  return trustNorm;
+  return {
+    score: normToPercent(trustNorm),
+    metrics: [
+      {name:"Product Rating", score: normToPercent(reviewNorm)},
+      {name:"Sales Volume", score: normToPercent(soldNorm)},
+      {name:"Seller Age", score:normToPercent(ageNorm)}
+    ]
+  };
+}
+
+// Takes a norm [0, 1] -> [0, 100] rounded to the nearest integer
+function normToPercent(norm : number) : number  {
+  return Math.round(norm * 100);
 }
 
 module.exports = simpleTrustScore;

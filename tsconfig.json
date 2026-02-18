@@ -5,9 +5,10 @@
     "strict": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM"],
 
     "rootDir": ".",
-    "outDir": "dist"
+    "outDir": "safecart/dist"
   },
   "include": ["safecart/**/*.ts", "safecart/**/*.tsx"],
   "exclude": ["node_modules"]
