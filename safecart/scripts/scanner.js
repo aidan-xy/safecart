@@ -46,6 +46,7 @@ function gatherPrice() {
   return match ? parseFloat(match[0].replace(/,/g, '')): 0;
 }
 
+
 //Gathering and parsing the html for the number sold element
 //output: number
 function gatherNumSold() {
@@ -125,6 +126,47 @@ function gatherAge() {
     age = 0;
   }
   return age;
+}
+
+//function is taking all the prices that is visible from the search page
+//output: array of float
+function gatherSearchedPrices() {
+  //take the lowest html that contain all of the prices
+  let priceArray = []
+  const allListingHTML = document.querySelector('div[class="hr_hs"]');
+  if(allListingHTML) {
+    //look into the html with the pirces
+    const eachInfo = allListingHTML.querySelectorAll('div[class="l0_e1"]');
+    for (let i = 0; i < eachInfo.length; i++) {
+        //grab the prices
+        let newProductPriceStringWithDollar = eachInfo[i].getAttribute("aria-label");
+        if(newProductPriceStringWithDollar) {
+          //parse the string from the dollarsign
+          let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+(\.\d{1,2})?/);
+          //turn it into a float
+          let newProductPrice = parseFloat(newProductPriceString);
+          priceArray.push(newProductPrice)
+          console.log("price element: " + newProductPrice);
+        }
+    }
+  }
+  return priceArray;
+}
+
+//take the average of all the price in gatherSearchedPrices()
+//output: -1 if empty, otherwise a float rounded to 2 decimal
+function computeAvargePrice() {
+  const prices = gatherSearchedPrices();
+  if(!prices) {
+    return -1
+  } else {
+    let total = 0;
+    for(let i = 0; i < prices.length; i++) {
+      total += prices[i]
+    }
+    const avgPrice = (total/ prices.length).toFixed(2)
+    return (avgPrice);
+  }
 }
 
 //getting all the information for the simpleTrustAGI() class
