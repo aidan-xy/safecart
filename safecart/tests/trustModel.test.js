@@ -1,5 +1,5 @@
 /**
- * @jest-environment jest-environment-node-single-context
+ * @jest-environment jest-environment-node
  */
 const trustScore = require("../scripts/trustScore");
 
