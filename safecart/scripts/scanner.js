@@ -266,7 +266,9 @@ function getInfoForSearchPage(doc = document) {
 
 /**getting all the information for the simpleTrustAGI() class
 * @return {string}: a string indenitfying what type of page 
-* the user is currently on
+* the user is currently on 
+* listing: on a listing page
+* search: on a search page
 */
 function currPageType() {
   if(window.location.href.includes("https://www.aliexpress.us/item/")||
@@ -287,14 +289,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if(request.html) {
     doc = request.html
   }
+  //get all the needed data for listing page
   if(request.action === "getData") {
     const infoForSimpleAGI = getAllInformationForSimpleAGI(doc);
     sendResponse(infoForSimpleAGI);
+  //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
     const infoForSimpleAGI = getInfoForSearchPage(doc);
     sendResponse(infoForSimpleAGI);
+  // get what type of page it is, if is a
+  // and use this to first idenitfy what page,
+  // then either use getDataFromSearch or, getData 
   } else if(request.action === "pageType") {
     sendResponse({pageType: currPageType()});
+  //get the url that put the listing title into the search bar
   } else if(request.action === "getURLToScapeForListing") {
     sendResponse({URLToScape:createURLForSearchPage()})
   }
