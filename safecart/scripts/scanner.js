@@ -2,8 +2,8 @@
 *Calculating the age based on today dates and the store dates
 * @return {string[]} an array of reviews for the product
 */
-function gatherReview() {
-  const reviews = document.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
+function gatherReview(doc = document) {
+  const reviews = doc.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
   const reviewsArray = [];
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
@@ -18,8 +18,8 @@ function gatherReview() {
 *Calculating the age based on today dates and the store dates
 * @return {string} the product title
 */
-function gatherTitle() {
-  const title = document.querySelector('h1[data-pl="product-title"]');
+function gatherTitle(doc = document) {
+  const title = doc.querySelector('h1[data-pl="product-title"]');
   console.log("Title element: " +  (title ? title.textContent : "no value yet"));
   return title ? title.textContent : "no value yet";
 }
@@ -28,8 +28,8 @@ function gatherTitle() {
 *Calculating the age based on today dates and the store dates
 * @return {number} the rating of the product
 */
-function gatherRating() {
-  const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
+function gatherRating(doc = document) {
+  const productRatingHTML = doc.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
   if(!productRatingHTML){
     console.log("could not see rating element");
     return 0;
@@ -43,8 +43,8 @@ function gatherRating() {
 *Calculating the age based on today dates and the store dates
 * @return {number} the price of the product
 */
-function gatherPrice() {
-  const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
+function gatherPrice(doc = document) {
+  const listingPrice = doc.querySelector('span[class="price-default--current--F8OlYIo"]');
   if(!listingPrice){
     console.log("could not see product price element");
     return 0;
@@ -59,8 +59,8 @@ function gatherPrice() {
 *Calculating the age based on today dates and the store dates
 * @return {number} the number of product sold
 */
-function gatherNumSold() {
-  const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
+function gatherNumSold(doc = document) {
+  const numSoldHTML = doc.querySelector('span[class="reviewer--sold--ytPeoEy"]');
   if(!numSoldHTML){
     console.log("could not see num sold element");
     return 0;
@@ -74,8 +74,8 @@ function gatherNumSold() {
 *Calculating the age based on today dates and the store dates
 * @return {number} the number of images
 */
-function gatherNumberImage() {
-  const numberImageImage = document.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
+function gatherNumberImage(doc = document) {
+  const numberImageImage = doc.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
   if(!numberImageImage){
     console.log("could not see number of images element");
     return 0;
@@ -90,8 +90,8 @@ function gatherNumberImage() {
 *Calculating the age based on today dates and the store dates
 * @return {number} the number of ratings
 */
-function gatherNumberRatings() {
-  const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
+function gatherNumberRatings(doc = document) {
+  const numberOfRatingsHTML = doc.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
   if(!numberOfRatingsHTML){
     console.log("could not see number of ratings element");
     return 0;
@@ -105,9 +105,9 @@ function gatherNumberRatings() {
 *Calculating the age based on today dates and the store dates
 * @return {string} the opening date in string
 */
-function gatherOpenSinceDate() {
+function gatherOpenSinceDate(doc = document) {
   let date;
-  ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
+  ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   if(ageHTML) {
     const eachInfo = ageHTML.querySelectorAll('td');
     for (let i = 0; i < eachInfo.length; i++) {
@@ -128,8 +128,8 @@ function gatherOpenSinceDate() {
 *Calculating the age based on today dates and the store dates
 * @return {Number} the age rounded to the nearest 100th
 */
-function gatherAge() {
-  const ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
+function gatherAge(doc = document) {
+  const ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
   if(ageHTML && gatherOpenSinceDate() !== "") {
     const dateStr = gatherOpenSinceDate();
@@ -154,7 +154,7 @@ function gatherAge() {
 function gatherSearchedPrices() {
   //take the lowest html that contain all of the prices
   let priceArray = [];
-  const allListingHTML = document.querySelector('div[class="hr_hs"]');
+  const allListingHTML = doc.querySelector('div[class="hr_hs"]');
   if(allListingHTML) {
     //look into the html with the pirces
     const eachInfo = allListingHTML.querySelectorAll('div[class="l0_e1"]');
@@ -195,12 +195,12 @@ function computeAvargePrice(doc = document) {
 
 //getting all the information for the simpleTrustAGI() class
 //output: record
-function getAllInformationForSimpleAGI() {
-  const infoForSimpleAGI = {productRating : gatherRating(), 
-                            numSold: gatherNumSold(), 
-                            ageYears: gatherAge(),
-                            numRating: gatherNumberRatings(),
-                            reviewImages: gatherNumberImage()};
+function getAllInformationForSimpleAGI(doc = document) {
+  const infoForSimpleAGI = {productRating : gatherRating(doc), 
+                            numSold: gatherNumSold(doc), 
+                            ageYears: gatherAge(doc),
+                            numRating: gatherNumberRatings(doc),
+                            reviewImages: gatherNumberImage(doc)};
   
   return infoForSimpleAGI;
 }
