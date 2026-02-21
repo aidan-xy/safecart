@@ -26,7 +26,9 @@
     "clsx": "^2.1.1",
     "fs": "^0.0.1-security",
     "jsx-runtime": "^1.2.0",
-    "puppeteer": "^24.37.2",
+    "puppeteer": "^24.37.5",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "tailwind-merge": "^3.4.0",
     "typescript": "^5.9.3"
   }

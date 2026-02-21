@@ -1,4 +1,7 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+
+puppeteer.use(StealthPlugin()); 
 import fs from "fs";
 
 /**
@@ -10,23 +13,42 @@ import fs from "fs";
 async function dumpFullResponse(url: string) {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-accelerated-2d-canvas',
+    '--disable-gpu'
+  ]
   });
 
   const page = await browser.newPage();
 
+  // realistic browser signals
   await page.setUserAgent(
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+    "(KHTML, like Gecko) Chrome/120 Safari/537.36"
   );
 
-  await page.goto(url, {
-    waitUntil: "networkidle2",
-    timeout: 60_000
+  await page.setViewport({
+    width: 1366,
+    height: 768
   });
 
-  // Get the FULL rendered HTML
+  await page.setExtraHTTPHeaders({
+    "accept-language": "en-US,en;q=0.9"
+  });
+
+  // FAST navigation
+  await page.goto(url, {
+    waitUntil: "domcontentloaded", // faster than networkidle
+    timeout: 60000
+  });
+
+  // capture page immediately
   const html = await page.content();
-  fs.writeFileSync("response.html", html, "utf-8");
+
+  fs.writeFileSync("response.html", html, "utf8");
 
   await browser.close();
   return html;
@@ -41,7 +63,7 @@ async function dumpFullResponse(url: string) {
 /*
 (async () => {
   await dumpFullResponse(
-    "https://www.aliexpress.us/item/3256806959829719.html"
+    "https://www.aliexpress.us/w/wholesale-DDR5-ram.html"
   );
 })();
 */
