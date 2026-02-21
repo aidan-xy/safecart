@@ -6,5 +6,6 @@ coverage/
 
 *.pkl
 *.onnx
+*.pyc
 
 response.html
