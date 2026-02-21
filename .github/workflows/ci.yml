@@ -20,6 +20,15 @@ jobs:
           node-version: 18
           cache: 'npm'
 
+      - name: Install Python dependencies
+        run: pip install pandas scikit-learn joblib skl2onnx
+
+      - name: Train trust model
+        run: python ./safecart/backend/model/trust_model_logistic_regression.py
+
+      - name: Export pipeline to ONNX
+        run: python ./safecart/backend/export_pipeline_onnx.py
+
       - name: Install dependencies
         run: npm ci
 

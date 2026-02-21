@@ -8,7 +8,7 @@ import { TrustModel, ListingData } from "./TrustModel";
  * @param {ListingData} input - The listing data to compute the trust score for
  * @returns {Promise<number>} - The computed trust score on a scale of [1, 100] rounded
  */
-async function trustScore(input : ListingData): Promise<number> {
+export async function trustScore(input : ListingData): Promise<number> {
   // Create the and load model
   const model = new TrustModel("trust_model.onnx"); // path to ONNX file
   await model.load();

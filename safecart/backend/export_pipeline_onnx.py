@@ -17,11 +17,16 @@ pipeline = joblib.load(BASE_DIR / "model/trust_pipeline.pkl")
 # Define input shape (6 features)
 initial_type = [('float_input', FloatTensorType([None, 6]))]
 
+# Convert to ONNX with options to disable zipmap (makes output easier to work with in TypeScript)
+scaler = pipeline.steps[0][1]
+classifier = pipeline.steps[1][1]
 onnx_model = convert_sklearn(
     pipeline,
     initial_types=initial_type,
-    options={id(pipeline): {'zipmap': False}}  # disable ZipMap
+    options={
+        id(scaler): {},
+        id(classifier): {'zipmap': False}
+    }
 )
-
 with open("trust_model.onnx", "wb") as f:
     f.write(onnx_model.SerializeToString())
