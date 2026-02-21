@@ -1,7 +1,9 @@
-//Gathering and parsing the element for the reviews element
-//output: array of strings
-function gatherReview() {
-  const reviews = document.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {string[]} an array of reviews for the product
+*/
+function gatherReview(doc = document) {
+  const reviews = doc.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
   const reviewsArray = [];
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
@@ -12,18 +14,22 @@ function gatherReview() {
   return reviewsArray;
 }
 
-//Gathering and parsing the html for the title element
-//output: string
-function gatherTitle() {
-  const title = document.querySelector('h1[data-pl="product-title"]');
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {string} the product title
+*/
+function gatherTitle(doc = document) {
+  const title = doc.querySelector('h1[data-pl="product-title"]');
   console.log("Title element: " +  (title ? title.textContent : "no value yet"));
   return title ? title.textContent : "no value yet";
 }
 
-//Gathering and parsing the html for the rating element
-//output: number
-function gatherRating() {
-  const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the rating of the product
+*/
+function gatherRating(doc = document) {
+  const productRatingHTML = doc.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
   if(!productRatingHTML){
     console.log("could not see rating element");
     return 0;
@@ -33,10 +39,12 @@ function gatherRating() {
   return productRating ? parseFloat(productRating [0]): 0;
 }
 
-//Gathering and parsing the html for the number sold element
-//output: number
-function gatherPrice() {
-  const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the price of the product
+*/
+function gatherPrice(doc = document) {
+  const listingPrice = doc.querySelector('span[class="price-default--current--F8OlYIo"]');
   if(!listingPrice){
     console.log("could not see product price element");
     return 0;
@@ -46,10 +54,13 @@ function gatherPrice() {
   return match ? parseFloat(match[0].replace(/,/g, '')): 0;
 }
 
-//Gathering and parsing the html for the number sold element
-//output: number
-function gatherNumSold() {
-  const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
+
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the number of product sold
+*/
+function gatherNumSold(doc = document) {
+  const numSoldHTML = doc.querySelector('span[class="reviewer--sold--ytPeoEy"]');
   if(!numSoldHTML){
     console.log("could not see num sold element");
     return 0;
@@ -59,10 +70,12 @@ function gatherNumSold() {
   return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0;
 }
 
-//Gathering and parsing the html for the number of images element
-//output: number
-function gatherNumberImage() {
-  const numberImageImage = document.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the number of images
+*/
+function gatherNumberImage(doc = document) {
+  const numberImageImage = doc.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
   if(!numberImageImage){
     console.log("could not see number of images element");
     return 0;
@@ -73,10 +86,12 @@ function gatherNumberImage() {
   return numberImage ? parseInt(numberImage[0]) : 0;
 }
 
-//Gathering and parsing the html for the number of ratings element
-//output: number
-function gatherNumberRatings() {
-  const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the number of ratings
+*/
+function gatherNumberRatings(doc = document) {
+  const numberOfRatingsHTML = doc.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
   if(!numberOfRatingsHTML){
     console.log("could not see number of ratings element");
     return 0;
@@ -86,11 +101,13 @@ function gatherNumberRatings() {
   return numberOfRatings ? parseFloat(numberOfRatings[0]) : 0;
 }
 
-//Gathering and parsing the html for the open date element
-//output: string
-function gatherOpenSinceDate() {
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {string} the opening date in string
+*/
+function gatherOpenSinceDate(doc = document) {
   let date;
-  ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
+  ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   if(ageHTML) {
     const eachInfo = ageHTML.querySelectorAll('td');
     for (let i = 0; i < eachInfo.length; i++) {
@@ -107,11 +124,12 @@ function gatherOpenSinceDate() {
   }
 
 }
-
-//Calculating the age based on today dates and the store dates
-//output: number
-function gatherAge() {
-  const ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {Number} the age rounded to the nearest 100th
+*/
+function gatherAge(doc = document) {
+  const ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
   if(ageHTML && gatherOpenSinceDate() !== "") {
     const dateStr = gatherOpenSinceDate();
@@ -127,14 +145,62 @@ function gatherAge() {
   return age;
 }
 
+/** 
+* function is taking all the prices that is visible from the search page
+*
+* @param {string} html element in string 
+* @return {number[]}
+*/
+function gatherSearchedPrices() {
+  //take the lowest html that contain all of the prices
+  let priceArray = [];
+  const allListingHTML = doc.querySelector('div[class="hr_hs"]');
+  if(allListingHTML) {
+    //look into the html with the pirces
+    const eachInfo = allListingHTML.querySelectorAll('div[class="l0_e1"]');
+    for (let i = 0; i < eachInfo.length; i++) {
+        //grab the prices
+        let newProductPriceStringWithDollar = eachInfo[i].getAttribute("aria-label");
+        if(newProductPriceStringWithDollar) {
+          //parse the string from the dollarsign
+          let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+(\.\d{1,2})?/);
+          //turn it into a float
+          let newProductPrice = parseFloat(newProductPriceString);
+          priceArray.push(newProductPrice);
+          console.log("price element: " + newProductPrice);
+        }
+    }
+  }
+  return priceArray;
+}
+
+/** 
+*take the average of all the price in gatherSearchedPrices()
+* @param {string} html element in string 
+* @return {number} the average price of the whole page
+*/
+function computeAvargePrice(doc = document) {
+  const prices = gatherSearchedPrices(doc);
+  if(!prices) {
+    return -1;
+  } else {
+    let total = 0;
+    for(let i = 0; i < prices.length; i++) {
+      total += prices[i];
+    }
+    const avgPrice = (total/ prices.length).toFixed(2)
+    return (avgPrice);
+  }
+}
+
 //getting all the information for the simpleTrustAGI() class
 //output: record
-function getAllInformationForSimpleAGI() {
-  const infoForSimpleAGI = {productRating : gatherRating(), 
-                            numSold: gatherNumSold(), 
-                            ageYears: gatherAge(),
-                            numRating: gatherNumberRatings(),
-                            reviewImages: gatherNumberImage()};
+function getAllInformationForSimpleAGI(doc = document) {
+  const infoForSimpleAGI = {productRating : gatherRating(doc), 
+                            numSold: gatherNumSold(doc), 
+                            ageYears: gatherAge(doc),
+                            numRating: gatherNumberRatings(doc),
+                            reviewImages: gatherNumberImage(doc)};
   
   return infoForSimpleAGI;
 }
