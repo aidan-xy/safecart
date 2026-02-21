@@ -4,12 +4,13 @@ import joblib
 from pathlib import Path
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 """
-This file trains a logistic regression model to classify listing trustworthiness then dumps
-it into trust_model_bundle.pkl to be used for trust_score.py
+This file trains a logistic regression pipeline to classify listing trustworthiness then dumps
+it into trust_pipeline.pkl to be exported to ONNX.
 """
 
 # This gets the file path of this file
@@ -28,23 +29,18 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=1
 )
 
-# Scale features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+# Create pipeline (scaler + logistic regression)
+trust_pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", LogisticRegression())
+])
 
-# Train and test model, expect 100% accuracy on synthetic data lol
-trust_model = LogisticRegression()
-trust_model.fit(X_train_scaled, y_train)
+# Train pipeline (scaler + model together)
+trust_pipeline.fit(X_train, y_train)
 
-acc = accuracy_score(y_test, trust_model.predict(X_test_scaled)) * 100
+# Test pipeline, expect 100% accuracy on synthetic data lol
+acc = accuracy_score(y_test, trust_pipeline.predict(X_test)) * 100
 print(f"Logistic Regression model accuracy: {acc:.2f}%")
 
-# Dump model
-feature_names = X.columns.tolist()
-model_path = BASE_DIR / "trust_model_bundle.pkl"
-joblib.dump({
-    "model": trust_model,
-    "scaler": scaler,
-    "feature_names": feature_names
-}, model_path)
+# Dump pipeline
+joblib.dump(trust_pipeline, BASE_DIR / "trust_pipeline.pkl")

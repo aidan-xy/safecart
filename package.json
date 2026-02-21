@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "fs": "^0.0.1-security",
     "jsx-runtime": "^1.2.0",
+    "onnxruntime-web": "^1.24.2",
     "puppeteer": "^24.37.5",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
