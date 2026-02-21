@@ -16,3 +16,5 @@ async function trustScore(input : ListingData): Promise<number> {
   const score = await model.score(input);
   return Math.max(1, Math.round(score * 100.0)); // convert to [1, 100] rounded scale
 }
+
+module.exports = trustScore;
