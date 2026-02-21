@@ -1,5 +1,7 @@
-//Gathering and parsing the element for the reviews element
-//output: array of strings
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {string[]} an array of reviews for the product
+*/
 function gatherReview() {
   const reviews = document.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
   const reviewsArray = [];
@@ -12,16 +14,20 @@ function gatherReview() {
   return reviewsArray;
 }
 
-//Gathering and parsing the html for the title element
-//output: string
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {string} the product title
+*/
 function gatherTitle() {
   const title = document.querySelector('h1[data-pl="product-title"]');
   console.log("Title element: " +  (title ? title.textContent : "no value yet"));
   return title ? title.textContent : "no value yet";
 }
 
-//Gathering and parsing the html for the rating element
-//output: number
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the rating of the product
+*/
 function gatherRating() {
   const productRatingHTML = document.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
   if(!productRatingHTML){
@@ -33,8 +39,10 @@ function gatherRating() {
   return productRating ? parseFloat(productRating [0]): 0;
 }
 
-//Gathering and parsing the html for the number sold element
-//output: number
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the price of the product
+*/
 function gatherPrice() {
   const listingPrice = document.querySelector('span[class="price-default--current--F8OlYIo"]');
   if(!listingPrice){
@@ -47,8 +55,10 @@ function gatherPrice() {
 }
 
 
-//Gathering and parsing the html for the number sold element
-//output: number
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the number of product sold
+*/
 function gatherNumSold() {
   const numSoldHTML = document.querySelector('span[class="reviewer--sold--ytPeoEy"]');
   if(!numSoldHTML){
@@ -60,8 +70,10 @@ function gatherNumSold() {
   return numSold ? parseInt(numSold[0].replace(/,/g, '')): 0;
 }
 
-//Gathering and parsing the html for the number of images element
-//output: number
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the number of images
+*/
 function gatherNumberImage() {
   const numberImageImage = document.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
   if(!numberImageImage){
@@ -74,8 +86,10 @@ function gatherNumberImage() {
   return numberImage ? parseInt(numberImage[0]) : 0;
 }
 
-//Gathering and parsing the html for the number of ratings element
-//output: number
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {number} the number of ratings
+*/
 function gatherNumberRatings() {
   const numberOfRatingsHTML = document.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
   if(!numberOfRatingsHTML){
@@ -87,8 +101,10 @@ function gatherNumberRatings() {
   return numberOfRatings ? parseFloat(numberOfRatings[0]) : 0;
 }
 
-//Gathering and parsing the html for the open date element
-//output: string
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {string} the opening date in string
+*/
 function gatherOpenSinceDate() {
   let date;
   ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
@@ -108,9 +124,10 @@ function gatherOpenSinceDate() {
   }
 
 }
-
-//Calculating the age based on today dates and the store dates
-//output: number
+/** 
+*Calculating the age based on today dates and the store dates
+* @return {Number} the age rounded to the nearest 100th
+*/
 function gatherAge() {
   const ageHTML = document.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
@@ -128,11 +145,15 @@ function gatherAge() {
   return age;
 }
 
-//function is taking all the prices that is visible from the search page
-//output: array of float
+/** 
+* function is taking all the prices that is visible from the search page
+*
+* @param {string} html element in string 
+* @return {number[]}
+*/
 function gatherSearchedPrices() {
   //take the lowest html that contain all of the prices
-  let priceArray = []
+  let priceArray = [];
   const allListingHTML = document.querySelector('div[class="hr_hs"]');
   if(allListingHTML) {
     //look into the html with the pirces
@@ -145,7 +166,7 @@ function gatherSearchedPrices() {
           let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+(\.\d{1,2})?/);
           //turn it into a float
           let newProductPrice = parseFloat(newProductPriceString);
-          priceArray.push(newProductPrice)
+          priceArray.push(newProductPrice);
           console.log("price element: " + newProductPrice);
         }
     }
@@ -153,16 +174,19 @@ function gatherSearchedPrices() {
   return priceArray;
 }
 
-//take the average of all the price in gatherSearchedPrices()
-//output: -1 if empty, otherwise a float rounded to 2 decimal
-function computeAvargePrice() {
-  const prices = gatherSearchedPrices();
+/** 
+*take the average of all the price in gatherSearchedPrices()
+* @param {string} html element in string 
+* @return {number} the average price of the whole page
+*/
+function computeAvargePrice(doc = document) {
+  const prices = gatherSearchedPrices(doc);
   if(!prices) {
-    return -1
+    return -1;
   } else {
     let total = 0;
     for(let i = 0; i < prices.length; i++) {
-      total += prices[i]
+      total += prices[i];
     }
     const avgPrice = (total/ prices.length).toFixed(2)
     return (avgPrice);
