@@ -175,6 +175,30 @@ function gatherSearchedPrices() {
 }
 
 /** 
+*take all the link for the search listing
+* @param {string} html element in string 
+* @return {string[]} all the link for each of the product on the page
+*/
+function gatherProductLinks(doc = document) {
+  //take the lowest html that contain all of the prices
+  let productArray = [];
+  const allListingHTML = doc.querySelector('div[class="hr_hs"]');
+  if(allListingHTML) {
+    //look into the html with the pirces
+    const eachInfo = allListingHTML.querySelectorAll('a[class="l0_b im_ir search-card-item"]');
+    for (let i = 0; i < eachInfo.length; i++) {
+        //grab the prices
+        let productLink = eachInfo[i].getAttribute("href");
+        if(productLink) {
+          productArray.push(productLink);
+          console.log("link element: " + productLink);
+        }
+    }
+  }
+  return productArray;
+}
+
+/** 
 *take the average of all the price in gatherSearchedPrices()
 * @param {string} html element in string 
 * @return {number} the average price of the whole page
@@ -189,12 +213,36 @@ function computeAvargePrice(doc = document) {
       total += prices[i];
     }
     const avgPrice = (total/ prices.length).toFixed(2)
-    return (avgPrice);
+    return avgPrice;
   }
 }
 
-//getting all the information for the simpleTrustAGI() class
-//output: record
+/** 
+*take the average of all the price in gatherSearchedPrices()
+* @return {string} a scaping url that is used based on the title
+* of the current listing
+*/
+function createURLForSearchPage() {
+  let title = gatherTitle();
+  if(title === "no value yet" || title === "") {
+    console.log("can't find title element")
+    return title;
+  }
+  console.log(title);
+  title = title.replace(/ /g, '-');
+  if(window.location.href.includes("https://www.aliexpress.us/item/")){
+
+    title = "https://www.aliexpress.us/w/wholesale-" + title + ".html?spm=a2g0o.home.search.0";
+  } else if(window.location.href.includes("https://www.aliexpress.com/item/")){
+    title = "https://www.aliexpress.com/w/wholesale-" + title + ".html?spm=a2g0o.home.search.0";
+  }
+  console.log("scraping: " + title);
+  return title;
+}
+
+/**getting all the information for the simpleTrustAGI() class
+* @return {record}: things that are useful for simple AGI
+*/
 function getAllInformationForSimpleAGI(doc = document) {
   const infoForSimpleAGI = {productRating : gatherRating(doc), 
                             numSold: gatherNumSold(doc), 
@@ -205,15 +253,50 @@ function getAllInformationForSimpleAGI(doc = document) {
   return infoForSimpleAGI;
 }
 
+/**getting all the information for the simpleTrustAGI() class
+* @return {record}: a record containg all the product link of the current page,
+* and the average price
+*/
+function getInfoForSearchPage(doc = document) {
+  const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
+                              listingLinks: gatherProductLinks(doc)};
+  
+  return InfoForSearchPage;
+}
+
+/**getting all the information for the simpleTrustAGI() class
+* @return {string}: a string indenitfying what type of page 
+* the user is currently on
+*/
+function currPageType() {
+  if(window.location.href.includes("https://www.aliexpress.us/item/")||
+      window.location.href.includes("https://www.aliexpress.com/item/")){
+    return "listing"
+  } else if(window.location.href.includes("https://www.aliexpress.us/w/")) {
+    return "search"
+  }
+}
+
 
 //listening for any query
 //commenting everything here since it is not needed yet
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //button is pressed
-    //check if the request is called "get data"
+  // this is for the current product page
+  const doc = document
+  if(request.html) {
+    doc = request.html
+  }
   if(request.action === "getData") {
-    const infoForSimpleAGI = getAllInformationForSimpleAGI();
+    const infoForSimpleAGI = getAllInformationForSimpleAGI(doc);
     sendResponse(infoForSimpleAGI);
+  } else if(request.action === "getDataFromSearch") {
+    const infoForSimpleAGI = getInfoForSearchPage(doc);
+    sendResponse(infoForSimpleAGI);
+  } else if(request.action === "pageType") {
+    sendResponse({pageType: currPageType()});
+  } else if(request.action === "getURLToScapeForListing") {
+    sendResponse({URLToScape:createURLForSearchPage()})
   }
   return true;
 })
