@@ -12,7 +12,7 @@ This file exports the trust pipeline to ONNX (to root dir) so it can be used wit
 BASE_DIR = Path(__file__).resolve().parent
 
 # Load trained pipeline
-pipeline = joblib.load(BASE_DIR / "model/trust_pipeline.pkl")
+pipeline = joblib.load(BASE_DIR / "trust_pipeline.pkl")
 
 # Define input shape (6 features)
 initial_type = [('float_input', FloatTensorType([None, 6]))]

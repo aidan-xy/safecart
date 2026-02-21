@@ -18,8 +18,8 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 - NOTE: This section can and likely will be changed and adjusted throughout development
 - `safecart/` – Core extension source code
     - `frontend/` – UI injection, extension popup, badges, icons, popups
-    - `backend/` – Stores the trust score machine learning model
-    - `scripts/` – Data gathering, hard-codeed scoring algorithms, evaluation logic
+    - `model/` – Stores the trust score machine learning model
+    - `scripts/` – Data gathering, hard-coded scoring algorithms, model inference, evaluation logic
     - `tests/` – Tests. Uses Jest for testing.
 - `documentation/` – Developer guides, test plans, requirements, and meeting notes
 - `weekly status reports/` – Team sprint updates
