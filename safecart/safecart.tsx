@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./frontend/popup/App";
 import { simpleTrustScore } from "./scripts/simpleTrustAlg";
 import "./frontend/popup/globals.css";
+import { trustScore } from "./scripts/trustScore";
+import { ListingData } from "./scripts/TrustModel";
 
 // this class will call all the layer components in order
 
@@ -24,6 +26,54 @@ async function getProductData() {
         });
     });
 }
+
+const goodListing: ListingData = {
+    price_dist: 0.04,
+    seller_age_years: 9.03,
+    rating: 4.9,
+    num_sold: 5000,
+    num_rating: 722,
+    num_images: 61,
+};
+trustScore(goodListing)
+  .then((score) => {
+    console.log("Trust score for good listing:", score);
+  })
+  .catch((error) => {
+    console.error("Failed to get trustScore:", error);
+  });
+
+const badListing: ListingData = {
+    price_dist: -0.75,
+    seller_age_years: 1.257,
+    rating: 1.6,
+    num_sold: 27,
+    num_rating: 7,
+    num_images: 0
+}
+trustScore(badListing)
+  .then((score) => {
+    console.log("Trust score for bad listing:", score);
+  })
+  .catch((error) => {
+    console.error("Failed to get trustScore:", error);
+  });
+
+const medListing: ListingData = {
+    price_dist: -0.21,
+    seller_age_years: 1.48,
+    rating: 4.6,
+    num_sold: 101,
+    num_rating: 19,
+    num_images: 4
+}
+trustScore(medListing)
+  .then((score) => {
+    console.log("Trust score for medium listing:", score);
+  })
+  .catch((error) => {
+    console.error("Failed to get trustScore:", error);
+  });
 
 // Store the response in a variable
 let productData: any = null;
