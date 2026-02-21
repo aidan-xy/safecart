@@ -16,19 +16,3 @@ async function trustScore(input : ListingData): Promise<number> {
   const score = await model.score(input);
   return Math.max(1, Math.round(score * 100.0)); // convert to [1, 100] rounded scale
 }
-
-const goodListing: ListingData = {
-    price_dist: 0.04,
-    seller_age_years: 9.03,
-    rating: 4.9,
-    num_sold: 5000,
-    num_rating: 722,
-    num_images: 61,
-};
-trustScore(goodListing)
-  .then((score) => {
-    console.log("Trust score for good listing:", score);
-  })
-  .catch((error) => {
-    console.error("Failed to get trustScore:", error);
-  });
