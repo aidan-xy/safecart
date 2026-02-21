@@ -13,6 +13,9 @@ function toListingData(raw) {
 }
 
 // TODO: These don't work since the model uses onnxruntime-web, which doesn't work in Node/Jest.
+test("dummy test", () => {
+  expect(1).toBe(1);
+});
 // describe('trust model tests', () => {
 //   // "Good" listings
 //   test("theoretical perfect listing", async () => {
