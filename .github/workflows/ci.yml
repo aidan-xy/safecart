@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          
+
       - name: Install Python dependencies
         run: pip install pandas scikit-learn joblib skl2onnx
 

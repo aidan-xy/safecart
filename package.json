@@ -19,7 +19,7 @@
     "vite": "^7.3.1"
   },
   "scripts": {
-    "test": "jest --coverage && npx tsc && node safecart/tests/trustModelTests.js",
+    "test": "jest --coverage & npx tsc && node safecart/tests/trustModelTests.js",
     "build": "npx tsc & vite build",
     "dev": "vite"
   },
