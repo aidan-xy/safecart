@@ -50,11 +50,10 @@ export class TrustModel {
       float_input: tensor, // must match export name !
     };
 
-    const results = await this.session.run(feeds);
+    const results = await this.session.run(feeds, ['probabilities']);
 
     // get second output (prob of class 1)
-    const outputName = this.session.outputNames[1]; 
-    const outputTensor = results[outputName] as ort.Tensor;
+    const outputTensor = results['probabilities'] as ort.Tensor;
     const probs = outputTensor.data as Float32Array;
     return probs[1];
   }
