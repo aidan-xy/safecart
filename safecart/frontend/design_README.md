@@ -7,14 +7,15 @@ It is responsible for rendering the trust score, detailed trust metrics, and all
 
 ## Folder Structure
 
-frontend/
-└── popup/
-    ├── App.tsx
-    ├── Attributions.md
-    ├── globals.css
-    └── components/
-        ├── TrustMetrics.tsx
-        └── TrustScore.tsx
+frontend/ 
+- popup/ 
+  - App.tsx 
+  - Attributions.md 
+  - globals.css 
+  - components/ 
+    - TrustMetrics.tsx
+            
+    - TrustScore.tsx
 
 ---
 
