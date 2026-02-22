@@ -16,19 +16,19 @@ function toListingData(raw) {
 function assertGreaterOrEqual(value, threshold, label) {
   if (value < threshold) {
     throw new Error(
-      `❌ ${label} FAILED — expected >= ${threshold}, got ${value}`
+      `FAIL: ${label} FAILED — expected >= ${threshold}, got ${value}`
     );
   }
-  console.log(`✅ ${label} passed (${value})`);
+  console.log(`PASS: ${label} passed (${value})`);
 }
 
 function assertLessOrEqual(value, threshold, label) {
   if (value > threshold) {
     throw new Error(
-      `❌ ${label} FAILED — expected <= ${threshold}, got ${value}`
+      `FAIL: ${label} FAILED — expected <= ${threshold}, got ${value}`
     );
   }
-  console.log(`✅ ${label} passed (${value})`);
+  console.log(`PASS: ${label} passed (${value})`);
 }
 
 async function runTests() {
