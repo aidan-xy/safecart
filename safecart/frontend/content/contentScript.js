@@ -75,7 +75,7 @@ function injectBadges() {
                         query
                     );
                     newCards.forEach((el) => {
-                        const card = el.closest('div');
+                        const card = el.closest('div').parentElement.closest('div').parentElement.closest('div'); // finds the correct container
                         injectBadgeOnListing(card);
                     });
                 }
