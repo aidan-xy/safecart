@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 # Load CSV (!) synthetic = NOT REAL DATA (!)
 # columns: price_dist, seller_age_years, rating, num_sold, num_rating, num_images, is_trustworthy
-trust_data = pd.read_csv(BASE_DIR / "data/synthetic_marketplace_data.csv")
+trust_data = pd.read_csv(BASE_DIR / "data/synthetic_marketplace_data_logi.csv")
 
 # Features and label
 X = trust_data.drop("is_trustworthy", axis=1)
@@ -38,7 +38,7 @@ trust_pipeline = Pipeline([
 # Train pipeline (scaler + model together)
 trust_pipeline.fit(X_train, y_train)
 
-# Test pipeline, expect 100% accuracy on synthetic data lol
+# Test pipeline
 acc = accuracy_score(y_test, trust_pipeline.predict(X_test)) * 100
 print(f"Logistic Regression model accuracy: {acc:.2f}%")
 

@@ -21,8 +21,7 @@
   "scripts": {
     "test": "jest --coverage & npx tsc && node safecart/tests/trustModelTests.js",
     "build": "npx tsc & vite build",
-    "dev": "vite",
-    "train": "python ./safecart/model/trust_model_logistic_regression.py && python ./safecart/model/export_pipeline_onnx.py"
+    "dev": "vite"
   },
   "dependencies": {
     "clsx": "^2.1.1",
