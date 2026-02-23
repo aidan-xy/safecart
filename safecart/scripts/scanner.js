@@ -285,7 +285,7 @@ function currPageType() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //button is pressed
   // this is for the current product page
-  const doc = document
+  let doc = document
   if(request.html) {
     doc = request.html
   }
