@@ -203,7 +203,7 @@ function gatherProductLinks(doc = document) {
 * @param {string} html element in string 
 * @return {number} the average price of the whole page
 */
-function computeAvargePrice(doc = document) {
+function computeAveragePrice(doc = document) {
   const prices = gatherSearchedPrices(doc);
   if(!prices) {
     return -1;
@@ -240,17 +240,17 @@ function createURLForSearchPage() {
   return title;
 }
 
-/**getting all the information for the simpleTrustAGI() class
-* @return {record}: things that are useful for simple AGI
+/**getting all the information for the simpleTrustAIg() class
+* @return {record}: things that are useful for simple AIg
 */
-function getAllInformationForSimpleAGI(doc = document) {
-  const infoForSimpleAGI = {productRating : gatherRating(doc), 
+function getAllInformationForSimpleAIg(doc = document) {
+  const infoForSimpleAIG = {productRating : gatherRating(doc), 
                             numSold: gatherNumSold(doc), 
                             ageYears: gatherAge(doc),
                             numRating: gatherNumberRatings(doc),
                             reviewImages: gatherNumberImage(doc)};
   
-  return infoForSimpleAGI;
+  return infoForSimpleAIG;
 }
 
 /**getting all the information for the simpleTrustAGI() class
@@ -291,7 +291,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   //get all the needed data for listing page
   if(request.action === "getData") {
-    const infoForSimpleAGI = getAllInformationForSimpleAGI(doc);
+    const infoForSimpleAGI = getAllInformationForSimpleAIg(doc);
     sendResponse(infoForSimpleAGI);
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
@@ -319,5 +319,5 @@ module.exports = {
   gatherNumberRatings,
   gatherAge,
   gatherOpenSinceDate,
-  getAllInformationForSimpleAGI
+  getAllInformationForSimpleAIg
 };
