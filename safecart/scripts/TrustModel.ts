@@ -1,6 +1,17 @@
 import * as ort from "onnxruntime-web";
 
-// interface for TrustModel.score()
+/**
+ * Use this interface to interact with the trust model. Must be in this order. Technically no
+ * restictions on the domain of the inputs (as long as they are valid number types) but "invalid"
+ * inputs will lead to innaccurate classification.
+ *
+ * @param {number} price_dist - Abs(market price - listing price) / market price
+ * @param {number} seller_age_years - Seller age in years
+ * @param {number} rating - Rating
+ * @param {number} num_sold - Number of units sold
+ * @param {number} num_rating - Total ratings
+ * @param {number} num_images - Total number of images
+ */
 export interface ListingData {
   price_dist: number;
   seller_age_years: number;

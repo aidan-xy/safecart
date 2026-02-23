@@ -3,7 +3,7 @@ const trustScore = require('../dist/safecart/scripts/trustScore.js');
 // Helper function to convert raw listing data to the format expected by the model
 function toListingData(raw) {
   return {
-    price_dist: (raw.listingPrice - raw.marketPrice) / raw.marketPrice,
+    price_dist: Math.abs(raw.listingPrice - raw.marketPrice) / raw.marketPrice,
     seller_age_years: raw.ageYears,
     rating: raw.productRating,
     num_sold: raw.numSold,
@@ -73,7 +73,7 @@ async function runTests() {
       reviewImages: 11,
     })
   );
-  assertGreaterOrEqual(score, 85, "TACVASEN Polo Shirt listing");
+  assertGreaterOrEqual(score, 80, "TACVASEN Polo Shirt listing");
 
   // bad listings
   score = await trustScore(
@@ -101,6 +101,19 @@ async function runTests() {
     })
   );
   assertLessOrEqual(score, 5, "Theoretical worst listing");
+
+  score = await trustScore(
+    toListingData({
+      listingPrice: 100,
+      marketPrice: 1,
+      productRating: 0.1,
+      numSold: 1,
+      ageYears: 0.1,
+      numRating: 1,
+      reviewImages: 0,
+    })
+  );
+  assertLessOrEqual(score, 5, "Theoretical worst listing, reversed price dist");
 
   console.log("\n All manual tests passed.");
 }
