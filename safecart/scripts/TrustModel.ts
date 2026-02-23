@@ -5,12 +5,13 @@ import * as ort from "onnxruntime-web";
  * restictions on the domain of the inputs (as long as they are valid number types) but "invalid"
  * inputs will lead to innaccurate classification.
  *
- * @param {number} price_dist - Abs(market price - listing price) / market price
- * @param {number} seller_age_years - Seller age in years
- * @param {number} rating - Rating
- * @param {number} num_sold - Number of units sold
- * @param {number} num_rating - Total ratings
- * @param {number} num_images - Total number of images
+ * @param {number} price_dist - Abs(market price - listing price) / market price, make sure to
+ *                              handle divide by zero cases when computing this!
+ * @param {number} seller_age_years - Seller age in years >= 0
+ * @param {number} rating - Rating [0, 5]
+ * @param {number} num_sold - Number of units sold >= 0
+ * @param {number} num_rating - Total ratings >= 0
+ * @param {number} num_images - Total number of images >= 0
  */
 export interface ListingData {
   price_dist: number;
