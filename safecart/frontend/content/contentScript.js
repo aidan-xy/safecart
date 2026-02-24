@@ -26,12 +26,12 @@ function injectBadgeOnListing(card) {
     badge.style.cursor = 'pointer';
     badge.style.zIndex = '9999';          // above other elements
     badge.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
-    badge.style.backgroundColor = '#ffffff';
+    badge.style.backgroundColor = '#2563eb';
     badge.style.pointerEvents = 'auto';    // ensure clicks reach the badge, not elements behind it
 
     // --- Placeholder content for now ---
     // TODO: replace the "S" with SafeCart logo when ready
-    badge.innerHTML = `<span style="font-size:14px;font-weight:bold;color:#2563eb;">S</span>`;
+    badge.innerHTML = `<span style="font-size:14px;font-weight:bold;color:#ffffff;">S</span>`;
 
     // Make sure the card itself is positioned so the badge is placed correctly
     card.style.position = 'relative';
