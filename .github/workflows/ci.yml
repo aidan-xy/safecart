@@ -21,7 +21,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Python dependencies
-        run: pip install pandas scikit-learn joblib skl2onnx
+        run: pip install -r requirements.txt
 
       - name: Train trust model
         run: python ./safecart/model/trust_model_logistic_regression.py
