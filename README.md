@@ -18,7 +18,8 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 - NOTE: This section can and likely will be changed and adjusted throughout development
 - `safecart/` – Core extension source code
     - `frontend/` – UI injection, extension popup, badges, icons, popups
-    - `scripts/` – Data gathering, scoring algorithms, evaluation logic
+    - `model/` – Stores the trust score machine learning model
+    - `scripts/` – Data gathering, hard-coded scoring algorithms, model inference, evaluation logic
     - `tests/` – Tests. Uses Jest for testing.
 - `documentation/` – Developer guides, test plans, requirements, and meeting notes
 - `weekly status reports/` – Team sprint updates
@@ -27,9 +28,10 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 ---
 
 ## Building and Testing
-- Prerequisite: have node.js and npm installed
+- Prerequisite: node.js, npm, python, pip
 - Clone the repo `git clone https://github.com/aidan-xy/safecart.git`
-- Install dependencies `npm install`
+- Install dependencies `npm install` and `pip install -r requirements.txt`
+- To train model, place data in `/safecart/model/data` then edit `trust_model_logisitc_regression.py` to use it (line 21) then do `npm run train`
 - To run tests do `npm test`
 - To build, run `npm run build`
 - After building, go to `chrome://extensions` then load unpacked from `safecart/safecart`
