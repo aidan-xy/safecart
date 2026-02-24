@@ -5,7 +5,7 @@
 // and dynamically loads badges as new items are added to the page.
 
 // Simple helper function: inject a badge into a single "card"
-function injectBadgeOnListing(card) {
+function injectBadgeOnListing(card, link) {
     // Exit early if card is invalid or already has a badge
     if (!card || card.querySelector('.safecart-badge')) return;
 
@@ -41,11 +41,30 @@ function injectBadgeOnListing(card) {
 
     // Make the badge clickable
     badge.addEventListener('click', (event) => {
-        event.preventDefault();     // prevent default link behavior
-        event.stopPropagation();    // prevent event from bubbling up
-        console.log("SafeCart badge clicked!");
-        // TODO: Add your script/function call here
-        // Example: runTrustCheck(card);
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Create popup container
+        const popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '50%';
+        popup.style.left = '50%';
+        popup.style.transform = 'translate(-50%, -50%)';
+        popup.style.backgroundColor = '#ffffff';
+        popup.style.padding = '20px';
+        popup.style.borderRadius = '8px';
+        popup.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        popup.style.zIndex = '10000';
+
+
+
+        popup.innerHTML = `
+            <p style="margin:0 0 15px 0;">` + link + 
+            `<button style="padding:5px 15px; background:#2563eb; color:white; border:none; borderRadius:4px; cursor:pointer;">Close</button>
+        `;
+
+        document.body.appendChild(popup);
+        popup.querySelector('button').addEventListener('click', () => popup.remove());
     });
 }
 
@@ -61,7 +80,8 @@ function injectBadges() {
     // Inject badge for each card found
     possibleCards.forEach((el) => {
         const card = el.closest('div').parentElement.closest('div').parentElement.closest('div'); // finds the correct container
-        injectBadgeOnListing(card);
+        const link = card.parentElement.closest('a').href;
+        injectBadgeOnListing(card, link);
     });
 
     // -------------------------------
