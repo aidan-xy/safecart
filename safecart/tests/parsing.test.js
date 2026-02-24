@@ -31,7 +31,8 @@ const {gatherTitle,
         gatherNumberRatings,
         gatherAge,
         getAllInformationForSimpleAIg,
-        computeAveragePrice} = require("../scripts/scanner");
+        computeAveragePrice, 
+        gatherSearchedPrices} = require("../scripts/scanner");
 const path = require("path");
 const fs = require("fs")
 
@@ -133,6 +134,28 @@ describe('parsingTest on a page with all the information needed', () => {
 
   })
 
+  test('sending back the correct request', () => {
+    const recordToSend = getAllInformationForSimpleAIg();
+
+    const openSinceDateInDate = new Date(openSinceDate)
+    const today = new Date()
+    let yearsOld = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+    yearsOld = Math.round(yearsOld * 100)/100
+
+    const expectedRecord = {productRating : 4.9, 
+                            numSold: 184, 
+                            ageYears: yearsOld,
+                            numRating: 19,
+                            reviewImages: 2}
+    expect(Object.keys(recordToSend).length).toEqual(Object.keys(expectedRecord).length)
+     
+    for (key in expectedRecord) {
+      expect(recordToSend[key]).toEqual(expectedRecord[key]);
+    }
+
+
+  })
+
   test('if it sends the correct data', () => {
 
     const openSinceDateInDate = new Date(openSinceDate)
@@ -157,7 +180,7 @@ describe('parsingTest on a page with all the information needed', () => {
     expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
   })
 
-  test('testing to if it respond to the rong action', (done) => {
+  test('testing to if it respond to the wrong action', (done) => {
 
     const openSinceDateInDate = new Date(openSinceDate)
     const today = new Date()
@@ -300,12 +323,27 @@ describe('parsing listing pages', () => {
     document.documentElement.innerHTML = '';
   });
 
-  test('parsing correctly', () => {
+  test('getting the avg price correctly', () => {
     const avg = computeAveragePrice()
-    expect(avg).toEqual(4.31);
+    expect(avg).toEqual(5.88);
   })
 
-
+  test('getting the number listing price correct', () => {
+    const listingPrices = gatherSearchedPrices()
+    const expectedListingPrice = [
+      3.29, 5.49, 0.99, 2.94, 12.32, 
+      6.7, 0.99, 0.99, 0.99, 0.99, 
+      2.09, 13.99, 0.99, 1.88, 0.99, 
+      8.17, 3.81, 0.99, 2.48, 0.99,
+      0.99, 8.98, 8.28, 18.78, 20.68, 
+      16.7, 0.99, 9.83, 0.99, 11.05, 
+      17.92, 0.99
+    ]
+    if(listingPrices.length != expectedListingPrice.length) {
+      expect(listingPrices.length).toEqual(expectedListingPrice.length);
+    }
+    expect(listingPrices).toEqual(expectedListingPrice)
+  })
 
 });
 
