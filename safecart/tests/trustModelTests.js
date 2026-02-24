@@ -1,3 +1,4 @@
+const { type } = require('node:os');
 const trustScore = require('../dist/safecart/scripts/trustScore.js');
 
 // Helper function to convert raw listing data to the format expected by the model
@@ -114,6 +115,45 @@ async function runTests() {
     })
   );
   assertLessOrEqual(score, 5, "Theoretical worst listing, reversed price dist");
+
+  // validate input
+  score = await trustScore(
+    toListingData({
+      listingPrice: -1,
+      marketPrice: -1,
+      productRating: -1,
+      numSold: -1,
+      ageYears: -1,
+      numRating: -1,
+      reviewImages: -1,
+    })
+  );
+  if (Number.isNaN(score)) {
+    throw new Error(
+      `FAIL: fallback values were not loaded from bad input (` + score + ')'
+    );
+  } else {
+    console.log('PASS: fallback values were loaded from bad input (' + score + ')')
+  }
+
+  score = await trustScore(
+    toListingData({
+      listingPrice: null,
+      marketPrice: null,
+      productRating: null,
+      numSold: null,
+      ageYears: null,
+      numRating: null,
+      reviewImages: null,
+    })
+  );
+  if (Number.isNaN(score)) {
+    throw new Error(
+      `FAIL: fallback values were not loaded from null input (` + score + ')'
+    );
+  } else {
+    console.log('PASS: fallback values were loaded from null input (' + score + ')')
+  }
 
   console.log("\n All manual tests passed.");
 }
