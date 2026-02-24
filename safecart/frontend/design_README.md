@@ -16,6 +16,8 @@ frontend/
     - TrustMetrics.tsx
             
     - TrustScore.tsx
+- content/
+  - contentScript.js
 
 ---
 
@@ -74,6 +76,18 @@ Contains reusable UI components used within the popup.
   - Percentage score
   - Progress bar
 - Uses predefined score thresholds to determine visual state.
+
+---
+
+## content/
+Contains the content script for injecting a SafeCart badge onto 
+product listings across Aliexpress.
+
+---
+
+### contentScript.js
+
+- Handles multiple layout variations and dynamically loads badges as new items are added to the page
 
 ---
 
