@@ -14,11 +14,11 @@ function injectBadgeOnListing(card) {
     badge.className = 'safecart-badge';
 
     // --- Style the badge ---
-    badge.style.position = 'relative';
-    badge.style.bottom = '-10px';           // distance from bottom of card
-    badge.style.left = '80px';             // distance from left of card
-    badge.style.width = '40px';
-    badge.style.height = '40px';
+    badge.style.position = 'absolute';
+    badge.style.bottom = '8px';           // distance from bottom of card
+    badge.style.left = '8px';             // distance from left of card
+    badge.style.width = '28px';
+    badge.style.height = '28px';
     badge.style.borderRadius = '50%';     // circular
     badge.style.display = 'flex';
     badge.style.alignItems = 'center';
@@ -26,41 +26,29 @@ function injectBadgeOnListing(card) {
     badge.style.cursor = 'pointer';
     badge.style.zIndex = '9999';          // above other elements
     badge.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
-    badge.style.backgroundColor = '#2563eb';
-    badge.style.pointerEvents = 'auto';    // ensure clicks reach the badge, not elements behind it
+    badge.style.backgroundColor = '#ffffff';
 
     // --- Placeholder content for now ---
     // TODO: replace the "S" with SafeCart logo when ready
-    badge.innerHTML = `<span style="font-size:14px;font-weight:bold;color:#ffffff;">S</span>`;
+    badge.innerHTML = `<span style="font-size:14px;font-weight:bold;color:#2563eb;">S</span>`;
 
     // Make sure the card itself is positioned so the badge is placed correctly
     card.style.position = 'relative';
 
     // Append the badge to the card
     card.appendChild(badge);
-
-    // Make the badge clickable
-    badge.addEventListener('click', (event) => {
-        event.preventDefault();     // prevent default link behavior
-        event.stopPropagation();    // prevent event from bubbling up
-        console.log("SafeCart badge clicked!");
-        // TODO: Add your script/function call here
-        // Example: runTrustCheck(card);
-    });
 }
 
 // Main function: find all cards and inject badges
 function injectBadges() {
-    const query = 'div.np_nq';
-
     // AliExpress uses multiple layouts. We search for product links or common containers
     const possibleCards = document.querySelectorAll(
-        query
+        'a[href*="/item/"], .list-item, .manhattan--container--1lP57Ag'
     );
 
     // Inject badge for each card found
     possibleCards.forEach((el) => {
-        const card = el.closest('div').parentElement.closest('div').parentElement.closest('div'); // finds the correct container
+        const card = el.closest('div');  // find the nearest container
         injectBadgeOnListing(card);
     });
 
@@ -72,10 +60,10 @@ function injectBadges() {
             mutation.addedNodes.forEach((node) => {
                 if (node.nodeType === 1) { // only elements
                     const newCards = node.querySelectorAll(
-                        query
+                        'a[href*="/item/"], .list-item, .manhattan--container--1lP57Ag'
                     );
                     newCards.forEach((el) => {
-                        const card = el.closest('div').parentElement.closest('div').parentElement.closest('div'); // finds the correct container
+                        const card = el.closest('div');
                         injectBadgeOnListing(card);
                     });
                 }
