@@ -30,7 +30,7 @@ const {gatherTitle,
         gatherNumberImage,
         gatherNumberRatings,
         gatherAge,
-        getAllInformationForSimpleAGI} = require("../scripts/scanner");
+        getAllInformationForSimpleAIg} = require("../scripts/scanner");
 const path = require("path");
 const fs = require("fs")
 
@@ -111,7 +111,7 @@ describe('parsingTest on a page with all the information needed', () => {
   })
 
   test('putting togther the information and send it to the AGI correctly', () => {
-    const recordToSend = getAllInformationForSimpleAGI();
+    const recordToSend = getAllInformationForSimpleAIg();
 
     const openSinceDateInDate = new Date(openSinceDate)
     const today = new Date()
