@@ -151,7 +151,7 @@ function gatherAge(doc = document) {
 * @param {string} html element in string 
 * @return {number[]}
 */
-function gatherSearchedPrices() {
+function gatherSearchedPrices(doc = document) {
   //take the lowest html that contain all of the prices
   let priceArray = [];
   const allListingHTML = doc.querySelector('div[class="hr_hs"]');

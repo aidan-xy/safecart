@@ -30,7 +30,8 @@ const {gatherTitle,
         gatherNumberImage,
         gatherNumberRatings,
         gatherAge,
-        getAllInformationForSimpleAIg} = require("../scripts/scanner");
+        getAllInformationForSimpleAIg,
+        computeAveragePrice} = require("../scripts/scanner");
 const path = require("path");
 const fs = require("fs")
 
@@ -285,6 +286,26 @@ describe('parsing a page that does have the html element but doesn\'t have the t
     const numberOfImage = gatherNumberImage();
     expect(numberOfImage).toEqual(0)
   })
+
+});
+
+describe('parsing listing pages', () => {
+
+  beforeEach(() => {
+    const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Sand-AliExpress.html"),"utf-8");
+    document.documentElement.innerHTML = html;
+  });
+
+  afterEach(() => {
+    document.documentElement.innerHTML = '';
+  });
+
+  test('parsing correctly', () => {
+    const avg = computeAveragePrice()
+    expect(avg).toEqual(4.31);
+  })
+
+
 
 });
 
