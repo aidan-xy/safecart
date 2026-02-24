@@ -7,10 +7,11 @@ function gatherReview(doc = document) {
   const reviewsArray = [];
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
-    reviewsArray.push(reviews[i].textContent);
-    console.log("recording review " + (i + 1) + " : " + reviews[i].textContent);
+      reviewsArray.push(reviews[i].textContent);
     }
   }
+  console.log("recording review: ");
+  console.log(reviewsArray);
   return reviewsArray;
 }
 
@@ -167,10 +168,11 @@ function gatherSearchedPrices(doc = document) {
           //turn it into a float
           let newProductPrice = parseFloat(newProductPriceString);
           priceArray.push(newProductPrice);
-          console.log("price element: " + newProductPrice);
         }
     }
   }
+  console.log("price element: ");
+  console.log(priceArray);
   return priceArray;
 }
 
@@ -226,9 +228,8 @@ function createURLForSearchPage(url = window.location.href) {
   let title = gatherTitle();
   if(title === "no value yet" || title === "") {
     console.log("can't find title element")
-    return title;
+    return "error: can't find the title";
   }
-  console.log(title);
   title = title.replace(/ /g, '-');
   if(title.length > 50) {
     title = title.slice(0,50);
@@ -236,7 +237,7 @@ function createURLForSearchPage(url = window.location.href) {
   if(url.includes("https://www.aliexpress.us/item/")){
 
     title = "https://www.aliexpress.us/w/wholesale-" + title + ".html";
-  } else if(url.includes("https://www.aliexpress.com/item/")){
+  } else {
     title = "https://www.aliexpress.com/w/wholesale-" + title + ".html";
   }
   console.log("scraping: " + title);
@@ -273,12 +274,15 @@ function getAllInformationForSimpleAIg(doc = document) {
 * listing: on a listing page
 * search: on a search page
 */
-function currPageType() {
+function currPageType(doc = document) {
   if(window.location.href.includes("https://www.aliexpress.us/item/")||
       window.location.href.includes("https://www.aliexpress.com/item/")){
     return "listing"
-  } else if(window.location.href.includes("https://www.aliexpress.us/w/")) {
+  } else if(window.location.href.includes("https://www.aliexpress.us/w/")||
+      window.location.href.includes("https://www.aliexpress.com/w/")) {
     return "search"
+  } else {
+    return "unkown"
   }
 }
 
