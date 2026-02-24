@@ -175,11 +175,35 @@ function gatherSearchedPrices() {
 }
 
 /** 
+*take all the link for the search listing
+* @param {string} html element in string 
+* @return {string[]} all the link for each of the product on the page
+*/
+function gatherProductLinks(doc = document) {
+  //take the lowest html that contain all of the prices
+  let productArray = [];
+  const allListingHTML = doc.querySelector('div[class="hr_hs"]');
+  if(allListingHTML) {
+    //look into the html with the pirces
+    const eachInfo = allListingHTML.querySelectorAll('a[class="l0_b im_ir search-card-item"]');
+    for (let i = 0; i < eachInfo.length; i++) {
+        //grab the prices
+        let productLink = eachInfo[i].getAttribute("href");
+        if(productLink) {
+          productArray.push(productLink);
+          console.log("link element: " + productLink);
+        }
+    }
+  }
+  return productArray;
+}
+
+/** 
 *take the average of all the price in gatherSearchedPrices()
 * @param {string} html element in string 
 * @return {number} the average price of the whole page
 */
-function computeAvargePrice(doc = document) {
+function computeAveragePrice(doc = document) {
   const prices = gatherSearchedPrices(doc);
   if(!prices) {
     return -1;
@@ -189,20 +213,73 @@ function computeAvargePrice(doc = document) {
       total += prices[i];
     }
     const avgPrice = (total/ prices.length).toFixed(2)
-    return (avgPrice);
+    return avgPrice;
   }
 }
 
-//getting all the information for the simpleTrustAGI() class
-//output: record
-function getAllInformationForSimpleAGI(doc = document) {
-  const infoForSimpleAGI = {productRating : gatherRating(doc), 
+/** 
+*take the average of all the price in gatherSearchedPrices()
+* @return {string} a scaping url that is used based on the title
+* of the current listing
+*/
+function createURLForSearchPage() {
+  let title = gatherTitle();
+  if(title === "no value yet" || title === "") {
+    console.log("can't find title element")
+    return title;
+  }
+  console.log(title);
+  title = title.replace(/ /g, '-');
+  if(title.length > 50) {
+    title = title.slice(0,50);
+  }
+  if(window.location.href.includes("https://www.aliexpress.us/item/")){
+
+    title = "https://www.aliexpress.us/w/wholesale-" + title + ".html";
+  } else if(window.location.href.includes("https://www.aliexpress.com/item/")){
+    title = "https://www.aliexpress.com/w/wholesale-" + title + ".html";
+  }
+  console.log("scraping: " + title);
+  return title;
+}
+
+/**getting all the information for the simpleTrustAIg() class
+* @return {record}: things that are useful for simple AIg
+*/
+function getAllInformationForSimpleAIg(doc = document) {
+  const infoForSimpleAIG = {productRating : gatherRating(doc), 
                             numSold: gatherNumSold(doc), 
                             ageYears: gatherAge(doc),
                             numRating: gatherNumberRatings(doc),
                             reviewImages: gatherNumberImage(doc)};
   
-  return infoForSimpleAGI;
+  return infoForSimpleAIG;
+}
+
+/**getting all the information for the simpleTrustAGI() class
+* @return {record}: a record containg all the product link of the current page,
+* and the average price
+*/
+function getInfoForSearchPage(doc = document) {
+  const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
+                              listingLinks: gatherProductLinks(doc)};
+  
+  return InfoForSearchPage;
+}
+
+/**getting all the information for the simpleTrustAGI() class
+* @return {string}: a string indenitfying what type of page 
+* the user is currently on 
+* listing: on a listing page
+* search: on a search page
+*/
+function currPageType() {
+  if(window.location.href.includes("https://www.aliexpress.us/item/")||
+      window.location.href.includes("https://www.aliexpress.com/item/")){
+    return "listing"
+  } else if(window.location.href.includes("https://www.aliexpress.us/w/")) {
+    return "search"
+  }
 }
 
 
@@ -210,10 +287,28 @@ function getAllInformationForSimpleAGI(doc = document) {
 //commenting everything here since it is not needed yet
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //button is pressed
-    //check if the request is called "get data"
+  // this is for the current product page
+  let doc = document
+  if(request.html) {
+    const parser = new DOMParser();
+    doc = parser.parseFromString(request.html, 'text/html');
+  }
+  //get all the needed data for listing page
   if(request.action === "getData") {
-    const infoForSimpleAGI = getAllInformationForSimpleAGI();
+    const infoForSimpleAGI = getAllInformationForSimpleAIg(doc);
     sendResponse(infoForSimpleAGI);
+  //getting all the needed data for the search page
+  } else if(request.action === "getDataFromSearch") {
+    const avgPrice = computeAveragePrice(doc);
+    sendResponse(avgPrice);
+  // get what type of page it is, if is a
+  // and use this to first idenitfy what page,
+  // then either use getDataFromSearch or, getData 
+  } else if(request.action === "pageType") {
+    sendResponse({pageType: currPageType()});
+  //get the url that put the listing title into the search bar
+  } else if(request.action === "getURLToScapeForListing") {
+    sendResponse({URLToScape:createURLForSearchPage()})
   }
   return true;
 })
@@ -228,5 +323,7 @@ module.exports = {
   gatherNumberRatings,
   gatherAge,
   gatherOpenSinceDate,
-  getAllInformationForSimpleAGI
+  getAllInformationForSimpleAIg,
+  gatherSearchedPrices,
+
 };
