@@ -151,7 +151,7 @@ function gatherAge(doc = document) {
 * @param {string} html element in string 
 * @return {number[]}
 */
-function gatherSearchedPrices() {
+function gatherSearchedPrices(doc = document) {
   //take the lowest html that contain all of the prices
   let priceArray = [];
   const allListingHTML = doc.querySelector('div[class="hr_hs"]');
@@ -174,29 +174,30 @@ function gatherSearchedPrices() {
   return priceArray;
 }
 
+//potentially scrapped function
 /** 
 *take all the link for the search listing
 * @param {string} html element in string 
 * @return {string[]} all the link for each of the product on the page
 */
-function gatherProductLinks(doc = document) {
-  //take the lowest html that contain all of the prices
-  let productArray = [];
-  const allListingHTML = doc.querySelector('div[class="hr_hs"]');
-  if(allListingHTML) {
-    //look into the html with the pirces
-    const eachInfo = allListingHTML.querySelectorAll('a[class="l0_b im_ir search-card-item"]');
-    for (let i = 0; i < eachInfo.length; i++) {
-        //grab the prices
-        let productLink = eachInfo[i].getAttribute("href");
-        if(productLink) {
-          productArray.push(productLink);
-          console.log("link element: " + productLink);
-        }
-    }
-  }
-  return productArray;
-}
+// function gatherProductLinks(doc = document) {
+//   //take the lowest html that contain all of the prices
+//   let productArray = [];
+//   const allListingHTML = doc.querySelector('div[class="hr_hs"]');
+//   if(allListingHTML) {
+//     //look into the html with the pirces
+//     const eachInfo = allListingHTML.querySelectorAll('a[class="l0_b im_ir search-card-item"]');
+//     for (let i = 0; i < eachInfo.length; i++) {
+//         //grab the prices
+//         let productLink = eachInfo[i].getAttribute("href");
+//         if(productLink) {
+//           productArray.push(productLink);
+//           console.log("link element: " + productLink);
+//         }
+//     }
+//   }
+//   return productArray;
+// }
 
 /** 
 *take the average of all the price in gatherSearchedPrices()
@@ -256,16 +257,17 @@ function getAllInformationForSimpleAIg(doc = document) {
   return infoForSimpleAIG;
 }
 
+//potentially scrap function
 /**getting all the information for the simpleTrustAGI() class
 * @return {record}: a record containg all the product link of the current page,
 * and the average price
 */
-function getInfoForSearchPage(doc = document) {
-  const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
-                              listingLinks: gatherProductLinks(doc)};
+// function getInfoForSearchPage(doc = document) {
+//   const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
+//                               listingLinks: gatherProductLinks(doc)};
   
-  return InfoForSearchPage;
-}
+//   return InfoForSearchPage;
+// }
 
 /**getting all the information for the simpleTrustAGI() class
 * @return {string}: a string indenitfying what type of page 
@@ -325,5 +327,6 @@ module.exports = {
   gatherOpenSinceDate,
   getAllInformationForSimpleAIg,
   gatherSearchedPrices,
-
+  computeAveragePrice,
+  createURLForSearchPage,
 };
