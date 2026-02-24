@@ -73,7 +73,7 @@ async function runTests() {
       reviewImages: 11,
     })
   );
-  assertGreaterOrEqual(score, 80, "TACVASEN Polo Shirt listing");
+  assertGreaterOrEqual(score, 90, "TACVASEN Polo Shirt listing");
 
   // bad listings
   score = await trustScore(
