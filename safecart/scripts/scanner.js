@@ -299,8 +299,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse(infoForSimpleAGI);
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
-    const infoForSimpleAGI = getInfoForSearchPage(doc);
-    sendResponse(infoForSimpleAGI);
+    const avgPrice = computeAveragePrice(doc);
+    sendResponse(avgPrice);
   // get what type of page it is, if is a
   // and use this to first idenitfy what page,
   // then either use getDataFromSearch or, getData 
@@ -323,5 +323,7 @@ module.exports = {
   gatherNumberRatings,
   gatherAge,
   gatherOpenSinceDate,
-  getAllInformationForSimpleAIg
+  getAllInformationForSimpleAIg,
+  gatherSearchedPrices,
+
 };
