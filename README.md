@@ -16,13 +16,14 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 
 ## Repository Layout
 - NOTE: This section can and likely will be changed and adjusted throughout development
-- `safecart/` – Core extension source code
-    - `frontend/` – UI injection, extension popup, badges, icons, popups
-    - `scripts/` – Data gathering, scoring algorithms, evaluation logic
-    - `tests/` – Tests. Uses Jest for testing.
-- `documentation/` – Developer guides, test plans, requirements, and meeting notes
-- `weekly status reports/` – Team sprint updates
-- `README.md` – Project overview and instructions
+- `safecart/` - Core extension source code
+    - `frontend/` - UI injection, extension popup, badges, icons, popups
+    - `scripts/` - Data gathering, scoring algorithms, evaluation logic
+    - `tests/` - Tests. Uses Jest for testing.
+- `documentation/` - Developer guides, test plans, requirements, and meeting notes
+- `weekly status reports/` - Team sprint updates
+- `README.md` - Project overview and instructions
+- `userguide.md` - User Guide
 
 ---
 
@@ -33,6 +34,11 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 - To run tests do `npm test`
 - To build, run `npm run build`
 - After building, go to `chrome://extensions` then load unpacked from `safecart/safecart`
+
+### Adding new tests
+ - Write your tests using Jest (https://jestjs.io/docs) then place them in the tests folder (safecart/tests).
+ - Name the test file <name>.test.js and it will automatically be run when the CI script is triggered or `npm run test` is used.
+
 
 ---
 
