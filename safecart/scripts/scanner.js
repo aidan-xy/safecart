@@ -302,7 +302,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
     const avgPrice = computeAveragePrice(doc);
-    sendResponse(avgPrice);
+    sendResponse({averagePrice: avgPrice});
   // get what type of page it is, if is a
   // and use this to first idenitfy what page,
   // then either use getDataFromSearch or, getData 
@@ -310,7 +310,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({pageType: currPageType()});
   //get the url that put the listing title into the search bar
   } else if(request.action === "getURLToScapeForListing") {
-    sendResponse({URLToScape:createURLForSearchPage()})
+    sendResponse({URLToScape: createURLForSearchPage()})
   }
   return true;
 })
@@ -327,6 +327,5 @@ module.exports = {
   gatherOpenSinceDate,
   getAllInformationForSimpleAIg,
   gatherSearchedPrices,
-  computeAveragePrice,
-  createURLForSearchPage,
+  computeAveragePrice
 };
