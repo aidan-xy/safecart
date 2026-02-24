@@ -8,7 +8,9 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
 
 2. Navigate to [chrome://extensions](chrome://extensions), and enable developer mode in the top right.
 
-3. Drag the `.crx` file into the Chrome extensions window to load the extension
+3. Open File Explorer and locate the `.crx` file.
+  
+4. Drag the `.crx` file into the Chrome extensions window to load the extension.
 
 ## Using SafeCart
 Note that SafeCart only functions on Google Chrome and AliExpress
@@ -36,7 +38,7 @@ If you encounter a bug or inconvenience while using SafeCart, create an issue on
 
 ```
 Chrome Version: 
-*Give the version of Chrome used*
+*Give the version of Chrome used (found at chrome://version at the very top)*
 
 Webpage: 
 *Give the webpage where the bug occured, or N/A if needed* 
