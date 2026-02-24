@@ -214,7 +214,7 @@ function computeAveragePrice(doc = document) {
       total += prices[i];
     }
     const avgPrice = (total/ prices.length).toFixed(2)
-    return avgPrice;
+    return parseFloat(avgPrice);
   }
 }
 
