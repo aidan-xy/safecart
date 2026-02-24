@@ -222,7 +222,7 @@ function computeAveragePrice(doc = document) {
 * @return {string} a scaping url that is used based on the title
 * of the current listing
 */
-function createURLForSearchPage() {
+function createURLForSearchPage(url = window.location.href) {
   let title = gatherTitle();
   if(title === "no value yet" || title === "") {
     console.log("can't find title element")
@@ -233,10 +233,10 @@ function createURLForSearchPage() {
   if(title.length > 50) {
     title = title.slice(0,50);
   }
-  if(window.location.href.includes("https://www.aliexpress.us/item/")){
+  if(url.includes("https://www.aliexpress.us/item/")){
 
     title = "https://www.aliexpress.us/w/wholesale-" + title + ".html";
-  } else if(window.location.href.includes("https://www.aliexpress.com/item/")){
+  } else if(url.includes("https://www.aliexpress.com/item/")){
     title = "https://www.aliexpress.com/w/wholesale-" + title + ".html";
   }
   console.log("scraping: " + title);
@@ -300,7 +300,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
     const avgPrice = computeAveragePrice(doc);
-    sendResponse(avgPrice);
+    sendResponse({averagePrice :avgPrice});
   // get what type of page it is, if is a
   // and use this to first idenitfy what page,
   // then either use getDataFromSearch or, getData 
@@ -325,5 +325,6 @@ module.exports = {
   gatherOpenSinceDate,
   getAllInformationForSimpleAIg,
   gatherSearchedPrices,
-  computeAveragePrice
+  computeAveragePrice,
+  createURLForSearchPage
 };

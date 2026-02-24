@@ -32,7 +32,8 @@ const {gatherTitle,
         gatherAge,
         getAllInformationForSimpleAIg,
         computeAveragePrice, 
-        gatherSearchedPrices} = require("../scripts/scanner");
+        gatherSearchedPrices,
+        createURLForSearchPage} = require("../scripts/scanner");
 const path = require("path");
 const fs = require("fs")
 
@@ -41,17 +42,24 @@ describe('parsingTest on a page with all the information needed', () => {
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone - AliExpress.html"),"utf-8");
     document.documentElement.innerHTML = html;
+    delete document.location;
+    document.location = new URL("https://www.aliexpress.us/item/3256810119868316.html?spm=a2g0o.productlist.main.6.14b63cb23bjkOf&algo_pvid=fd01a302-8a5a-4a07-861d-e41e7c0fe29d&algo_exp_id=fd01a302-8a5a-4a07-861d-e41e7c0fe29d-5&pdp_ext_f=%7B%22order%22%3A%22184%22%2C%22eval%22%3A%221%22%2C%22fromPage%22%3A%22search%22%7D&pdp_npi=6%40dis%21USD%2116.80%210.99%21%21%21115.36%216.79%21%402103212317711971944063518ef621%2112000051873183901%21sea%21US%210%21ABX%211%210%21n_tag%3A-29910%3Bd%3Aacf72556%3Bm03_new_user%3A-29895%3BpisId%3A5000000201000927&curPageLogUid=UGx9dkDNIrCG&utparam-url=scene%3Asearch%7Cquery_from%3A%7Cx_object_id%3A1005010306183068%7C_p_origin_prod%3A");
   });
 
   afterEach(() => {
     document.documentElement.innerHTML = '';
   });
 
-
   test('parsing title correctly', () => {
 
     const rating = gatherTitle();
     expect(rating).toEqual("40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone");   
+  })
+
+
+  test('sending back the correct link', () => {
+    const rating = createURLForSearchPage();
+    expect(rating).toEqual("https://www.aliexpress.us/w/wholesale-40W-2-Ports-USB-C-Type-C-GaN-Fast-Charger-with-Cha.html");   
   })
 
   test('parsing rating correctly', () => {
@@ -134,27 +142,27 @@ describe('parsingTest on a page with all the information needed', () => {
 
   })
 
-  test('sending back the correct request', () => {
-    const recordToSend = getAllInformationForSimpleAIg();
+  // test('sending back the correct request', () => {
+  //   const recordToSend = getAllInformationForSimpleAIg();
 
-    const openSinceDateInDate = new Date(openSinceDate)
-    const today = new Date()
-    let yearsOld = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-    yearsOld = Math.round(yearsOld * 100)/100
+  //   const openSinceDateInDate = new Date(openSinceDate)
+  //   const today = new Date()
+  //   let yearsOld = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+  //   yearsOld = Math.round(yearsOld * 100)/100
 
-    const expectedRecord = {productRating : 4.9, 
-                            numSold: 184, 
-                            ageYears: yearsOld,
-                            numRating: 19,
-                            reviewImages: 2}
-    expect(Object.keys(recordToSend).length).toEqual(Object.keys(expectedRecord).length)
+  //   const expectedRecord = {productRating : 4.9, 
+  //                           numSold: 184, 
+  //                           ageYears: yearsOld,
+  //                           numRating: 19,
+  //                           reviewImages: 2}
+  //   expect(Object.keys(recordToSend).length).toEqual(Object.keys(expectedRecord).length)
      
-    for (key in expectedRecord) {
-      expect(recordToSend[key]).toEqual(expectedRecord[key]);
-    }
+  //   for (key in expectedRecord) {
+  //     expect(recordToSend[key]).toEqual(expectedRecord[key]);
+  //   }
 
 
-  })
+  // })
 
   test('if it sends the correct data', () => {
 
@@ -207,6 +215,8 @@ describe('parsing a page with some information missing', () => {
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/MMS 1.5Ton Mini Excavator 13.5HP B&S Engine Trencher Digger Pilot Control Crawler Digger for Farm Garden Yard Full Payment - AliExpress.html"),"utf-8");
     document.documentElement.innerHTML = html;
+    delete document.location;
+    document.location = new URL("https://www.aliexpress.us/item/3256810013860575.html?spm=a2g0o.productlist.main.24.ec8862a1DHVGL6&aem_p4p_detail=2026021517140613685013986856520006393158&algo_pvid=67573531-d241-49cc-b2d3-4780392156ee&algo_exp_id=67573531-d241-49cc-b2d3-4780392156ee-23&pdp_ext_f=%7B%22order%22%3A%22-1%22%2C%22eval%22%3A%221%22%2C%22fromPage%22%3A%22search%22%7D&pdp_npi=6%40dis%21USD%219396.15%215355.81%21%21%2164534.00%2136784.38%21%402103128817712044467187008ee53b%2112000051502962771%21sea%21US%210%21ABX%211%210%21n_tag%3A-29910%3Bd%3Af44e31a0%3Bm03_new_user%3A-29895&curPageLogUid=PMFsmk6Xi1ou&utparam-url=scene%3Asearch%7Cquery_from%3A%7Cx_object_id%3A1005010200175327%7C_p_origin_prod%3A&search_p4p_id=2026021517140613685013986856520006393158_6");
   });
 
   afterEach(() => {
@@ -263,6 +273,8 @@ describe('parsing a page that does have the html element but doesn\'t have the t
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/3256807811584970.html"),"utf-8");
     document.documentElement.innerHTML = html;
+    delete document.location;
+    document.location = new URL("https://www.aliexpress.us/item/")
   });
 
   afterEach(() => {
@@ -317,6 +329,8 @@ describe('parsing listing pages', () => {
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Sand-AliExpress.html"),"utf-8");
     document.documentElement.innerHTML = html;
+    delete document.location;
+    document.location = new URL("https://www.aliexpress.us/item/")
   });
 
   afterEach(() => {

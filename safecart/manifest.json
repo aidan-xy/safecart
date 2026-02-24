@@ -24,6 +24,8 @@
       "matches": [
         "https://www.aliexpress.us/item/*",
         "https://www.aliexpress.com/item/*",
+        "https://www.aliexpress.us/w/wholesale*",
+        "https://www.aliexpress.com/w/wholesale*",
         "https://www.aliexpress/*"
       ]
     },
@@ -39,6 +41,8 @@
   "host_permissions": [
     "https://www.aliexpress.us/*",
     "https://www.aliexpress.com/*",
+    "https://www.aliexpress.us/w/wholesale*",
+    "https://www.aliexpress.com/w/wholesale*",
     "https://www.aliexpress/*"
   ]
 }
