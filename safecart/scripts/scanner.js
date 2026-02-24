@@ -230,11 +230,14 @@ function createURLForSearchPage() {
   }
   console.log(title);
   title = title.replace(/ /g, '-');
+  if(title.length > 50) {
+    title = title.slice(0,50);
+  }
   if(window.location.href.includes("https://www.aliexpress.us/item/")){
 
-    title = "https://www.aliexpress.us/w/wholesale-" + title + ".html?spm=a2g0o.home.search.0";
+    title = "https://www.aliexpress.us/w/wholesale-" + title + ".html";
   } else if(window.location.href.includes("https://www.aliexpress.com/item/")){
-    title = "https://www.aliexpress.com/w/wholesale-" + title + ".html?spm=a2g0o.home.search.0";
+    title = "https://www.aliexpress.com/w/wholesale-" + title + ".html";
   }
   console.log("scraping: " + title);
   return title;
@@ -287,7 +290,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // this is for the current product page
   let doc = document
   if(request.html) {
-    doc = request.html
+    const parser = new DOMParser();
+    doc = parser.parseFromString(request.html, 'text/html');
   }
   //get all the needed data for listing page
   if(request.action === "getData") {
