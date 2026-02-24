@@ -20,7 +20,7 @@ frontend/
   - contentScript.js
 
 ---
-
+ 
 ## popup/
 
 Contains all UI-related code for the SafeCart popup interface.
