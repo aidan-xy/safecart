@@ -7,7 +7,7 @@ import * as ort from "onnxruntime-web";
  *
  * @param {number} price_dist - Abs(market price - listing price) / market price, make sure to
  *                              handle divide by zero cases when computing this!
- * @param {number} seller_age_years - Seller age in years >= 0
+ * @param {number} seller_age_years - age in years >= 0, use 5 as fallback if cannot be determined
  * @param {number} rating - Rating [0, 5]
  * @param {number} num_sold - Number of units sold >= 0
  * @param {number} num_rating - Total ratings >= 0

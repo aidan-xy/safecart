@@ -5,7 +5,8 @@ import { TrustModel, ListingData } from "./TrustModel";
  * logistic regression model. It creates an instance of TrustModel, loads the ONNX file, 
  * and then computes the trust score for the given listing data. 
  * 
- * @param {ListingData} input - The listing data to compute the trust score for
+ * @param {ListingData} input - The ListingData to compute the trust score for. If 
+ *                              seller_age_years cannot be determined use 5 as a fallback for now.                              
  * @returns {Promise<number>} - The computed trust score on a scale of [1, 100] rounded
  */
 export async function trustScore(input : ListingData): Promise<number> {
