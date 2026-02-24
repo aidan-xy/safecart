@@ -118,7 +118,8 @@ describe('parsingTest on a page with all the information needed', () => {
     let yearsOld = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
     yearsOld = Math.round(yearsOld * 100)/100
 
-    const expectedRecord = {productRating : 4.9, 
+    const expectedRecord = {productRating : 4.9,
+                            listingPrice: 0.99, 
                             numSold: 184, 
                             ageYears: yearsOld,
                             numRating: 19,
@@ -143,7 +144,8 @@ describe('parsingTest on a page with all the information needed', () => {
     const mockSender = {};
     const mockSendResponse = jest.fn();
     
-    const expectedRecord = {productRating : 4.9, 
+    const expectedRecord = {productRating : 4.9,
+                            listingPrice: 0.99, 
                             numSold: 184, 
                             ageYears: yearsOld,
                             numRating: 19,

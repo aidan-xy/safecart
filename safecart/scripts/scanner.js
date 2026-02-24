@@ -252,7 +252,7 @@ function getAllInformationForSimpleAIg(doc = document) {
                             numSold: gatherNumSold(doc), 
                             ageYears: gatherAge(doc),
                             numRating: gatherNumberRatings(doc),
-                            listingPrice: listingPrice(doc),
+                            listingPrice: gatherPrice(doc),
                             reviewImages: gatherNumberImage(doc)};
   
   return infoForSimpleAIG;
