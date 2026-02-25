@@ -247,18 +247,19 @@ function createURLForSearchPage() {
 /**getting all the information for the simpleTrustAIg() class
 * @return {record}: things that are useful for simple AIg
 */
-function getAllInformationForSimpleAIg(doc = document) {
-  const infoForSimpleAIG = {productRating : gatherRating(doc), 
-                            numSold: gatherNumSold(doc), 
-                            ageYears: gatherAge(doc),
-                            numRating: gatherNumberRatings(doc),
-                            reviewImages: gatherNumberImage(doc)};
+function getAllInformationForAlg(doc = document) {
+  const infoForAlg = {listingPrice: gatherPrice(doc),
+                      productRating: gatherRating(doc), 
+                      numSold: gatherNumSold(doc), 
+                      ageYears: gatherAge(doc),
+                      numRating: gatherNumberRatings(doc),
+                      reviewImages: gatherNumberImage(doc)};
   
-  return infoForSimpleAIG;
+  return infoForAlg;
 }
 
 //potentially scrap function
-/**getting all the information for the simpleTrustAGI() class
+/**getting all the information for the simpleTrustAlg() class
 * @return {record}: a record containg all the product link of the current page,
 * and the average price
 */
@@ -269,7 +270,7 @@ function getAllInformationForSimpleAIg(doc = document) {
 //   return InfoForSearchPage;
 // }
 
-/**getting all the information for the simpleTrustAGI() class
+/**getting all the information for the simpleTrustAlg() class
 * @return {string}: a string indenitfying what type of page 
 * the user is currently on 
 * listing: on a listing page
@@ -297,8 +298,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   //get all the needed data for listing page
   if(request.action === "getData") {
-    const infoForSimpleAGI = getAllInformationForSimpleAIg(doc);
-    sendResponse(infoForSimpleAGI);
+    const infoForSimpleAlg = getAllInformationForAlg(doc);
+    sendResponse(infoForSimpleAlg);
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
     const avgPrice = computeAveragePrice(doc);
@@ -325,7 +326,7 @@ module.exports = {
   gatherNumberRatings,
   gatherAge,
   gatherOpenSinceDate,
-  getAllInformationForSimpleAIg,
+  getAllInformationForSimpleAIg: getAllInformationForAlg,
   gatherSearchedPrices,
   computeAveragePrice
 };
