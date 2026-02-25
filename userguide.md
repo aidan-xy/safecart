@@ -13,7 +13,7 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
 4. Drag the `.crx` file into the Chrome extensions window to load the extension.
 
 ## Using SafeCart
-Note that SafeCart only functions on Google Chrome and AliExpress
+Note that SafeCart only functions on Google Chrome and AliExpress. It also may not function properly on Brand+ or other abnormal listings.
 ### On a Product Page
 
 1. Navigate to a product listing page of AliExpress.
@@ -46,5 +46,8 @@ Webpage:
 Recreation Steps: 
 *Describe the steps that led to said bug/inconvenience in a numbered list. Give enough information that someone who hasn't used the extension could follow to reproduce the bug*
 ```
+
+## Known Bugs
+- Seller age will not be parsed if the element containing the seller's start date has not been loaded yet. As a workaround, make sure to load that element by hovering over the seller's nameplate in the listing.
 
 
