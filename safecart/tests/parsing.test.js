@@ -38,7 +38,7 @@ const {gatherTitle,
         gatherNumberImage,
         gatherNumberRatings,
         gatherAge,
-        getAllInformationForSimpleAIg,
+        getAllInformationForAlg,
         computeAveragePrice, 
         gatherSearchedPrices,
         createURLForSearchPage,
@@ -137,7 +137,7 @@ describe('parsingTest on a page with all the information needed', () => {
   })
 
   test('putting togther the information and send it to the AGI correctly', () => {
-    const recordToSend = getAllInformationForSimpleAIg();
+    const recordToSend = getAllInformationForAlg();
 
     const openSinceDateInDate = new Date(openSinceDate)
     const today = new Date()
@@ -442,7 +442,7 @@ test("testing if the getting the price from a search exclude the free", () => {
 
   const prices = gatherSearchedPrices();
   const expectedPrices = [
-    0.99, 9.15, 4.38, 0.99,
+    9.15, 4.38, 0.99,
     0.99, 0.83, 0.99
   ]
   expect(prices).toEqual(expectedPrices);

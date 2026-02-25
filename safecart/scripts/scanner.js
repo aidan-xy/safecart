@@ -176,11 +176,30 @@ function gatherSearchedPrices(doc = document) {
   return priceArray;
 }
 
+//potentially scrapped function
 /** 
 *take all the link for the search listing
 * @param {string} html element in string 
 * @return {string[]} all the link for each of the product on the page
 */
+// function gatherProductLinks(doc = document) {
+//   //take the lowest html that contain all of the prices
+//   let productArray = [];
+//   const allListingHTML = doc.querySelector('div[class="hr_hs"]');
+//   if(allListingHTML) {
+//     //look into the html with the pirces
+//     const eachInfo = allListingHTML.querySelectorAll('a[class="l0_b im_ir search-card-item"]');
+//     for (let i = 0; i < eachInfo.length; i++) {
+//         //grab the prices
+//         let productLink = eachInfo[i].getAttribute("href");
+//         if(productLink) {
+//           productArray.push(productLink);
+//           console.log("link element: " + productLink);
+//         }
+//     }
+//   }
+//   return productArray;
+// }
 // function gatherProductLinks(doc = document) {
 //   //take the lowest html that contain all of the prices
 //   let productArray = [];
@@ -215,7 +234,6 @@ function computeAveragePrice(doc = document) {
       total += prices[i];
     }
     const avgPrice = (total/ prices.length).toFixed(2)
-    console.log("calculated average price: " + avgPrice)
     return parseFloat(avgPrice);
   }
 }
@@ -248,29 +266,35 @@ function createURLForSearchPage(url = window.location.href) {
 /**getting all the information for the simpleTrustAIg() class
 * @return {record}: things that are useful for simple AIg
 */
-function getAllInformationForSimpleAIg(doc = document) {
-  const infoForSimpleAIG = {productRating : gatherRating(doc), 
-                            numSold: gatherNumSold(doc), 
-                            ageYears: gatherAge(doc),
-                            numRating: gatherNumberRatings(doc),
-                            listingPrice:gatherPrice(doc),
-                            reviewImages: gatherNumberImage(doc)};
+function getAllInformationForAlg(doc = document) {
+  const infoForAlg = {listingPrice: gatherPrice(doc),
+                      productRating: gatherRating(doc), 
+                      numSold: gatherNumSold(doc), 
+                      ageYears: gatherAge(doc),
+                      numRating: gatherNumberRatings(doc),
+                      reviewImages: gatherNumberImage(doc)};
   
-  return infoForSimpleAIG;
+  return infoForAlg;
 }
 
-/**getting all the information for the simpleTrustAGI() class
+//potentially scrap function
+/**getting all the information for the simpleTrustAlg() class
 * @return {record}: a record containg all the product link of the current page,
 * and the average price
 */
 // function getInfoForSearchPage(doc = document) {
 //   const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
 //                               listingLinks: gatherProductLinks(doc)};
+// function getInfoForSearchPage(doc = document) {
+//   const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
+//                               listingLinks: gatherProductLinks(doc)};
   
 //   return InfoForSearchPage;
 // }
+//   return InfoForSearchPage;
+// }
 
-/**getting all the information for the simpleTrustAGI() class
+/**getting all the information for the simpleTrustAlg() class
 * @return {string}: a string indenitfying what type of page 
 * the user is currently on 
 * listing: on a listing page
@@ -304,8 +328,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   //get all the needed data for listing page
   if(request.action === "getData") {
-    const infoForSimpleAGI = getAllInformationForSimpleAIg(doc);
-    sendResponse(infoForSimpleAGI);
+    const infoForSimpleAlg = getAllInformationForAlg(doc);
+    sendResponse(infoForSimpleAlg);
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
     const avgPrice = computeAveragePrice(doc);
@@ -317,7 +341,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({pageType: currPageType(doc)});
   //get the url that put the listing title into the search bar
   } else if(request.action === "getURLToScapeForListing") {
-    sendResponse({URLToScape:createURLForSearchPage()})
+    sendResponse({URLToScape: createURLForSearchPage()})
   }
   return true;
 })
@@ -332,9 +356,9 @@ module.exports = {
   gatherNumberRatings,
   gatherAge,
   gatherOpenSinceDate,
-  getAllInformationForSimpleAIg,
+  getAllInformationForAlg,
   gatherSearchedPrices,
   computeAveragePrice,
   createURLForSearchPage,
   currPageType
-};
+}
