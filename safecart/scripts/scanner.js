@@ -207,7 +207,7 @@ function gatherSearchedPrices(doc = document) {
 */
 function computeAveragePrice(doc = document) {
   const prices = gatherSearchedPrices(doc);
-  if(!prices) {
+  if(!prices || prices.length === 0) {
     return -1;
   } else {
     let total = 0;
@@ -215,6 +215,7 @@ function computeAveragePrice(doc = document) {
       total += prices[i];
     }
     const avgPrice = (total/ prices.length).toFixed(2)
+    console.log("calculated average price: " + avgPrice)
     return parseFloat(avgPrice);
   }
 }
@@ -276,14 +277,17 @@ function getAllInformationForSimpleAIg(doc = document) {
 * search: on a search page
 */
 function currPageType(doc = document) {
-  if(window.location.href.includes("https://www.aliexpress.us/item/")||
-      window.location.href.includes("https://www.aliexpress.com/item/")){
+  let elementType = doc.querySelector("body[data-spm='productlist']");
+  if(!elementType) {elementType = doc.querySelector("body[data-spm='detail']");}
+  if(!elementType) {
+    return "unknown"
+  }
+  if(elementType.getAttribute("data-spm") === "detail") {
     return "listing"
-  } else if(window.location.href.includes("https://www.aliexpress.us/w/")||
-      window.location.href.includes("https://www.aliexpress.com/w/")) {
-    return "search"
+
+  //this is a else if(elementType.getAttribute("data-spm") === "productlist")
   } else {
-    return "unkown"
+    return "search"
   }
 }
 
@@ -310,7 +314,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // and use this to first idenitfy what page,
   // then either use getDataFromSearch or, getData 
   } else if(request.action === "pageType") {
-    sendResponse({pageType: currPageType()});
+    sendResponse({pageType: currPageType(doc)});
   //get the url that put the listing title into the search bar
   } else if(request.action === "getURLToScapeForListing") {
     sendResponse({URLToScape:createURLForSearchPage()})
@@ -331,5 +335,6 @@ module.exports = {
   getAllInformationForSimpleAIg,
   gatherSearchedPrices,
   computeAveragePrice,
-  createURLForSearchPage
+  createURLForSearchPage,
+  currPageType
 };

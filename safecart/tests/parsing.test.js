@@ -21,6 +21,14 @@ global.chrome = {
   }
 };
 
+beforeEach(() => {
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 const {gatherTitle, 
         gatherRating, 
         gatherPrice, 
@@ -33,7 +41,8 @@ const {gatherTitle,
         getAllInformationForSimpleAIg,
         computeAveragePrice, 
         gatherSearchedPrices,
-        createURLForSearchPage} = require("../scripts/scanner");
+        createURLForSearchPage,
+        currPageType} = require("../scripts/scanner");
 const path = require("path");
 const fs = require("fs")
 
@@ -54,6 +63,10 @@ describe('parsingTest on a page with all the information needed', () => {
     expect(rating).toEqual("40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone");   
   })
 
+  test('seeing if it dectect the page correctly', () => {
+    const pageType = currPageType();
+    expect(pageType).toEqual("listing")
+  })
 
   test('sending back the correct link', () => {
     const rating = createURLForSearchPage();
@@ -131,7 +144,8 @@ describe('parsingTest on a page with all the information needed', () => {
     let yearsOld = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
     yearsOld = Math.round(yearsOld * 100)/100
 
-    const expectedRecord = {productRating : 4.9, 
+    const expectedRecord = {productRating : 4.9,
+                            listingPrice: 0.99, 
                             numSold: 184, 
                             ageYears: yearsOld,
                             numRating: 19,
@@ -178,7 +192,8 @@ describe('parsingTest on a page with all the information needed', () => {
     const mockSender = {};
     const mockSendResponse = jest.fn();
     
-    const expectedRecord = {productRating : 4.9, 
+    const expectedRecord = {productRating : 4.9,
+                            listingPrice: 0.99, 
                             numSold: 184, 
                             ageYears: yearsOld,
                             numRating: 19,
@@ -213,11 +228,13 @@ describe('parsingTest on a page with all the information needed', () => {
 
 });
 
+
 describe('parsing a page with some information missing', () => {
 
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/MMS 1.5Ton Mini Excavator 13.5HP B&S Engine Trencher Digger Pilot Control Crawler Digger for Farm Garden Yard Full Payment - AliExpress.html"),"utf-8");
     document.documentElement.innerHTML = html;
+
   });
 
   afterEach(() => {
@@ -328,7 +345,7 @@ describe('parsing a page that does have the html element but doesn\'t have the t
 
 });
 
-describe('parsing listing pages', () => {
+describe('parsing search pages', () => {
 
   beforeEach(() => {
     const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Sand-AliExpress.html"),"utf-8");
@@ -361,6 +378,11 @@ describe('parsing listing pages', () => {
     expect(listingPrices).toEqual(expectedListingPrice)
   })
 
+  test('seeing if it dectect the page correctly', () => {
+    const pageType = currPageType();
+    expect(pageType).toEqual("search")
+  })
+
 });
 
 describe('parsing edge cases', () => {
@@ -373,6 +395,11 @@ describe('parsing edge cases', () => {
   afterEach(() => {
     document.documentElement.innerHTML = '';
   });
+
+  test('not in a listing or a search page', () => {
+    const pageType = currPageType();
+    expect(pageType).toEqual("unknown");
+  })
 
   test('no title HTML', () => {
     const numberOfImage = gatherTitle();
@@ -391,3 +418,121 @@ describe('parsing edge cases', () => {
   })
 
 });
+
+test("testing what happend if we cannot get any info from listing", ()=> {
+  const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/china - Buy china with free shipping on AliExpress.html"),"utf-8");
+  document.documentElement.innerHTML = html;
+
+  const avgPrice = computeAveragePrice();
+  expect(avgPrice).toEqual(-1);
+})
+
+test("testing if the title is between 50 alphabet", () => {
+  const html = fs.readFileSync(path.resolve(__dirname,"localHTMLpage/14K Dainty Gold Bow Necklace for Women Mom Teen Girls, Cute Small Tiny Bow Pendant Choker Chain Necklaces Jewelry Gifts for Her - AliExpress.html"),"utf-8");
+  document.documentElement.innerHTML = html;
+
+  const link = createURLForSearchPage();
+  expect(link).toEqual("https://www.aliexpress.com/w/wholesale--14K-Dainty-Gold-Bow-Necklace-for-Women-Mom-Teen.html")
+})
+
+test("testing if the getting the price from a search exclude the free", () => {
+  //this page have a listing that changes one of the aria label in to arial label
+  const html = fs.readFileSync(path.resolve(__dirname,"localHTMLpage/Paper-AliExpress.html"),"utf-8");
+  document.documentElement.innerHTML = html;
+
+  const prices = gatherSearchedPrices();
+  const expectedPrices = [
+    0.99, 9.15, 4.38, 0.99,
+    0.99, 0.83, 0.99
+  ]
+  expect(prices).toEqual(expectedPrices);
+}) 
+
+describe('testing chrome listening, with input', () => {
+
+  beforeEach(() => {
+    document.documentElement.innerHTML = '';
+  });
+
+  test('if it sends the correct data', () => {
+    const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone - AliExpress.html"),"utf-8");
+    document.documentElement.innerHTML = html;
+    const openSinceDateInDate = new Date("Sep 4, 2025")
+    const today = new Date()
+    
+    let yearsOld = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+    yearsOld = Math.round(yearsOld * 100)/100
+
+    const htmlString = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone - AliExpress.html"),"utf-8");
+
+    const mockRequest = { action: "getData", html: htmlString};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {productRating : 4.9,
+                            listingPrice: 0.99, 
+                            numSold: 184, 
+                            ageYears: yearsOld,
+                            numRating: 19,
+                            reviewImages: 2}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+
+
+
+  test('if it sends the correct data in listing page', () => {
+
+    const htmlString = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Sand-AliExpress.html"),"utf-8");
+    
+
+    const mockRequest = { action: "getDataFromSearch", html: htmlString};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {averagePrice: 5.88}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+
+
+  test('if it correctly sends the right info for pageType', () => {
+    const htmlString = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/MMS 1.5Ton Mini Excavator 13.5HP B&S Engine Trencher Digger Pilot Control Crawler Digger for Farm Garden Yard Full Payment - AliExpress.html"),"utf-8");
+
+    const mockRequest = { action: "pageType", html: htmlString};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {pageType: "listing"}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+
+  test('if it correctly sends the right info for pageType', () => {
+    const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/MMS 1.5Ton Mini Excavator 13.5HP B&S Engine Trencher Digger Pilot Control Crawler Digger for Farm Garden Yard Full Payment - AliExpress.html"),"utf-8");
+    document.documentElement.innerHTML = html;
+    const mockRequest = { action: "getURLToScapeForListing"};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {URLToScape: "https://www.aliexpress.com/w/wholesale-MMS-1.5Ton-Mini-Excavator-13.5HP-B&S-Engine-Trench.html"}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+})
