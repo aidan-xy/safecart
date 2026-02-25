@@ -52,3 +52,4 @@ Our detailed development plan, including team structure, use cases, feature prio
 
 ## Release Tags
 Beta Release: `beta`
+Gamma Release: `gamma`
