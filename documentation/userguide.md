@@ -16,7 +16,7 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
 Note that SafeCart only functions on Google Chrome and AliExpress. It also may not function properly on Brand+ or other abnormal listings.
 ### On a Product Page
 
-1. Navigate to a product listing page of AliExpress.
+1. Navigate to a product listing page of AliExpress (with "item" in the url) for example: `https://www.aliexpress.us/item/3256806256696105.html`.
 
 2. Click the extension icon in the toolbar of your browser.
 
