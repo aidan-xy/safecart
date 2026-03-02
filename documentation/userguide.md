@@ -4,13 +4,13 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
 
 ## Installation
 
-1. Download the `.crx` file from a [release](https://github.com/aidan-xy/safecart/releases).
+1. Download the `.zip` file from a [release](https://github.com/aidan-xy/safecart/releases) and unzip it to any directory.
 
 2. Navigate to [chrome://extensions](chrome://extensions), and enable developer mode in the top right.
 
-3. Open File Explorer and locate the `.crx` file.
+3. Click the `Load Unpacked` button.
   
-4. Drag the `.crx` file into the Chrome extensions window to load the extension.
+4. Select the directory containing the unzipped contents to load the extension.
 
 ## Using SafeCart
 Note that SafeCart only functions on Google Chrome and AliExpress. It also may not function properly on Brand+ or other abnormal listings.
