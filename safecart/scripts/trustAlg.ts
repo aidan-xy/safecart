@@ -17,7 +17,7 @@
  *   }[]
  * }}
  */
-function trustScore(
+export function trustScore(
   listingPrice : number,
   marketPrice : number,
   productRating : number,
@@ -96,8 +96,8 @@ function trustScore(
     metrics: [
       {name: "Product Rating", score: normToPercent(reviewNorm)},
       {name: "Price Ratio", score: normToPercent(priceNorm)},
-      {name:"Sales Volume", score: normToPercent(soldNorm)},
-      {name:"Seller Age", score:normToPercent(ageNorm)}
+      {name: "Sales Volume", score: normToPercent(soldNorm)},
+      {name: "Seller Age", score: normToPercent(ageNorm)}
     ]
   };
 }

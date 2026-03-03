@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./frontend/popup/App";
 import { simpleTrustScore } from "./scripts/simpleTrustAlg";
+import { trustScore } from "./scripts/trustAlg";
 import "./frontend/popup/globals.css";
 
 // this class will call all the layer components in order
@@ -9,8 +10,8 @@ import "./frontend/popup/globals.css";
 // parse page
 // Request data from scanner.js listener
 async function getProductData() {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        return new Promise((resolve, reject) => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    return new Promise((resolve, reject) => {
         if (!tab.id) {
             reject(new Error("No active tab found"));
             return;
@@ -25,22 +26,103 @@ async function getProductData() {
     });
 }
 
+async function getMarketPrice(doc: Document) {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    return new Promise((resolve, reject) => {
+        if (!tab.id) {
+            reject(new Error("No active tab found"));
+            return;
+        }
+        chrome.tabs.sendMessage(tab.id, { action: "getDataFromSearch", html: doc }, (response: any) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(response);
+            }
+        });
+    });
+}
+
+async function getSearchUrl() {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    return new Promise((resolve, reject) => {
+        if (!tab.id) {
+            reject(new Error("No active tab found"));
+            return;
+        }
+        chrome.tabs.sendMessage(tab.id, { action: "getURLToScapeForListing" }, (response: any) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(response);
+            }
+        });
+    });
+}
+
 // Store the response in a variable
 let productData: any = null;
+let searchUrl: any = null;
+let searchDoc: any = null;
+let marketPrice: any = null;
+const parser = new DOMParser();
 
 getProductData()
-  .then((data) => {
-    productData = data;
-    console.log("Product data retrieved:", productData);
-    renderApp();
-  })
-  .catch((error) => {
-    console.error("Failed to get product data:", error);
-    renderApp();
-  });
+    .then((data) => {
+        productData = data;
+        console.log("Product data retrieved:", productData);
+    })
+    .catch((error) => {
+        console.error("Failed to get product data:", error);
+        renderApp();
+    });
 
+getSearchUrl()
+    .then((data) => {
+        searchUrl = data;
+        console.log("Search url retrieved:", searchUrl);
+    })
+    .catch((error) => {
+        console.error("Failed to get search url:", error);
+        renderApp();
+    });
+
+// scraping is currently broken and will not work. this will always error
+(async () => {
+    try {
+        const res = await fetch(searchUrl);
+        const html = await res.text();
+        searchDoc = parser.parseFromString(html, "text/html");
+        console.log("Search Doc retrieved: ", searchDoc);
+    } catch (error) {
+        console.error("Failed to fetch search URL:", error);
+    }
+})();
+
+// since scraping is broken, this is also broken
+getMarketPrice(searchDoc)
+    .then((data) => {
+        marketPrice = data;
+        console.log("Market price retrieved:", marketPrice);
+        renderApp();
+    })
+    .catch((error) => {
+        console.error("Failed to get search url:", error);
+        renderApp();
+    });
+
+// displays the popup from the extension
 function renderApp() {
     if(productData != null){
+        // const evaluation = trustScore(
+        //     productData.listingPrice,
+        //     marketPrice.averagePrice,
+        //     productData.productRating,
+        //     productData.numSold,
+        //     productData.ageYears,
+        //     productData.numRating,
+        //     productData.reviewImages
+        // );
         const evaluation = simpleTrustScore(
             productData.productRating,
             productData.numSold,

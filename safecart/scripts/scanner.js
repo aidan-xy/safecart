@@ -200,24 +200,6 @@ function gatherSearchedPrices(doc = document) {
 //   }
 //   return productArray;
 // }
-// function gatherProductLinks(doc = document) {
-//   //take the lowest html that contain all of the prices
-//   let productArray = [];
-//   const allListingHTML = doc.querySelector('div[class="hr_hs"]');
-//   if(allListingHTML) {
-//     //look into the html with the pirces
-//     const eachInfo = allListingHTML.querySelectorAll('a[class="l0_b im_ir search-card-item"]');
-//     for (let i = 0; i < eachInfo.length; i++) {
-//         //grab the prices
-//         let productLink = eachInfo[i].getAttribute("href");
-//         if(productLink) {
-//           productArray.push(productLink);
-//           console.log("link element: " + productLink);
-//         }
-//     }
-//   }
-//   return productArray;
-// }
 
 /** 
 *take the average of all the price in gatherSearchedPrices()
@@ -285,12 +267,7 @@ function getAllInformationForAlg(doc = document) {
 // function getInfoForSearchPage(doc = document) {
 //   const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
 //                               listingLinks: gatherProductLinks(doc)};
-// function getInfoForSearchPage(doc = document) {
-//   const InfoForSearchPage = {avgPrice: computeAvargePrice(doc),
-//                               listingLinks: gatherProductLinks(doc)};
   
-//   return InfoForSearchPage;
-// }
 //   return InfoForSearchPage;
 // }
 
@@ -333,7 +310,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
     const avgPrice = computeAveragePrice(doc);
-    sendResponse({averagePrice :avgPrice});
+    sendResponse({averagePrice: avgPrice});
   // get what type of page it is, if is a
   // and use this to first idenitfy what page,
   // then either use getDataFromSearch or, getData 

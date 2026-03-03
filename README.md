@@ -1,5 +1,7 @@
 # SafeCart Browser Extension
 
+FOR THE USER GUIDE, VISIT `documentation/userguide.md`
+
 ## Project Idea and Goals
 SafeCart is a browser extension designed to help users safely navigate online marketplaces (currently focused on AliExpress). It analyzes publicly available data about listings and sellers to provide a **trustworthiness rating**, helping users avoid scams or low-quality products.
 
@@ -16,23 +18,32 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 
 ## Repository Layout
 - NOTE: This section can and likely will be changed and adjusted throughout development
-- `safecart/` – Core extension source code
+- `safecart/` - Core extension source code
     - `frontend/` – UI injection, extension popup, badges, icons, popups
-    - `scripts/` – Data gathering, scoring algorithms, evaluation logic
+    - `model/` – Stores the trust score machine learning model
+    - `scripts/` – Data gathering, hard-coded scoring algorithms, model inference, evaluation logic
     - `tests/` – Tests. Uses Jest for testing.
 - `documentation/` – Developer guides, test plans, requirements, and meeting notes
 - `weekly status reports/` – Team sprint updates
 - `README.md` – Project overview and instructions
+- `userguide.md` - User Guide
 
 ---
 
 ## Building and Testing
-- Prerequisite: have node.js and npm installed
+- Prerequisites: at least node.js: v22.13.0, npm: 10.9.2, python: 3.11, pip: 2.25.3
 - Clone the repo `git clone https://github.com/aidan-xy/safecart.git`
-- Install dependencies `npm install`
+- Install dependencies `npm install` and `pip install -r requirements.txt`
+- To train model, place data in `/safecart/model/data` then edit `trust_model_logisitc_regression.py` to use it (line 21) then run both that file and `export_pipeline_onnx.py` in `/safecart/model`
 - To run tests do `npm test`
 - To build, run `npm run build`
 - After building, go to `chrome://extensions` then load unpacked from `safecart/safecart`
+
+### Adding new tests
+ - Write your tests using Jest (https://jestjs.io/docs) then place them in the tests folder (safecart/tests).
+ - Name the test file <name>.test.js and it will automatically be run when the CI script is triggered or `npm run test` is used.
+ - Refer to `documentation/tests.md` for more information
+
 
 ---
 
@@ -42,4 +53,7 @@ Our detailed development plan, including team structure, use cases, feature prio
 ---
 
 ## Release Tags
+
 Beta Release: `beta`
+
+Gamma Release: `gamma`

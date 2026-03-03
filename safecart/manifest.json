@@ -44,5 +44,11 @@
     "https://www.aliexpress.us/w/wholesale*",
     "https://www.aliexpress.com/w/wholesale*",
     "https://www.aliexpress/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["trust_model.onnx"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }
