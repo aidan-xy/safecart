@@ -96,6 +96,8 @@ function injectBadges() {
                     );
                     newCards.forEach((el) => {
                         const card = el.closest('div').parentElement.closest('div').parentElement.closest('div'); // finds the correct container
+                        // BUG: missing `link` argument — popup will show "undefined" instead of the product URL.
+                        // The link needs to be extracted here (same as line 84) before calling this function.
                         injectBadgeOnListing(card);
                     });
                 }
