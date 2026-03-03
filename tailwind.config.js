@@ -2,7 +2,7 @@
 export default {
   content: [
     './safecart/popup.html',
-    './safecart/frontend/popup/**/*.{js,jsx,ts,tsx}',
+    './safecart/frontend/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {},

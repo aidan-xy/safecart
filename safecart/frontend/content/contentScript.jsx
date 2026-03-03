@@ -4,6 +4,9 @@
 // across AliExpress pages. It handles multiple layout variations
 // and dynamically loads badges as new items are added to the page.
 
+import ReactDOM from "react-dom/client";
+import App from "../popup/App";
+
 // Simple helper function: inject a badge into a single "card"
 function injectBadgeOnListing(card, link) {
     // Exit early if card is invalid or already has a badge
@@ -44,27 +47,43 @@ function injectBadgeOnListing(card, link) {
         event.preventDefault();
         event.stopPropagation();
 
-        // Create popup container
-        const popup = document.createElement('div');
-        popup.style.position = 'fixed';
-        popup.style.top = '50%';
-        popup.style.left = '50%';
-        popup.style.transform = 'translate(-50%, -50%)';
-        popup.style.backgroundColor = '#ffffff';
-        popup.style.padding = '20px';
-        popup.style.borderRadius = '8px';
-        popup.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-        popup.style.zIndex = '10000';
+        // Create host
+        const host = document.createElement("div");
+        host.style.position = "fixed";
+        host.style.top = "0";
+        host.style.left = "0";
+        host.style.zIndex = "2147483647";
+        document.body.appendChild(host);
 
+        // Attach shadow root
+        const shadowRoot = host.attachShadow({ mode: "open" });
 
+        // Inject CSS inside shadow root
+        const styleLink = document.createElement("link");
+        styleLink.rel = "stylesheet";
+        styleLink.href = chrome.runtime.getURL("dist/assets/popup.css");
+        shadowRoot.appendChild(styleLink);
 
-        popup.innerHTML = `
-            <p style="margin:0 0 15px 0;">` + link + 
-            `<button style="padding:5px 15px; background:#2563eb; color:white; border:none; borderRadius:4px; cursor:pointer;">Close</button>
-        `;
+        // Popup container
+        const popup = document.createElement("div");
+        popup.style.position = "fixed";
+        popup.style.top = "50%";
+        popup.style.left = "50%";
+        popup.style.transform = "translate(-50%, -50%)";
 
-        document.body.appendChild(popup);
-        popup.querySelector('button').addEventListener('click', () => popup.remove());
+        shadowRoot.appendChild(popup);
+
+        // Mount React
+        ReactDOM.createRoot(popup).render(
+          <App trustData={{ score: 0, metrics: [] }} />
+        );
+
+        // Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Close';
+        closeBtn.style.marginTop = '10px';
+        closeBtn.addEventListener('click', () => popup.remove());
+        popup.appendChild(closeBtn);
     });
 }
 
