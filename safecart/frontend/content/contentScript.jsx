@@ -48,11 +48,13 @@ function injectBadgeOnListing(card, link) {
         event.stopPropagation();
 
         // Create host
+        if (document.getElementById("safecart-overlay")) return;
         const host = document.createElement("div");
         host.style.position = "fixed";
         host.style.top = "0";
         host.style.left = "0";
         host.style.zIndex = "2147483647";
+        host.id = "safecart-overlay";
         document.body.appendChild(host);
 
         // Attach shadow root
@@ -64,26 +66,50 @@ function injectBadgeOnListing(card, link) {
         styleLink.href = chrome.runtime.getURL("dist/assets/popup.css");
         shadowRoot.appendChild(styleLink);
 
-        // Popup container
-        const popup = document.createElement("div");
-        popup.style.position = "fixed";
-        popup.style.top = "50%";
-        popup.style.left = "50%";
-        popup.style.transform = "translate(-50%, -50%)";
+        // Overlay container
+        const overlay = document.createElement("div");
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100vw";
+        overlay.style.height = "100vh";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.4)";
+        overlay.style.zIndex = "2147483647";
+        shadowRoot.appendChild(overlay);
 
-        shadowRoot.appendChild(popup);
+        // Modal container
+        const modal = document.createElement("div");
+        modal.style.position = "relative";
+        modal.style.background = "white";
+        modal.style.padding = "20px";
+        modal.style.borderRadius = "12px";
+        modal.style.minWidth = "300px";
+        overlay.appendChild(modal);
 
-        // Mount React
-        ReactDOM.createRoot(popup).render(
-          <App trustData={{ score: 0, metrics: [] }} />
+        // Close button inside modal
+        const closeBtn = document.createElement("button");
+        closeBtn.textContent = "×";
+        closeBtn.style.position = "absolute";
+        closeBtn.style.top = "-5px";
+        closeBtn.style.right = "5px";
+        closeBtn.style.cursor = "pointer";
+        closeBtn.style.fontSize = "18px";
+        closeBtn.style.background = "transparent";
+        closeBtn.style.border = "none";
+        closeBtn.addEventListener("click", () => host.remove());
+        modal.appendChild(closeBtn);
+
+        // React root inside modal
+        const reactRoot = document.createElement("div");
+        modal.appendChild(reactRoot);
+
+        ReactDOM.createRoot(reactRoot).render(
+            <App trustData={{ score: 0, metrics: [] }} />
         );
 
-        // Close button
-        const closeBtn = document.createElement('button');
-        closeBtn.textContent = 'Close';
-        closeBtn.style.marginTop = '10px';
-        closeBtn.addEventListener('click', () => popup.remove());
-        popup.appendChild(closeBtn);
     });
 }
 
