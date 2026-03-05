@@ -565,7 +565,7 @@ describe('testing for the dollar express page', () => {
 
   test("check if it correctly dectect the type of page", () => {
     const expectedPageType = currPageType();
-    expect(expectedPageType).toEqual("for you")
+    expect(expectedPageType).toEqual("for you");
   })
 
   test('parsing numSold', () => {
@@ -574,8 +574,8 @@ describe('testing for the dollar express page', () => {
   })
 
   test('parsing image', () => {
-    const numImage = gatherNumberImage()
-    expect(numImage).toEqual(404)
+    const numImage = gatherNumberImage();
+    expect(numImage).toEqual(404);
   })
 
   test('test gatherNumberRatings when can\'t dectect website ', () => {
