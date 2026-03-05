@@ -141,7 +141,8 @@ function injectBadges() {
                     );
                     newCards.forEach((el) => {
                         const card = el.closest('div').parentElement.closest('div').parentElement.closest('div'); // finds the correct container
-                        injectBadgeOnListing(card);
+                        const link = card.parentElement.closest('a').href;
+                        injectBadgeOnListing(card, link);
                     });
                 }
             });
