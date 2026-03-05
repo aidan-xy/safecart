@@ -115,7 +115,7 @@ function injectBadgeOnListing(card, link) {
 
 // Main function: find all cards and inject badges
 function injectBadges() {
-    const query = 'div.np_nq';
+    const query = 'div.nm_nn';
 
     // AliExpress uses multiple layouts. We search for product links or common containers
     const possibleCards = document.querySelectorAll(
