@@ -31,7 +31,7 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 ---
 
 ## Building and Testing
-- Prerequisite: node.js, npm, python, pip
+- Prerequisites: at least node.js: v22.13.0, npm: 10.9.2, python: 3.11, pip: 2.25.3
 - Clone the repo `git clone https://github.com/aidan-xy/safecart.git`
 - Install dependencies `npm install` and `pip install -r requirements.txt`
 - To train model, place data in `/safecart/model/data` then edit `trust_model_logisitc_regression.py` to use it (line 21) then run both that file and `export_pipeline_onnx.py` in `/safecart/model`

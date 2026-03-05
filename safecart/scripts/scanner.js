@@ -7,10 +7,11 @@ function gatherReview(doc = document) {
   const reviewsArray = [];
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
-    reviewsArray.push(reviews[i].textContent);
-    console.log("recording review " + (i + 1) + " : " + reviews[i].textContent);
+      reviewsArray.push(reviews[i].textContent);
     }
   }
+  console.log("recording review: ");
+  console.log(reviewsArray);
   return reviewsArray;
 }
 
@@ -167,10 +168,11 @@ function gatherSearchedPrices(doc = document) {
           //turn it into a float
           let newProductPrice = parseFloat(newProductPriceString);
           priceArray.push(newProductPrice);
-          console.log("price element: " + newProductPrice);
         }
     }
   }
+  console.log("price element: ");
+  console.log(priceArray);
   return priceArray;
 }
 
@@ -206,7 +208,7 @@ function gatherSearchedPrices(doc = document) {
 */
 function computeAveragePrice(doc = document) {
   const prices = gatherSearchedPrices(doc);
-  if(!prices) {
+  if(!prices || prices.length === 0) {
     return -1;
   } else {
     let total = 0;
@@ -223,21 +225,20 @@ function computeAveragePrice(doc = document) {
 * @return {string} a scaping url that is used based on the title
 * of the current listing
 */
-function createURLForSearchPage() {
+function createURLForSearchPage(url = window.location.href) {
   let title = gatherTitle();
   if(title === "no value yet" || title === "") {
     console.log("can't find title element")
-    return title;
+    return "error: can't find the title";
   }
-  console.log(title);
   title = title.replace(/ /g, '-');
   if(title.length > 50) {
     title = title.slice(0,50);
   }
-  if(window.location.href.includes("https://www.aliexpress.us/item/")){
+  if(url.includes("https://www.aliexpress.us/item/")){
 
     title = "https://www.aliexpress.us/w/wholesale-" + title + ".html";
-  } else if(window.location.href.includes("https://www.aliexpress.com/item/")){
+  } else {
     title = "https://www.aliexpress.com/w/wholesale-" + title + ".html";
   }
   console.log("scraping: " + title);
@@ -276,11 +277,17 @@ function getAllInformationForAlg(doc = document) {
 * listing: on a listing page
 * search: on a search page
 */
-function currPageType() {
-  if(window.location.href.includes("https://www.aliexpress.us/item/")||
-      window.location.href.includes("https://www.aliexpress.com/item/")){
+function currPageType(doc = document) {
+  let elementType = doc.querySelector("body[data-spm='productlist']");
+  if(!elementType) {elementType = doc.querySelector("body[data-spm='detail']");}
+  if(!elementType) {
+    return "unknown"
+  }
+  if(elementType.getAttribute("data-spm") === "detail") {
     return "listing"
-  } else if(window.location.href.includes("https://www.aliexpress.us/w/")) {
+
+  //this is a else if(elementType.getAttribute("data-spm") === "productlist")
+  } else {
     return "search"
   }
 }
@@ -308,7 +315,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // and use this to first idenitfy what page,
   // then either use getDataFromSearch or, getData 
   } else if(request.action === "pageType") {
-    sendResponse({pageType: currPageType()});
+    sendResponse({pageType: currPageType(doc)});
   //get the url that put the listing title into the search bar
   } else if(request.action === "getURLToScapeForListing") {
     sendResponse({URLToScape: createURLForSearchPage()})
@@ -326,7 +333,9 @@ module.exports = {
   gatherNumberRatings,
   gatherAge,
   gatherOpenSinceDate,
-  getAllInformationForSimpleAIg: getAllInformationForAlg,
+  getAllInformationForAlg,
   gatherSearchedPrices,
-  computeAveragePrice
-};
+  computeAveragePrice,
+  createURLForSearchPage,
+  currPageType
+}
