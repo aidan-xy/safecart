@@ -1,6 +1,8 @@
 # SafeCart Browser Extension
 
-FOR THE USER GUIDE, VISIT `documentation/userguide.md`
+For the developer guide, visit `documentation/devguide.md`
+
+For the user guide, visit `documentation/userguide.md`
 
 ## Project Idea and Goals
 SafeCart is a browser extension designed to help users safely navigate online marketplaces (currently focused on AliExpress). It analyzes publicly available data about listings and sellers to provide a **trustworthiness rating**, helping users avoid scams or low-quality products.
