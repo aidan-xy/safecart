@@ -37,7 +37,7 @@
       "js": ["frontend/content/contentScript.js"]
     }
   ],
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "offscreen","tabs"],
   "host_permissions": [
     "https://www.aliexpress.us/*",
     "https://www.aliexpress.com/*",
@@ -50,5 +50,8 @@
       "resources": ["trust_model.onnx"],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  }
 }

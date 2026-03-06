@@ -60,6 +60,21 @@ async function getSearchUrl() {
     });
 }
 
+async function fetchFullHTML(url: string) : Promise<string> {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage(
+            {action: "fetchFullHTML", url: url },
+            (response) => {
+                if (response?.success) {
+                    resolve(response.html);
+                } else {
+                    reject(response?.error);
+                }
+            }
+        );
+    });
+}
+
 // Store the response in a variable
 let productData: any = null;
 let searchUrl: any = null;
@@ -79,35 +94,28 @@ getProductData()
 
 getSearchUrl()
     .then((data) => {
-        searchUrl = data;
+        searchUrl = data.URLToScape;
         console.log("Search url retrieved:", searchUrl);
+
+        // Now perform the scraping
+        return fetchFullHTML(searchUrl);
     })
-    .catch((error) => {
-        console.error("Failed to get search url:", error);
-        renderApp();
-    });
-
-// scraping is currently broken and will not work. this will always error
-(async () => {
-    try {
-        const res = await fetch(searchUrl);
-        const html = await res.text();
+    .then((html) => {
+        console.log("check2");
+        const parser = new DOMParser();
         searchDoc = parser.parseFromString(html, "text/html");
-        console.log("Search Doc retrieved: ", searchDoc);
-    } catch (error) {
-        console.error("Failed to fetch search URL:", error);
-    }
-})();
+        console.log("Search Doc retrieved:", searchDoc);
 
-// since scraping is broken, this is also broken
-getMarketPrice(searchDoc)
+        // Now get market price
+        return getMarketPrice(searchDoc);
+    })
     .then((data) => {
         marketPrice = data;
         console.log("Market price retrieved:", marketPrice);
         renderApp();
     })
     .catch((error) => {
-        console.error("Failed to get search url:", error);
+        console.error("Failed to get search url or scrape:", error);
         renderApp();
     });
 
