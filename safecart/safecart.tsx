@@ -93,7 +93,7 @@ getProductData()
     });
 
 getSearchUrl()
-    .then((data) => {
+    .then((data: any) => {
         searchUrl = data.URLToScape;
         console.log("Search url retrieved:", searchUrl);
 
@@ -101,7 +101,6 @@ getSearchUrl()
         return fetchFullHTML(searchUrl);
     })
     .then((html) => {
-        console.log("check2");
         const parser = new DOMParser();
         searchDoc = parser.parseFromString(html, "text/html");
         console.log("Search Doc retrieved:", searchDoc);

@@ -40,11 +40,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                             });
                         } else if (results && results[0] && results[0].result) {
                             console.log("HTML retrieved, length:", results[0].result.length);
+                            /*
                             // Open the HTML in a new tab for inspection
                             chrome.tabs.create({
                                 url: 'data:text/html;charset=utf-8,' + encodeURIComponent(results[0].result),
                                 active: false
                             });
+                            */
                             sendResponse({
                                 success: true,
                                 html: results[0].result
