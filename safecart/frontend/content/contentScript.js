@@ -109,5 +109,14 @@ function injectBadges() {
 // -------------------------------
 // Script starts here
 // -------------------------------
-console.log("SAFE CART IS RUNNING");
-injectBadges();
+if (typeof window !== 'undefined' && !window.__SAFE_CART_TEST__) {
+    console.log("SAFE CART IS RUNNING");
+    injectBadges();
+}
+
+if (typeof module !== 'undefined') {
+    module.exports = {
+        injectBadgeOnListing,
+        injectBadges
+    };
+}
