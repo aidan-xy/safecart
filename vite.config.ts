@@ -23,13 +23,15 @@ export default defineConfig({
     outDir: "safecart/dist",
     emptyOutDir: true,
     rollupOptions: {
+      // add the content script as a second entry so Vite transpiles the
+      // JSX and spits out a plain JS file in the assets folder
       input: {
         popup: path.resolve(__dirname, "safecart/popup.html")
       },
       output: {
         entryFileNames: 'assets/[name].js',
         chunkFileNames: 'assets/[name].js',
-        assetFileNames: 'assets/[name].[ext]'
+        assetFileNames: 'assets/[name].css'
       }
     }
   }

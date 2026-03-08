@@ -4,8 +4,11 @@
 // across AliExpress pages. It handles multiple layout variations
 // and dynamically loads badges as new items are added to the page.
 
+import ReactDOM from "react-dom/client";
+import App from "../popup/App";
+
 // Simple helper function: inject a badge into a single "card"
-function injectBadgeOnListing(card, link) {
+export function injectBadgeOnListing(card, link) {
     // Exit early if card is invalid or already has a badge
     if (!card || card.querySelector('.safecart-badge')) return;
 
@@ -44,33 +47,75 @@ function injectBadgeOnListing(card, link) {
         event.preventDefault();
         event.stopPropagation();
 
-        // Create popup container
-        const popup = document.createElement('div');
-        popup.style.position = 'fixed';
-        popup.style.top = '50%';
-        popup.style.left = '50%';
-        popup.style.transform = 'translate(-50%, -50%)';
-        popup.style.backgroundColor = '#ffffff';
-        popup.style.padding = '20px';
-        popup.style.borderRadius = '8px';
-        popup.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-        popup.style.zIndex = '10000';
+        // Create host
+        if (document.getElementById("safecart-overlay")) return;
+        const host = document.createElement("div");
+        host.style.position = "fixed";
+        host.style.top = "0";
+        host.style.left = "0";
+        host.style.zIndex = "2147483647";
+        host.id = "safecart-overlay";
+        document.body.appendChild(host);
 
+        // Attach shadow root
+        const shadowRoot = host.attachShadow({ mode: "open" });
 
+        // Inject CSS inside shadow root
+        const styleLink = document.createElement("link");
+        styleLink.rel = "stylesheet";
+        styleLink.href = chrome.runtime.getURL("dist/assets/popup.css");
+        shadowRoot.appendChild(styleLink);
 
-        popup.innerHTML = `
-            <p style="margin:0 0 15px 0;">` + link + 
-            `<button style="padding:5px 15px; background:#2563eb; color:white; border:none; borderRadius:4px; cursor:pointer;">Close</button>
-        `;
+        // Overlay container
+        const overlay = document.createElement("div");
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100vw";
+        overlay.style.height = "100vh";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.background = "rgba(0,0,0,0.4)";
+        overlay.style.zIndex = "2147483647";
+        shadowRoot.appendChild(overlay);
 
-        document.body.appendChild(popup);
-        popup.querySelector('button').addEventListener('click', () => popup.remove());
+        // Modal container
+        const modal = document.createElement("div");
+        modal.style.position = "relative";
+        modal.style.background = "white";
+        modal.style.padding = "20px";
+        modal.style.borderRadius = "12px";
+        modal.style.minWidth = "300px";
+        overlay.appendChild(modal);
+
+        // Close button inside modal
+        const closeBtn = document.createElement("button");
+        closeBtn.textContent = "×";
+        closeBtn.style.position = "absolute";
+        closeBtn.style.top = "-5px";
+        closeBtn.style.right = "5px";
+        closeBtn.style.cursor = "pointer";
+        closeBtn.style.fontSize = "18px";
+        closeBtn.style.background = "transparent";
+        closeBtn.style.border = "none";
+        closeBtn.addEventListener("click", () => host.remove());
+        modal.appendChild(closeBtn);
+
+        // React root inside modal
+        const reactRoot = document.createElement("div");
+        modal.appendChild(reactRoot);
+
+        ReactDOM.createRoot(reactRoot).render(
+            <App trustData={{ score: 0, metrics: [] }} />
+        );
+
     });
 }
 
 // Main function: find all cards and inject badges
-function injectBadges() {
-    const query = 'div.np_nq';
+export function injectBadges() {
+    const query = 'div.nm_nn';
 
     // AliExpress uses multiple layouts. We search for product links or common containers
     const possibleCards = document.querySelectorAll(
@@ -96,7 +141,8 @@ function injectBadges() {
                     );
                     newCards.forEach((el) => {
                         const card = el.closest('div').parentElement.closest('div').parentElement.closest('div'); // finds the correct container
-                        injectBadgeOnListing(card);
+                        const link = card.parentElement.closest('a').href;
+                        injectBadgeOnListing(card, link);
                     });
                 }
             });
@@ -109,14 +155,6 @@ function injectBadges() {
 // -------------------------------
 // Script starts here
 // -------------------------------
-if (typeof window !== 'undefined' && !window.__SAFE_CART_TEST__) {
-    console.log("SAFE CART IS RUNNING");
-    injectBadges();
-}
 
-if (typeof module !== 'undefined') {
-    module.exports = {
-        injectBadgeOnListing,
-        injectBadges
-    };
-}
+console.log("SAFE CART IS RUNNING");
+injectBadges();

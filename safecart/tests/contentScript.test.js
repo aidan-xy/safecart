@@ -1,109 +1,134 @@
 /**
  * @jest-environment jsdom
- *
- * We explicitly use jsdom because this file tests DOM manipulation.
- * This ensures document, window, and MutationObserver exist.
  */
 
-// Prevent auto-execution of injectBadges() when the module loads
 window.__SAFE_CART_TEST__ = true;
+
+// Mock React root rendering
+jest.mock("react-dom/client", () => ({
+    createRoot: jest.fn(() => ({
+        render: jest.fn()
+    }))
+}));
+
+const ReactDOM = require("react-dom/client");
 
 const {
     injectBadgeOnListing,
     injectBadges
-} = require('../frontend/content/contentScript');
+} = require("../frontend/content/contentScript");
 
-describe('SafeCart Content Script', () => {
+global.chrome = {
+    runtime: {
+        getURL: jest.fn(() => "popup.css")
+    }
+};
 
-    /**
-     * Reset DOM before each test to ensure isolation.
-     * This prevents badges or popups from leaking across tests.
-     */
+describe("SafeCart Content Script", () => {
+
     beforeEach(() => {
-        document.body.innerHTML = '';
-        jest.restoreAllMocks();
+        document.body.innerHTML = "";
+        jest.clearAllMocks();
     });
 
     // =====================================================
-    // injectBadgeOnListing() UNIT TESTS
+    // injectBadgeOnListing()
     // =====================================================
 
-    test('returns early when card is null (guard clause branch 1)', () => {
+    test("returns early when card is null", () => {
         expect(() => injectBadgeOnListing(null)).not.toThrow();
-        expect(document.querySelector('.safecart-badge')).toBeNull();
+        expect(document.querySelector(".safecart-badge")).toBeNull();
     });
 
-    test('returns early when badge already exists (guard clause branch 2)', () => {
-        const card = document.createElement('div');
+    test("returns early if badge already exists", () => {
+        const card = document.createElement("div");
         document.body.appendChild(card);
 
-        injectBadgeOnListing(card, 'first-link');
-        injectBadgeOnListing(card, 'second-link'); // should not create second badge
+        injectBadgeOnListing(card, "link1");
+        injectBadgeOnListing(card, "link2");
 
-        const badges = card.querySelectorAll('.safecart-badge');
+        const badges = card.querySelectorAll(".safecart-badge");
         expect(badges.length).toBe(1);
     });
 
-    test('injects badge with correct styles and content', () => {
-        const card = document.createElement('div');
+    test("injects badge with correct styling", () => {
+        const card = document.createElement("div");
         document.body.appendChild(card);
 
-        injectBadgeOnListing(card, 'https://example.com');
+        injectBadgeOnListing(card, "https://example.com");
 
-        const badge = card.querySelector('.safecart-badge');
+        const badge = card.querySelector(".safecart-badge");
 
-        // Badge exists
         expect(badge).not.toBeNull();
-
-        // Style assertions (ensures styling logic is executed)
-        expect(badge.style.borderRadius).toBe('50%');
-        expect(badge.style.pointerEvents).toBe('auto');
-        expect(card.style.position).toBe('relative');
-
-        // Content assertion
-        expect(badge.innerHTML).toContain('S');
+        expect(badge.style.borderRadius).toBe("50%");
+        expect(badge.style.pointerEvents).toBe("auto");
+        expect(card.style.position).toBe("relative");
+        expect(badge.innerHTML).toContain("S");
     });
 
-    test('clicking badge opens popup and close button removes it (link defined)', () => {
-        const card = document.createElement('div');
+    test("clicking badge opens shadow DOM modal and close button removes it", () => {
+
+        const card = document.createElement("div");
         document.body.appendChild(card);
 
-        injectBadgeOnListing(card, 'https://product.com');
+        injectBadgeOnListing(card, "https://product.com");
 
-        const badge = card.querySelector('.safecart-badge');
+        const badge = card.querySelector(".safecart-badge");
+
         badge.click();
 
-        // Popup should be created
-        const popup = document.querySelector('div[style*="position: fixed"]');
-        expect(popup).not.toBeNull();
+        // Host overlay should exist
+        const host = document.getElementById("safecart-overlay");
+        expect(host).not.toBeNull();
 
-        // Ensure link content is interpolated correctly
-        expect(popup.innerHTML).toContain('https://product.com');
+        const shadowRoot = host.shadowRoot;
+        expect(shadowRoot).not.toBeNull();
 
-        // Close popup
-        const button = popup.querySelector('button');
-        button.click();
+        // CSS link injected
+        const link = shadowRoot.querySelector("link");
+        expect(link).not.toBeNull();
+        expect(chrome.runtime.getURL).toHaveBeenCalled();
 
-        // Popup removed from DOM
-        expect(document.querySelector('div[style*="position: fixed"]')).toBeNull();
+        // React root should render
+        expect(ReactDOM.createRoot).toHaveBeenCalled();
+
+        // Close button
+        const closeBtn = shadowRoot.querySelector("button");
+        expect(closeBtn).not.toBeNull();
+
+        closeBtn.click();
+
+        expect(document.getElementById("safecart-overlay")).toBeNull();
+    });
+
+    test("clicking badge twice does not create duplicate overlays", () => {
+
+        const card = document.createElement("div");
+        document.body.appendChild(card);
+
+        injectBadgeOnListing(card, "https://product.com");
+
+        const badge = card.querySelector(".safecart-badge");
+
+        badge.click();
+        badge.click();
+
+        const overlays = document.querySelectorAll("#safecart-overlay");
+        expect(overlays.length).toBe(1);
     });
 
     // =====================================================
-    // injectBadges() INITIAL DOM SCAN
+    // injectBadges() DOM scan
     // =====================================================
 
-    test('injectBadges finds existing cards and injects badge', () => {
+    test("injectBadges finds existing cards", () => {
 
-        /**
-         * This structure mirrors the nested DOM depth your traversal relies on:
-         * el.closest('div').parentElement.closest('div').parentElement.closest('div')
-         */
         document.body.innerHTML = `
             <a href="https://example.com/product">
                 <div>
                     <div>
                         <div>
-                            <div class="np_nq"></div>
+                            <div class="nm_nn"></div>
                         </div>
                     </div>
                 </div>
@@ -112,28 +137,26 @@ describe('SafeCart Content Script', () => {
 
         injectBadges();
 
-        const badge = document.querySelector('.safecart-badge');
+        const badge = document.querySelector(".safecart-badge");
         expect(badge).not.toBeNull();
     });
 
     // =====================================================
-    // MutationObserver BRANCH COVERAGE
+    // MutationObserver coverage
     // =====================================================
 
-    test('MutationObserver injects badge for dynamically added elements (link undefined branch)', async () => {
+    test("MutationObserver injects badge for dynamically added elements", async () => {
 
-        /**
-         * We call injectBadges() first so MutationObserver attaches.
-         */
         injectBadges();
 
-        const wrapper = document.createElement('div');
+        const wrapper = document.createElement("div");
+
         wrapper.innerHTML = `
             <a href="https://dynamic.com/product">
                 <div>
                     <div>
                         <div>
-                            <div class="np_nq"></div>
+                            <div class="nm_nn"></div>
                         </div>
                     </div>
                 </div>
@@ -142,78 +165,45 @@ describe('SafeCart Content Script', () => {
 
         document.body.appendChild(wrapper);
 
-        /**
-         * MutationObserver callbacks are async in jsdom.
-         * We wait one microtask tick to allow it to execute.
-         */
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await new Promise(r => setTimeout(r, 0));
 
-        const badge = document.querySelector('.safecart-badge');
+        const badge = document.querySelector(".safecart-badge");
         expect(badge).not.toBeNull();
-
-        /**
-         * IMPORTANT:
-         * In the MutationObserver branch, injectBadgeOnListing(card)
-         * is called WITHOUT the link parameter.
-         * This ensures the "undefined link" popup interpolation path executes.
-         */
-        badge.click();
-
-        const popup = document.querySelector('div[style*="position: fixed"]');
-        expect(popup).not.toBeNull();
-
-        // This assertion forces execution of the undefined link branch
-        expect(popup.innerHTML).toContain('undefined');
     });
 
-    test('MutationObserver ignores non-element nodes (nodeType !== 1 branch)', async () => {
+    test("MutationObserver ignores non-element nodes", async () => {
 
         injectBadges();
 
-        // Add a text node instead of an element
         const textNode = document.createTextNode("hello");
         document.body.appendChild(textNode);
 
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await new Promise(r => setTimeout(r, 0));
 
-        /**
-         * No badges should be created because nodeType !== 1
-         * This covers the negative branch of:
-         * if (node.nodeType === 1)
-         */
-        const badges = document.querySelectorAll('.safecart-badge');
+        const badges = document.querySelectorAll(".safecart-badge");
         expect(badges.length).toBe(0);
     });
 
-    //describe block to cover lines 113-114
-    describe('Auto-execution branch (window !== undefined && !__SAFE_CART_TEST__)', () => {
+    // =====================================================
+    // Auto execution branch
+    // =====================================================
+
+    describe("auto-execution when not in test mode", () => {
 
         beforeEach(() => {
-            jest.resetModules(); // Important: allows re-importing fresh module
-            document.body.innerHTML = '';
+            jest.resetModules();
+            document.body.innerHTML = "";
         });
 
-        test('logs and auto-runs injectBadges when not in test mode', () => {
+        test("logs and runs injectBadges", () => {
 
-            // Remove test flag so condition becomes TRUE
             delete window.__SAFE_CART_TEST__;
 
-            // Spy on console.log
-            const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+            const consoleSpy = jest
+                .spyOn(console, "log")
+                .mockImplementation(() => {});
 
-            // Spy on injectBadges BEFORE requiring module
-            const injectSpy = jest.fn();
-
-            jest.doMock('../frontend/content/contentScript', () => {
-                const original = jest.requireActual('../frontend/content/contentScript');
-                return {
-                    ...original,
-                    injectBadges: injectSpy
-                };
-            });
-
-            // Re-require module so bottom script executes
-            require('../frontend/content/contentScript');
+            require("../frontend/content/contentScript");
 
             expect(consoleSpy).toHaveBeenCalledWith("SAFE CART IS RUNNING");
 

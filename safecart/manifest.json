@@ -36,7 +36,8 @@
         "*://*.aliexpress.com/*",
         "*://*.aliexpress.us/*"
       ],
-      "js": ["frontend/content/contentScript.js"]
+      "js": ["dist/assets/contentScript.js"],
+      "type": "module"
     }
   ],
   "permissions": ["activeTab", "scripting"],
@@ -51,7 +52,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["trust_model.onnx"],
+      "resources": ["trust_model.onnx", "dist/assets/popup.css"],
       "matches": ["<all_urls>"]
     }
   ]

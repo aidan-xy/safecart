@@ -2,43 +2,6 @@ import { useState } from 'react';
 import { TrustScore } from './components/TrustScore';
 import { TrustMetrics } from './components/TrustMetrics';
 
-// Mock data for the listing being analyzed
-const mockTrustData = {
-  score: 78,
-  metrics: [
-    {
-      name: 'Product Rating',
-      score: 92,
-      status: 'positive' as const,
-      description: 'Strong 4.6/5 average rating with high customer satisfaction'
-    },
-    {
-      name: 'Price Analysis',
-      score: 65,
-      status: 'warning' as const,
-      description: 'Listing price is 15% below market average - review carefully'
-    },
-    {
-      name: 'Sales Volume',
-      score: 88,
-      status: 'positive' as const,
-      description: 'Over 3,400 units sold indicating established product'
-    },
-    {
-      name: 'Review Authenticity',
-      score: 85,
-      status: 'positive' as const,
-      description: '1,250 verified ratings with 420+ review images uploaded'
-    },
-    {
-      name: 'Seller Age',
-      score: 72,
-      status: 'positive' as const,
-      description: 'Seller account active for 2.3 years with consistent history'
-    }
-  ]
-};
-
 type TrustData = {
   score: number;
   metrics: { name: string; score: number }[];
