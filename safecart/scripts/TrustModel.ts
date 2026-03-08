@@ -47,18 +47,6 @@ export class TrustModel {
   private session: ort.InferenceSession | null = null;
   private modelPath: string;
 
-  // Model metadata embedded from the trained sklearn pipeline.
-  // Extracted via: scaler.mean_, scaler.scale_, model.coef_[0]
-  // These must be kept in sync with trust_model_logistic_regression.py / trust_pipeline.pkl.
-  private readonly featureNames: (keyof ListingData)[] = [
-    "price_dist",
-    "seller_age_years",
-    "rating",
-    "num_sold",
-    "num_rating",
-    "num_images",
-  ];
-
   // StandardScaler parameters (mean and std per feature, in ListingData order)
   // ! UPDATE THESE ! if the model is retrained — run: pipeline['scaler'].mean_ / .scale_
   private readonly scalerMean: number[] = [0.265949, 5.00127, 3.42658, 3494.91, 538.177, 81.7089];
