@@ -4,7 +4,7 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
 
 ## Installation
 
-1. Download the `.zip` file from a [release](https://github.com/aidan-xy/safecart/releases) and unzip it to any directory.
+1. Download the `.zip` file from the latest [release](https://github.com/aidan-xy/safecart/releases) and unzip it to any directory.
 
 2. Navigate to [chrome://extensions](chrome://extensions), and enable developer mode in the top right.
 
