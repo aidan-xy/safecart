@@ -21,8 +21,14 @@ global.chrome = {
   }
 };
 
+const originalError  = console.error;
+
 beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation((msg, ...args) => {
+    if (typeof msg === 'string' && msg.includes('Could not parse CSS stylesheet')) return;
+    originalError(msg, ...args); // let all other errors through normally
+  });
 });
 
 afterEach(() => {
@@ -417,6 +423,14 @@ describe('parsing edge cases', () => {
     expect(numberOfImage).toEqual(0);
   })
 
+  test('test gatherAge to see if there is a website but there is no price element', () => {
+    const htmlString = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/SUMRY 4KW 6KW 120V Off Grid Solar Inverter 24V 140A 5600W MPPT Charger Pure Sine Wave Home Inverter 6.25 Inch LCD Display.html"),"utf-8");
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(htmlString, 'text/html');
+    const price = gatherPrice(htmlDoc);
+    expect(price).toEqual(0);
+  })
+
 });
 
 test("testing what happend if we cannot get any info from listing", ()=> {
@@ -434,6 +448,7 @@ test("testing if the title is between 50 alphabet", () => {
   const link = createURLForSearchPage();
   expect(link).toEqual("https://www.aliexpress.com/w/wholesale--14K-Dainty-Gold-Bow-Necklace-for-Women-Mom-Teen.html")
 })
+
 
 test("testing if the getting the price from a search exclude the free", () => {
   //this page have a listing that changes one of the aria label in to arial label
@@ -535,4 +550,58 @@ describe('testing chrome listening, with input', () => {
 
     expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
   })
+})
+
+describe('testing for the dollar express page', () => { 
+
+  beforeEach(() => {
+    const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Bundle Deals 2.0.html"),"utf-8");
+    document.documentElement.innerHTML = html;
+  });
+
+  afterEach(() => {
+    document.documentElement.innerHTML = '';
+  });
+
+  test("check if it correctly dectect the type of page", () => {
+    const expectedPageType = currPageType();
+    expect(expectedPageType).toEqual("for you");
+  })
+
+  test('parsing numSold', () => {
+    const NumSold = gatherNumSold();
+    expect(NumSold).toEqual(10000);
+  })
+
+  test('parsing image', () => {
+    const numImage = gatherNumberImage();
+    expect(numImage).toEqual(404);
+  })
+
+  test('test gatherNumberRatings when can\'t dectect website ', () => {
+    const NumberRatings = gatherNumberRatings();
+    expect(NumberRatings).toEqual(1696);
+  })
+
+  test('test gatherOpenSinceDate when can\'t dectect website', () => {
+    const OpenSinceDate = gatherOpenSinceDate();
+    expect(OpenSinceDate).toEqual("Dec 11, 2022");
+  })
+
+  // test('test gatherAge when can\'t dectect website', () => {
+  //   const Age = gatherAge();
+  //   expect(Age).toEqual(0);
+  // })
+
+  test('parsing the age', () => {
+    const rating = gatherRating();
+    expect(rating).toEqual(4.7);
+  })
+
+  test('parsing the title', () => {
+    const title = gatherTitle();
+    expect(title).toEqual("45000RPM Rechargeable Electric Nail Drill Machine Professional Nail Drills for Gel Nails Polish Portable Nail File Manicure Tool");
+  })
+
+
 })

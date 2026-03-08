@@ -26,6 +26,8 @@
         "https://www.aliexpress.com/item/*",
         "https://www.aliexpress.us/w/wholesale*",
         "https://www.aliexpress.com/w/wholesale*",
+        "https://www.aliexpress.com/ssr/*",
+        "https://www.aliexpress.us/ssr/*",
         "https://www.aliexpress/*"
       ]
     },
@@ -43,6 +45,8 @@
     "https://www.aliexpress.com/*",
     "https://www.aliexpress.us/w/wholesale*",
     "https://www.aliexpress.com/w/wholesale*",
+    "https://www.aliexpress.com/ssr/*",
+    "https://www.aliexpress.us/ssr/*",
     "https://www.aliexpress/*"
   ],
   "web_accessible_resources": [
