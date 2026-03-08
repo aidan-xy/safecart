@@ -1,6 +1,8 @@
 # SafeCart Browser Extension
 
-FOR THE USER GUIDE, VISIT `documentation/userguide.md`
+For the developer guide, visit `documentation/devguide.md`
+
+For the user guide, visit `documentation/userguide.md`
 
 ## Project Idea and Goals
 SafeCart is a browser extension designed to help users safely navigate online marketplaces (currently focused on AliExpress). It analyzes publicly available data about listings and sellers to provide a **trustworthiness rating**, helping users avoid scams or low-quality products.
@@ -23,10 +25,9 @@ SafeCart is a browser extension designed to help users safely navigate online ma
     - `model/` – Stores the trust score machine learning model
     - `scripts/` – Data gathering, hard-coded scoring algorithms, model inference, evaluation logic
     - `tests/` – Tests. Uses Jest for testing.
-- `documentation/` – Developer guides, test plans, requirements, and meeting notes
+- `documentation/` – User guide, Developer guide, test plans, and requirements
 - `weekly status reports/` – Team sprint updates
-- `README.md` – Project overview and instructions
-- `userguide.md` - User Guide
+- `README.md` – Project overview, layout, and instructions
 
 ---
 
