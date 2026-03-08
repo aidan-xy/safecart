@@ -8,7 +8,7 @@ import ReactDOM from "react-dom/client";
 import App from "../popup/App";
 
 // Simple helper function: inject a badge into a single "card"
-function injectBadgeOnListing(card, link) {
+export function injectBadgeOnListing(card, link) {
     // Exit early if card is invalid or already has a badge
     if (!card || card.querySelector('.safecart-badge')) return;
 
@@ -114,7 +114,7 @@ function injectBadgeOnListing(card, link) {
 }
 
 // Main function: find all cards and inject badges
-function injectBadges() {
+export function injectBadges() {
     const query = 'div.nm_nn';
 
     // AliExpress uses multiple layouts. We search for product links or common containers
@@ -155,14 +155,6 @@ function injectBadges() {
 // -------------------------------
 // Script starts here
 // -------------------------------
-if (typeof window !== 'undefined' && !window.__SAFE_CART_TEST__) {
-    console.log("SAFE CART IS RUNNING");
-    injectBadges();
-}
 
-if (typeof module !== 'undefined') {
-    module.exports = {
-        injectBadgeOnListing,
-        injectBadges
-    };
-}
+console.log("SAFE CART IS RUNNING");
+injectBadges();
