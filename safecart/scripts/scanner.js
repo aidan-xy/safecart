@@ -253,6 +253,7 @@ function gatherSearchedPrices(doc = document) {
 * @return {number} the average price of the whole page
 */
 function computeAveragePrice(doc = document) {
+  console.log("computing average price");
   const prices = gatherSearchedPrices(doc);
   if(!prices || prices.length === 0) {
     return -1;
