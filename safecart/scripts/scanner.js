@@ -7,10 +7,11 @@ function gatherReview(doc = document) {
   const reviewsArray = [];
   if(reviews && reviews.length > 0) {
     for(let i = 0; i < reviews.length; i++) {
-    reviewsArray.push(reviews[i].textContent);
-    console.log("recording review " + (i + 1) + " : " + reviews[i].textContent);
+      reviewsArray.push(reviews[i].textContent);
     }
   }
+  console.log("recording review: ");
+  console.log(reviewsArray);
   return reviewsArray;
 }
 
@@ -29,7 +30,13 @@ function gatherTitle(doc = document) {
 * @return {number} the rating of the product
 */
 function gatherRating(doc = document) {
-  const productRatingHTML = doc.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
+  let productRatingHTML;
+  if(currPageType(doc) === "listing") {
+    productRatingHTML = doc.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
+  } else {
+    productRatingHTML = doc.querySelector('a[class="reviewer--rating--xrWWFzx pdp-index-disable-pointer"] strong');
+  }
+
   if(!productRatingHTML){
     console.log("could not see rating element");
     return 0;
@@ -44,7 +51,13 @@ function gatherRating(doc = document) {
 * @return {number} the price of the product
 */
 function gatherPrice(doc = document) {
-  const listingPrice = doc.querySelector('span[class="price-default--current--F8OlYIo"]');
+  let listingPrice;
+  if(currPageType(doc) === "listing") {
+    listingPrice = doc.querySelector('span[class="price-default--current--F8OlYIo"]');
+  } else {
+    listingPrice = doc.querySelector('span[class="price-default--current--F8OlYIo"]');
+  }
+
   if(!listingPrice){
     console.log("could not see product price element");
     return 0;
@@ -60,7 +73,13 @@ function gatherPrice(doc = document) {
 * @return {number} the number of product sold
 */
 function gatherNumSold(doc = document) {
-  const numSoldHTML = doc.querySelector('span[class="reviewer--sold--ytPeoEy"]');
+  let numSoldHTML;
+  if(currPageType(doc) === "listing") {
+    numSoldHTML = doc.querySelector('span[class="reviewer--sold--ytPeoEy"]');
+  } else {
+    numSoldHTML = doc.querySelector('span[class="reviewer--sold--ytPeoEy"]');
+  }
+
   if(!numSoldHTML){
     console.log("could not see num sold element");
     return 0;
@@ -75,13 +94,33 @@ function gatherNumSold(doc = document) {
 * @return {number} the number of images
 */
 function gatherNumberImage(doc = document) {
-  const numberImageImage = doc.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
-  if(!numberImageImage){
-    console.log("could not see number of images element");
-    return 0;
+  let numberImage;
+  if(currPageType(doc) === "listing") {
+    const numberImageImage = doc.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
+    if(!numberImageImage){
+      console.log("could not see number of images element");
+      return 0;
+    }
+    const numberImageImageParent = numberImageImage.parentElement;
+    numberImage = numberImageImageParent.textContent.match(/\d+/);
+  } else {
+    const numberImageHTML = doc.querySelector('div[class="ae-filter-tab-list"]');
+    if(numberImageHTML) {
+      const eachText = numberImageHTML.querySelectorAll('div[class="ae-filter-tab-item-text"]');
+      const eachNumber = numberImageHTML.querySelectorAll('div[class="ae-filter-tab-item-num"]');
+      for (let i = 0; i < eachText.length; i++) {
+        if (eachText[i].textContent.trim() === 'Pic review') {
+          numberImageText = eachNumber[i];
+          break;
+        }
+      }
+      numberImage = numberImageText.textContent.match(/\d+/);
+    } else{
+      console.log("could not see number of images element");
+      return 0;
+    }
   }
-  const numberImageImageParent = numberImageImage.parentElement;
-  const numberImage = numberImageImageParent.textContent.match(/\d+/);
+
   console.log("Number of images element: " + (numberImage ? parseInt(numberImage[0]) : 0));
   return numberImage ? parseInt(numberImage[0]) : 0;
 }
@@ -91,7 +130,12 @@ function gatherNumberImage(doc = document) {
 * @return {number} the number of ratings
 */
 function gatherNumberRatings(doc = document) {
-  const numberOfRatingsHTML = doc.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
+  let numberOfRatingsHTML;
+  if(currPageType(doc) === "listing") {
+    numberOfRatingsHTML = doc.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
+  } else {
+    numberOfRatingsHTML = doc.querySelector('a[class="reviewer--reviews--cx7Zs_V pdp-index-disable-pointer"]');
+  }
   if(!numberOfRatingsHTML){
     console.log("could not see number of ratings element");
     return 0;
@@ -107,7 +151,11 @@ function gatherNumberRatings(doc = document) {
 */
 function gatherOpenSinceDate(doc = document) {
   let date;
-  ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
+  if(currPageType(doc) === "listing") {
+    ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
+  } else {
+    ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
+  }
   if(ageHTML) {
     const eachInfo = ageHTML.querySelectorAll('td');
     for (let i = 0; i < eachInfo.length; i++) {
@@ -129,10 +177,9 @@ function gatherOpenSinceDate(doc = document) {
 * @return {Number} the age rounded to the nearest 100th
 */
 function gatherAge(doc = document) {
-  const ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   let age = 0;
-  if(ageHTML && gatherOpenSinceDate() !== "") {
-    const dateStr = gatherOpenSinceDate();
+  const dateStr = gatherOpenSinceDate(doc = document);
+  if(dateStr !== "") {
     const targetDate = new Date(dateStr);
     const today = new Date();
     age = ((today.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
@@ -167,10 +214,11 @@ function gatherSearchedPrices(doc = document) {
           //turn it into a float
           let newProductPrice = parseFloat(newProductPriceString);
           priceArray.push(newProductPrice);
-          console.log("price element: " + newProductPrice);
         }
     }
   }
+  console.log("price element: ");
+  console.log(priceArray);
   return priceArray;
 }
 
@@ -206,7 +254,7 @@ function gatherSearchedPrices(doc = document) {
 */
 function computeAveragePrice(doc = document) {
   const prices = gatherSearchedPrices(doc);
-  if(!prices) {
+  if(!prices || prices.length === 0) {
     return -1;
   } else {
     let total = 0;
@@ -223,21 +271,20 @@ function computeAveragePrice(doc = document) {
 * @return {string} a scaping url that is used based on the title
 * of the current listing
 */
-function createURLForSearchPage() {
+function createURLForSearchPage(url = window.location.href) {
   let title = gatherTitle();
   if(title === "no value yet" || title === "") {
     console.log("can't find title element")
-    return title;
+    return "error: can't find the title";
   }
-  console.log(title);
   title = title.replace(/ /g, '-');
   if(title.length > 50) {
     title = title.slice(0,50);
   }
-  if(window.location.href.includes("https://www.aliexpress.us/item/")){
+  if(url.includes("https://www.aliexpress.us/item/")){
 
     title = "https://www.aliexpress.us/w/wholesale-" + title + ".html";
-  } else if(window.location.href.includes("https://www.aliexpress.com/item/")){
+  } else {
     title = "https://www.aliexpress.com/w/wholesale-" + title + ".html";
   }
   console.log("scraping: " + title);
@@ -276,12 +323,21 @@ function getAllInformationForAlg(doc = document) {
 * listing: on a listing page
 * search: on a search page
 */
-function currPageType() {
-  if(window.location.href.includes("https://www.aliexpress.us/item/")||
-      window.location.href.includes("https://www.aliexpress.com/item/")){
-    return "listing"
-  } else if(window.location.href.includes("https://www.aliexpress.us/w/")) {
-    return "search"
+function currPageType(doc = document) {
+  let elementType = doc.querySelector("body[data-spm='productlist']");
+  if(!elementType) {elementType = doc.querySelector("body[data-spm='detail']");}
+  if(!elementType) {elementType = doc.querySelector("body[data-spm='tm1000015626']");}
+  if(!elementType) {
+    return "unknown"
+  }
+  if(elementType.getAttribute("data-spm") === "detail") {
+    return "listing";
+
+  //this is a else if(elementType.getAttribute("data-spm") === "productlist")
+  } else if (elementType.getAttribute("data-spm") === "productlist") {
+    return "search";
+  } else {
+    return "for you";
   }
 }
 
@@ -295,6 +351,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if(request.html) {
     const parser = new DOMParser();
     doc = parser.parseFromString(request.html, 'text/html');
+    // doc = request.html
   }
   //get all the needed data for listing page
   if(request.action === "getData") {
@@ -308,7 +365,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // and use this to first idenitfy what page,
   // then either use getDataFromSearch or, getData 
   } else if(request.action === "pageType") {
-    sendResponse({pageType: currPageType()});
+    sendResponse({pageType: currPageType(doc)});
   //get the url that put the listing title into the search bar
   } else if(request.action === "getURLToScapeForListing") {
     sendResponse({URLToScape: createURLForSearchPage()})
@@ -326,7 +383,9 @@ module.exports = {
   gatherNumberRatings,
   gatherAge,
   gatherOpenSinceDate,
-  getAllInformationForSimpleAIg: getAllInformationForAlg,
+  getAllInformationForAlg,
   gatherSearchedPrices,
-  computeAveragePrice
-};
+  computeAveragePrice,
+  createURLForSearchPage,
+  currPageType
+}
