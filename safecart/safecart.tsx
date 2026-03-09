@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./frontend/popup/App";
-import { simpleTrustScore } from "./scripts/simpleTrustAlg";
 import { trustScore } from "./scripts/trustScore";
 import "./frontend/popup/globals.css";
 import { ListingData } from "./scripts/TrustModel";
@@ -132,7 +131,7 @@ async function renderApp() {
         }
         const evaluation = await trustScore(listingData);
         console.log("Evaluation result:", evaluation);
-        
+
         // display frontend
         const root = document.getElementById('root');
         if (root != null){
