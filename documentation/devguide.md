@@ -24,7 +24,7 @@
 - After building, go to `chrome://extensions` then load unpacked from `safecart/safecart`
 
 ### Adding new tests
- - Write your tests using Jest (https://jestjs.io/docs) then place them in the tests folder (safecart/tests).
+ - Write your tests using Jest (https://jestjs.io/docs/getting-started) then place them in the tests folder (safecart/tests).
  - Name the test file <name>.test.js and it will automatically be run when the CI script is triggered or `npm run test` is used.
  - Refer to `documentation/tests.md` for more information
 
