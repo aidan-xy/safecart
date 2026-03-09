@@ -279,6 +279,7 @@ function createURLForSearchPage(url = window.location.href) {
     return "error: can't find the title";
   }
   title = title.replace(/ /g, '-');
+  title = title.replace(/\//g, '');
   if(title.length > 50) {
     title = title.slice(0,50);
   }
