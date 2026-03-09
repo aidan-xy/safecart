@@ -263,8 +263,7 @@ export function computeAveragePrice(doc = document) {
     for(let i = 0; i < prices.length; i++) {
       total += prices[i];
     }
-    const avgPrice = (total/ prices.length).toFixed(2)
-    console.log("average price: " + computeAveragePrice(doc));
+    const avgPrice = (total/ prices.length).toFixed(2);
     return parseFloat(avgPrice);
   }
 }

@@ -314,10 +314,10 @@ describe('parsing search pages', () => {
     document.documentElement.innerHTML = '';
   });
 
-  // test('getting the avg price correctly', () => {
-  //   const avg = computeAveragePrice()
-  //   expect(avg).toEqual(5.88);
-  // })
+  test('getting the avg price correctly', () => {
+    const avg = computeAveragePrice()
+    expect(avg).toEqual(5.88);
+  })
 
   test('getting the number listing price correct', () => {
     const listingPrices = gatherSearchedPrices(document)
