@@ -4,30 +4,31 @@ For the developer guide, visit `documentation/devguide.md`
 
 For the user guide, visit `documentation/userguide.md`
 
-## Project Idea and Goals
+## The Project
 SafeCart is a browser extension designed to help users safely navigate online marketplaces (currently focused on AliExpress). It analyzes publicly available data about listings and sellers to provide a **trustworthiness rating**, helping users avoid scams or low-quality products.
 
-**Goals:**
-- Automatically evaluate listings and flag suspicious vendors. (Complete)
-- Provide a clear, interpretable trust score per listing. (Complete)
-- Display trust metrics on both search results and individual listing pages.
-- Lay the foundation for machine learning-based evaluations in the future.
+---
 
-**Current Functional Use Cases and Features:**
-- Can evaluate any Aliexpress listing for trustworthiness. Display's trust score/metrics to user in extension popup window.
+## Current Features:
+- Can evaluate an Aliexpress listing for trustworthiness. Display's trust score/metrics to user in extension popup window.
+- From a search page, a button will display to allow the user to see the trust score directly from the search page.
+- A machine learning algorithm is used to calculate trust scores.
+- An item's price is compared to the average price of similar items in determining a trust score.
+- 
 
 ---
 
 ## Repository Layout
 - NOTE: This section can and likely will be changed and adjusted throughout development
-- `safecart/` - Core extension source code
-    - `frontend/` – UI injection, extension popup, badges, icons, popups
-    - `model/` – Stores the trust score machine learning model
-    - `scripts/` – Data gathering, hard-coded scoring algorithms, model inference, evaluation logic
+- `safecart/` - Core extension source code.
+    - `frontend/` – UI injection, extension popup, badges, icons.
+    - `model/` – Stores the trust score machine learning model.
+    - `images/` – The extension icons.
+    - `scripts/` – Data gathering, hard-coded scoring algorithms, model inference, evaluation logic.
     - `tests/` – Tests. Uses Jest for testing.
-- `documentation/` – User guide, Developer guide, test plans, and requirements
-- `weekly status reports/` – Team sprint updates
-- `README.md` – Project overview, layout, and instructions
+- `documentation/` – User guide, Developer guide, test plans, and requirements.
+- `weekly status reports/` – Team sprint updates.
+- `README.md` – Project overview, layout, and instructions.
 
 ---
 
@@ -35,9 +36,9 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 - Prerequisites: at least node.js: v22.13.0, npm: 10.9.2, python: 3.11, pip: 2.25.3
 - Clone the repo `git clone https://github.com/aidan-xy/safecart.git`
 - Install dependencies `npm install` and `pip install -r requirements.txt`
-- To train model, place data in `/safecart/model/data` then edit `trust_model_logisitc_regression.py` to use it (line 21) then run both that file and `export_pipeline_onnx.py` in `/safecart/model`
-- To run tests do `npm test`
-- To build, run `npm run build`
+- To train model, place data in `/safecart/model/data` then edit `trust_model_logistic_regression.py` to use it (line 21) then run both that file and `export_pipeline_onnx.py` in `/safecart/model`
+- To run tests, do `npm test`
+- To build, do `npm run build`
 - After building, go to `chrome://extensions` then load unpacked from `safecart/safecart`
 
 ### Adding new tests
@@ -63,3 +64,5 @@ As per the course policy, we utilized AI to help complete code based on our desi
 Beta Release: `beta`
 
 Gamma Release: `gamma`
+
+Final Release: `final`
