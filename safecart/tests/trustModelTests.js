@@ -1,4 +1,3 @@
-const { type } = require('node:os');
 const trustScore = require('../dist/safecart/scripts/trustScore.js');
 
 // Helper function to convert raw listing data to the format expected by the model
@@ -34,23 +33,24 @@ function assertLessOrEqual(value, threshold, label) {
 
 async function runTests() {
   console.log("Running trust model manual tests...\n");
-  let score;
+  let trustScores;
 
   // good listings
-  score = await trustScore(
+  trustScores =await trustScore(
     toListingData({
       listingPrice: 100,
       marketPrice: 100,
       productRating: 5,
-      numSold: 1000,
-      ageYears: 5,
-      numRating: 1000,
+      numSold: 10000,
+      ageYears: 10,
+      numRating: 10000,
       reviewImages: 1000,
     })
   );
-  assertGreaterOrEqual(score, 90, "Theoretical perfect listing");
+  assertGreaterOrEqual(trustScores.score, 90, "Theoretical perfect listing");
+  console.log("Trust score breakdown:", trustScores.metrics);
 
-  score = await trustScore(
+  trustScores = await trustScore(
     toListingData({
       listingPrice: 76.73,
       marketPrice: 90,
@@ -61,9 +61,10 @@ async function runTests() {
       reviewImages: 1223,
     })
   );
-  assertGreaterOrEqual(score, 90, "Ajazz AK820 listing");
+  assertGreaterOrEqual(trustScores.score, 90, "Ajazz AK820 listing");
+  console.log("Trust score breakdown:", trustScores.metrics);
 
-  score = await trustScore(
+  trustScores = await trustScore(
     toListingData({
       listingPrice: 37.23,
       marketPrice: 30,
@@ -74,10 +75,11 @@ async function runTests() {
       reviewImages: 11,
     })
   );
-  assertGreaterOrEqual(score, 90, "TACVASEN Polo Shirt listing");
+  assertGreaterOrEqual(trustScores.score, 90, "TACVASEN Polo Shirt listing");
+  console.log("Trust score breakdown:", trustScores.metrics);
 
   // bad listings
-  score = await trustScore(
+  trustScores = await trustScore(
     toListingData({
       listingPrice: 500,
       marketPrice: 1600,
@@ -88,9 +90,10 @@ async function runTests() {
       reviewImages: 0,
     })
   );
-  assertLessOrEqual(score, 30, "Scam RTX 4090 listing");
+  assertLessOrEqual(trustScores.score, 30, "Scam RTX 4090 listing");
+  console.log("Trust score breakdown:", trustScores.metrics);
 
-  score = await trustScore(
+  trustScores = await trustScore(
     toListingData({
       listingPrice: 1,
       marketPrice: 100,
@@ -101,9 +104,10 @@ async function runTests() {
       reviewImages: 0,
     })
   );
-  assertLessOrEqual(score, 5, "Theoretical worst listing");
+  assertLessOrEqual(trustScores.score, 5, "Theoretical worst listing");
+  console.log("Trust score breakdown:", trustScores.metrics);
 
-  score = await trustScore(
+  trustScores = await trustScore(
     toListingData({
       listingPrice: 100,
       marketPrice: 1,
@@ -114,10 +118,11 @@ async function runTests() {
       reviewImages: 0,
     })
   );
-  assertLessOrEqual(score, 5, "Theoretical worst listing, reversed price dist");
+  assertLessOrEqual(trustScores.score, 5, "Theoretical worst listing, reversed price dist");
+  console.log("Trust score breakdown:", trustScores.metrics);
 
   // validate input
-  score = await trustScore(
+  trustScores = await trustScore(
     toListingData({
       listingPrice: -1,
       marketPrice: -1,
@@ -128,15 +133,15 @@ async function runTests() {
       reviewImages: -1,
     })
   );
-  if (Number.isNaN(score)) {
+  if (Number.isNaN(trustScores.score)) {
     throw new Error(
-      `FAIL: fallback values were not loaded from bad input (` + score + ')'
+      `FAIL: fallback values were not loaded from bad input (` + trustScores.score + ')'
     );
   } else {
-    console.log('PASS: fallback values were loaded from bad input (' + score + ')')
+    console.log('PASS: fallback values were loaded from bad input (' + trustScores.score + ')')
   }
 
-  score = await trustScore(
+  trustScores = await trustScore(
     toListingData({
       listingPrice: null,
       marketPrice: null,
@@ -147,12 +152,12 @@ async function runTests() {
       reviewImages: null,
     })
   );
-  if (Number.isNaN(score)) {
+  if (Number.isNaN(trustScores.score)) {
     throw new Error(
-      `FAIL: fallback values were not loaded from null input (` + score + ')'
+      `FAIL: fallback values were not loaded from null input (` + trustScores.score + ')'
     );
   } else {
-    console.log('PASS: fallback values were loaded from null input (' + score + ')')
+    console.log('PASS: fallback values were loaded from null input (' + trustScores.score + ')')
   }
 
   console.log("\n All manual tests passed.");
