@@ -127,6 +127,15 @@ export class TrustModel {
     return { score, metrics };
   }
 
+  // Dispose of the inference session and free resources
+  async dispose(): Promise<void> {
+    if (this.session) {
+      await this.session.release();
+      this.session = null;
+      console.log("Trust model disposed.");
+    }
+  }
+
   // Runs ONNX inference and returns the raw probability array [p_class0, p_class1]
   private async _runInference(listing: ListingData): Promise<Float32Array> {
     if (!this.session) {
