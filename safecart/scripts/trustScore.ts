@@ -1,24 +1,76 @@
-import { TrustModel, ListingData } from "./TrustModel";
+import { TrustModel, ListingData, TrustScoreResult } from "./TrustModel";
+
+// Singleton instance of the trust model (cached to avoid reloading)
+let modelInstance: TrustModel | null = null;
+let modelInitPromise: Promise<TrustModel> | null = null;
+
+/**
+ * Get or initialize the singleton trust model instance.
+ * Handles concurrent requests safely with a promise lock.
+ * @returns {Promise<TrustModel>} - The loaded model instance
+ */
+async function getTrustModel(): Promise<TrustModel> {
+  if (modelInstance) {
+    return modelInstance;
+  }
+
+  // If initialization is already in progress, wait for it
+  if (modelInitPromise) {
+    return modelInitPromise;
+  }
+
+  // Start initialization
+  modelInitPromise = (async () => {
+    const model = new TrustModel("trust_model.onnx");
+    await model.load();
+    modelInstance = model;
+    return model;
+  })();
+
+  return modelInitPromise;
+}
+
+/**
+ * Setup cleanup listener for browser unload events.
+ * Disposes model's ONNX session when page closes.
+ */
+function setupCleanup(): void {
+  if (typeof window !== "undefined") {
+    window.addEventListener("beforeunload", async () => {
+      if (modelInstance) {
+        await modelInstance.dispose();
+        modelInstance = null;
+        modelInitPromise = null;
+      }
+    });
+  }
+}
+
+// Initialize cleanup on module load
+setupCleanup();
 
 /**
  * This function is the main entry point for computing a trust score for a listing using the
- * logistic regression model. It creates an instance of TrustModel, loads the ONNX file, 
- * and then computes the trust score for the given listing data. 
+ * logistic regression model. It reuses a cached model instance, loading it only once.
  * 
- * @param {ListingData} input - The ListingData to compute the trust score for. If 
- *                              seller_age_years cannot be determined use 5 as a fallback for now.                              
- * @returns {Promise<number>} - The computed trust score on a scale of [1, 100] rounded
+ * @param {ListingData} input - The ListingData to compute the trust score for. Inputted data is 
+ *                              validated and replaced with fallback values if invalid.                              
+ * @returns {Promise<TrustScoreResult>} - Overall score and per-metric breakdown in [1, 100] which
+ *                                        can be directly fed into the UI. The structure is:
+ *   {
+ *     score: number,
+ *     metrics: [
+ *       { name: string, score: number },
+ *       ...
+ *     ]
+ *   }
  */
-export async function trustScore(input: ListingData): Promise<number> {
+export async function trustScore(input: ListingData): Promise<TrustScoreResult> {
   const validatedInput = { ...input };
   validateInput(validatedInput);
 
-  // Create the and load model
-  const model = new TrustModel("trust_model.onnx"); // path to ONNX file
-  await model.load();
-
-  const score = await model.score(validatedInput);
-  return Math.max(1, Math.round(score * 100.0)); // convert to [1, 100] rounded scale
+  const model = await getTrustModel();
+  return model.scoreWithBreakdown(validatedInput);
 }
 
 const PRICE_DIST_FALLBACK = 0.25;
