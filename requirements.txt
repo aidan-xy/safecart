@@ -2,3 +2,4 @@ joblib
 pandas
 scikit-learn
 skl2onnx
+numpy
