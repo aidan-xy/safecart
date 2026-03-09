@@ -53,6 +53,11 @@ Our detailed development plan, including team structure, use cases, feature prio
 
 ---
 
+## Use of AI in Development
+As per the course policy, we utilized AI to help complete code based on our design and architecture. Our team consistenly met during daily standups to discuss our ideas for design and implementation before launching a hybrid AI-human development cycle for sprints. After outlining ideas and design choices, we used a combination of AI build tools to prototype relevant code files. Following the initial generaltion, we maintianed strong engineering principles by manually checking generated code to assess compatability and conducting code reviews on commits before merging to the main branch. Agentic coding was central to code completion and helping to implement our design choices, but all build ideas and rationale was our own.
+
+---
+
 ## Release Tags
 
 Beta Release: `beta`
