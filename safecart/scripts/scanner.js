@@ -201,24 +201,23 @@ function gatherAge(doc = document) {
 function gatherSearchedPrices(doc = document) {
   //take the lowest html that contain all of the prices
   let priceArray = [];
-  const allListingHTML = doc.querySelector('div[class="hr_hs"]');
+  const allListingHTML = doc.querySelector('div[data-spm="main"]');
   if(allListingHTML) {
     //look into the html with the pirces
-    const eachInfo = allListingHTML.querySelectorAll('div[class="l0_e1"]');
+    const eachInfo = allListingHTML.querySelectorAll('div[aria-label]:not([title])');
     for (let i = 0; i < eachInfo.length; i++) {
         //grab the prices
         let newProductPriceStringWithDollar = eachInfo[i].getAttribute("aria-label");
         if(newProductPriceStringWithDollar) {
           //parse the string from the dollarsign
-          let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+(\.\d{1,2})?/);
+          let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+\.\d{1,2}/);
           //turn it into a float
-          let newProductPrice = parseFloat(newProductPriceString);
+          let newProductPrice = parseFloat( newProductPriceString[0].replace(/,/g, ''));
           priceArray.push(newProductPrice);
+          console.log("price element: " + newProductPrice);
         }
     }
   }
-  console.log("price element: ");
-  console.log(priceArray);
   return priceArray;
 }
 
@@ -263,6 +262,7 @@ function computeAveragePrice(doc = document) {
       total += prices[i];
     }
     const avgPrice = (total/ prices.length).toFixed(2)
+    console.log("average price: " + computeAveragePrice(doc));
     return parseFloat(avgPrice);
   }
 }
