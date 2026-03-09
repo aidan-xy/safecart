@@ -144,7 +144,7 @@ async function renderApp() {
         const root = document.getElementById('root');
         if (root != null){
             ReactDOM.createRoot(root).render(
-              <p>Parsing failed. Please click into a product listing on Aliexpress</p>
+              <h1>Parsing failed. Please click into a product listing on Aliexpress</h1>
             )
         }
     }
