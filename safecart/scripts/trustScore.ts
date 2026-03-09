@@ -66,6 +66,7 @@ setupCleanup();
  *   }
  */
 export async function trustScore(input: ListingData): Promise<TrustScoreResult> {
+  console.log("trustScore: Received input:", input);
   const validatedInput = { ...input };
   validateInput(validatedInput);
 
@@ -108,5 +109,3 @@ function validateInput(input: ListingData): void {
     input.num_images = NUM_IMAGES_FALLBACK;
   }
 }
-
-module.exports = trustScore;

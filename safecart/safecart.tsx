@@ -2,8 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./frontend/popup/App";
 import { simpleTrustScore } from "./scripts/simpleTrustAlg";
-import { trustScore } from "./scripts/trustAlg";
+import { trustScore } from "./scripts/trustScore";
 import "./frontend/popup/globals.css";
+import { ListingData } from "./scripts/TrustModel";
 
 // this class will call all the layer components in order
 
@@ -119,25 +120,19 @@ getSearchUrl()
     });
 
 // displays the popup from the extension
-function renderApp() {
-    if(productData != null){
-        // const evaluation = trustScore(
-        //     productData.listingPrice,
-        //     marketPrice.averagePrice,
-        //     productData.productRating,
-        //     productData.numSold,
-        //     productData.ageYears,
-        //     productData.numRating,
-        //     productData.reviewImages
-        // );
-        const evaluation = simpleTrustScore(
-            productData.productRating,
-            productData.numSold,
-            productData.ageYears,
-            productData.numRating,
-            productData.reviewImages
-        );
+async function renderApp() {
+    if (productData != null) {
+        const listingData : ListingData = {
+            price_dist: Math.abs(marketPrice.averagePrice - productData.listingPrice) / marketPrice.averagePrice,
+            seller_age_years: productData.ageYears,
+            rating: productData.rating,
+            num_sold: productData.numSold,
+            num_rating: productData.numRating,
+            num_images: productData.numImages
+        }
+        const evaluation = await trustScore(listingData);
         console.log("Evaluation result:", evaluation);
+        
         // display frontend
         const root = document.getElementById('root');
         if (root != null){
