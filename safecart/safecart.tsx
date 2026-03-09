@@ -26,13 +26,14 @@ async function getProductData() {
     });
 }
 
-async function getMarketPrice(doc: Document) {
+async function getMarketPrice(doc: string) {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     return new Promise((resolve, reject) => {
         if (!tab.id) {
             reject(new Error("No active tab found"));
             return;
         }
+        console.log("SENDING DOC TO GETMARKETPRICE ", doc);
         chrome.tabs.sendMessage(tab.id, { action: "getDataFromSearch", html: doc }, (response: any) => {
             if (chrome.runtime.lastError) {
                 reject(chrome.runtime.lastError);
@@ -66,6 +67,7 @@ async function fetchFullHTML(url: string) : Promise<string> {
             {action: "fetchFullHTML", url: url },
             (response) => {
                 if (response?.success) {
+                    console.log(response.html);
                     resolve(response.html);
                 } else {
                     reject(response?.error);
@@ -94,20 +96,18 @@ getProductData()
     });
 
 getSearchUrl()
-    .then((data: any) => {
+    .then(async (data: any) => {
         searchUrl = data.URLToScape;
         console.log("Search url retrieved:", searchUrl);
 
         // Now perform the scraping
-        return fetchFullHTML(searchUrl);
+        return await fetchFullHTML(searchUrl);
     })
-    .then((html) => {
-        const parser = new DOMParser();
-        searchDoc = parser.parseFromString(html, "text/html");
-        console.log("Search Doc retrieved:", searchDoc);
+    .then(async (html) => {
+        console.log("Search Doc retrieved:", html);
 
         // Now get market price
-        return getMarketPrice(searchDoc);
+        return await getMarketPrice(html);
     })
     .then((data) => {
         marketPrice = data;
