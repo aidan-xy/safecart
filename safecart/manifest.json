@@ -20,18 +20,6 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/scanner.js"],
-      "matches": [
-        "https://www.aliexpress.us/item/*",
-        "https://www.aliexpress.com/item/*",
-        "https://www.aliexpress.us/w/wholesale*",
-        "https://www.aliexpress.com/w/wholesale*",
-        "https://www.aliexpress.com/ssr/*",
-        "https://www.aliexpress.us/ssr/*",
-        "https://www.aliexpress/*"
-      ]
-    },
-    {
       "matches": [
         "*://*.aliexpress.com/*",
         "*://*.aliexpress.us/*"
