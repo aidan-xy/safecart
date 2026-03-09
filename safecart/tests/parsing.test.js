@@ -41,8 +41,9 @@ const originalError  = console.error;
 beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {});
   jest.spyOn(console, 'error').mockImplementation((msg, ...args) => {
-    if (typeof msg === 'string' && msg.includes('Could not parse CSS stylesheet')) return;
-    originalError(msg, ...args); // let all other errors through normally
+    const text = typeof msg === 'string' ? msg : msg?.message;
+    if (text?.includes('Could not parse CSS stylesheet')) return;
+    originalError(msg, ...args);
   });
 });
 
