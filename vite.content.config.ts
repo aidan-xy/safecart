@@ -15,9 +15,9 @@ export default defineConfig({
       ),
       output: {
         inlineDynamicImports: true,
-        entryFileNames: "contentScript.js",
-        assetFileNames: 'assets/[name].css'
-      }
+        entryFileNames: "contentScript.js"
+      },
+      external: ['safecart/tests/**']
     }
   }
 });

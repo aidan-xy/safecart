@@ -80,7 +80,8 @@ let productData: any = null;
 let searchUrl: any = null;
 let searchDoc: any = null;
 let marketPrice: any = null;
-const parser = new DOMParser();
+
+
 
 getProductData()
     .then((data) => {
@@ -121,22 +122,22 @@ getSearchUrl()
 // displays the popup from the extension
 function renderApp() {
     if(productData != null){
-        // const evaluation = trustScore(
-        //     productData.listingPrice,
-        //     marketPrice.averagePrice,
-        //     productData.productRating,
-        //     productData.numSold,
-        //     productData.ageYears,
-        //     productData.numRating,
-        //     productData.reviewImages
-        // );
-        const evaluation = simpleTrustScore(
+        const evaluation = trustScore(
+            productData.listingPrice,
+            marketPrice.averagePrice,
             productData.productRating,
             productData.numSold,
             productData.ageYears,
             productData.numRating,
             productData.reviewImages
         );
+        // const evaluation = simpleTrustScore(
+        //     productData.productRating,
+        //     productData.numSold,
+        //     productData.ageYears,
+        //     productData.numRating,
+        //     productData.reviewImages
+        // );
         console.log("Evaluation result:", evaluation);
         // display frontend
         const root = document.getElementById('root');

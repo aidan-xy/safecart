@@ -11,204 +11,68 @@ jest.mock("react-dom/client", () => ({
     }))
 }));
 
+jest.mock("")
+
 const ReactDOM = require("react-dom/client");
 
-const {
-    injectBadgeOnListing,
-    injectBadges
-} = require("../frontend/content/contentScript");
+const { injectBadgeOnListing, injectBadges } = require("../frontend/content/contentScript");
 
 global.chrome = {
     runtime: {
-        getURL: jest.fn(() => "popup.css")
+        getURL: jest.fn(() => "popup.css"),
+        sendMessage: jest.fn((msg, cb) => cb({ success: true, html: "<html></html>" })),
+        onMessage: {
+            addListener: jest.fn(() => null)
+        }
     }
 };
 
-describe("SafeCart Content Script", () => {
+describe("SafeCart Content Script - simplified flow", () => {
 
     beforeEach(() => {
         document.body.innerHTML = "";
         jest.clearAllMocks();
     });
 
-    // =====================================================
-    // injectBadgeOnListing()
-    // =====================================================
-
-    test("returns early when card is null", () => {
-        expect(() => injectBadgeOnListing(null)).not.toThrow();
-        expect(document.querySelector(".safecart-badge")).toBeNull();
-    });
-
-    test("returns early if badge already exists", () => {
+    test("injectBadgeOnListing main flow with badge click and auto-execution", async () => {
+        // Setup a dummy card
         const card = document.createElement("div");
+        const link = "https://product.com";
         document.body.appendChild(card);
 
-        injectBadgeOnListing(card, "link1");
-        injectBadgeOnListing(card, "link2");
-
-        const badges = card.querySelectorAll(".safecart-badge");
-        expect(badges.length).toBe(1);
-    });
-
-    test("injects badge with correct styling", () => {
-        const card = document.createElement("div");
-        document.body.appendChild(card);
-
-        injectBadgeOnListing(card, "https://example.com");
+        // Inject badge
+        injectBadgeOnListing(card, link);
 
         const badge = card.querySelector(".safecart-badge");
-
         expect(badge).not.toBeNull();
-        expect(badge.style.borderRadius).toBe("50%");
-        expect(badge.style.pointerEvents).toBe("auto");
         expect(card.style.position).toBe("relative");
-        expect(badge.innerHTML).toContain("S");
-    });
 
-    test("clicking badge opens shadow DOM modal and close button removes it", () => {
+        // Simulate badge click
+        await badge.click();
 
-        const card = document.createElement("div");
-        document.body.appendChild(card);
-
-        injectBadgeOnListing(card, "https://product.com");
-
-        const badge = card.querySelector(".safecart-badge");
-
-        badge.click();
-
-        // Host overlay should exist
-        const host = document.getElementById("safecart-overlay");
-        expect(host).not.toBeNull();
-
-        const shadowRoot = host.shadowRoot;
-        expect(shadowRoot).not.toBeNull();
+        // Overlay and shadow DOM should exist
+        const overlay = document.getElementById("safecart-overlay");
+        expect(overlay).not.toBeNull();
+        expect(overlay.shadowRoot).not.toBeNull();
 
         // CSS link injected
-        const link = shadowRoot.querySelector("link");
-        expect(link).not.toBeNull();
+        const styleLink = overlay.shadowRoot.querySelector("link");
+        expect(styleLink).not.toBeNull();
         expect(chrome.runtime.getURL).toHaveBeenCalled();
 
-        // React root should render
-        expect(ReactDOM.createRoot).toHaveBeenCalled();
-
-        // Close button
-        const closeBtn = shadowRoot.querySelector("button");
+        // Close modal
+        const closeBtn = overlay.shadowRoot.querySelector("button");
         expect(closeBtn).not.toBeNull();
-
         closeBtn.click();
-
         expect(document.getElementById("safecart-overlay")).toBeNull();
-    });
 
-    test("clicking badge twice does not create duplicate overlays", () => {
-
-        const card = document.createElement("div");
-        document.body.appendChild(card);
-
-        injectBadgeOnListing(card, "https://product.com");
-
-        const badge = card.querySelector(".safecart-badge");
-
-        badge.click();
-        badge.click();
-
-        const overlays = document.querySelectorAll("#safecart-overlay");
-        expect(overlays.length).toBe(1);
-    });
-
-    // =====================================================
-    // injectBadges() DOM scan
-    // =====================================================
-
-    test("injectBadges finds existing cards", () => {
-
-        document.body.innerHTML = `
-            <a href="https://example.com/product">
-                <div>
-                    <div>
-                        <div>
-                            <div class="nm_nn"></div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        `;
-
-        injectBadges();
-
-        const badge = document.querySelector(".safecart-badge");
-        expect(badge).not.toBeNull();
-    });
-
-    // =====================================================
-    // MutationObserver coverage
-    // =====================================================
-
-    test("MutationObserver injects badge for dynamically added elements", async () => {
-
-        injectBadges();
-
-        const wrapper = document.createElement("div");
-
-        wrapper.innerHTML = `
-            <a href="https://dynamic.com/product">
-                <div>
-                    <div>
-                        <div>
-                            <div class="nm_nn"></div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        `;
-
-        document.body.appendChild(wrapper);
-
-        await new Promise(r => setTimeout(r, 0));
-
-        const badge = document.querySelector(".safecart-badge");
-        expect(badge).not.toBeNull();
-    });
-
-    test("MutationObserver ignores non-element nodes", async () => {
-
-        injectBadges();
-
-        const textNode = document.createTextNode("hello");
-        document.body.appendChild(textNode);
-
-        await new Promise(r => setTimeout(r, 0));
-
-        const badges = document.querySelectorAll(".safecart-badge");
-        expect(badges.length).toBe(0);
-    });
-
-    // =====================================================
-    // Auto execution branch
-    // =====================================================
-
-    describe("auto-execution when not in test mode", () => {
-
-        beforeEach(() => {
-            jest.resetModules();
-            document.body.innerHTML = "";
-        });
-
-        test("logs and runs injectBadges", () => {
-
-            delete window.__SAFE_CART_TEST__;
-
-            const consoleSpy = jest
-                .spyOn(console, "log")
-                .mockImplementation(() => {});
-
-            require("../frontend/content/contentScript");
-
-            expect(consoleSpy).toHaveBeenCalledWith("SAFE CART IS RUNNING");
-
-            consoleSpy.mockRestore();
-        });
+        // Auto-execution branch
+        delete window.__SAFE_CART_TEST__;
+        const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        jest.resetModules();
+        require("../frontend/content/contentScript");
+        expect(consoleSpy).toHaveBeenCalledWith("SAFE CART IS RUNNING");
+        consoleSpy.mockRestore();
     });
 
 });

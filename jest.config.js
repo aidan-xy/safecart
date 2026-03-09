@@ -4,7 +4,8 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   transform: {
-    "jsx": "babel-jest"
+    "jsx": "babel-jest",
+    "js": "babel-jest"
   },
   moduleNameMapper: {
     "^react$": require.resolve("react"),

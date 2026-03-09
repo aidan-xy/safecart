@@ -2,7 +2,7 @@
 *Calculating the age based on today dates and the store dates
 * @return {string[]} an array of reviews for the product
 */
-function gatherReview(doc = document) {
+export function gatherReview(doc = document) {
   const reviews = doc.querySelectorAll('div[class="list--itemReview--d9Z9Z5Z"]');
   const reviewsArray = [];
   if(reviews && reviews.length > 0) {
@@ -19,7 +19,7 @@ function gatherReview(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {string} the product title
 */
-function gatherTitle(doc = document) {
+export function gatherTitle(doc = document) {
   const title = doc.querySelector('h1[data-pl="product-title"]');
   console.log("Title element: " +  (title ? title.textContent : "no value yet"));
   return title ? title.textContent : "no value yet";
@@ -29,7 +29,7 @@ function gatherTitle(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {number} the rating of the product
 */
-function gatherRating(doc = document) {
+export function gatherRating(doc = document) {
   let productRatingHTML;
   if(currPageType(doc) === "listing") {
     productRatingHTML = doc.querySelector('a[class="reviewer--rating--xrWWFzx"] strong');
@@ -50,7 +50,7 @@ function gatherRating(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {number} the price of the product
 */
-function gatherPrice(doc = document) {
+export function gatherPrice(doc = document) {
   let listingPrice;
   if(currPageType(doc) === "listing") {
     listingPrice = doc.querySelector('span[class="price-default--current--F8OlYIo"]');
@@ -72,7 +72,7 @@ function gatherPrice(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {number} the number of product sold
 */
-function gatherNumSold(doc = document) {
+export function gatherNumSold(doc = document) {
   let numSoldHTML;
   if(currPageType(doc) === "listing") {
     numSoldHTML = doc.querySelector('span[class="reviewer--sold--ytPeoEy"]');
@@ -93,7 +93,7 @@ function gatherNumSold(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {number} the number of images
 */
-function gatherNumberImage(doc = document) {
+export function gatherNumberImage(doc = document) {
   let numberImage;
   if(currPageType(doc) === "listing") {
     const numberImageImage = doc.querySelector('span[class="comet-icon comet-icon-photo filter--labelIcon--O0LEQIg"]');
@@ -108,9 +108,10 @@ function gatherNumberImage(doc = document) {
     if(numberImageHTML) {
       const eachText = numberImageHTML.querySelectorAll('div[class="ae-filter-tab-item-text"]');
       const eachNumber = numberImageHTML.querySelectorAll('div[class="ae-filter-tab-item-num"]');
+      let numberImageText = null
       for (let i = 0; i < eachText.length; i++) {
         if (eachText[i].textContent.trim() === 'Pic review') {
-          numberImageText = eachNumber[i];
+          let numberImageText = eachNumber[i];
           break;
         }
       }
@@ -129,7 +130,7 @@ function gatherNumberImage(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {number} the number of ratings
 */
-function gatherNumberRatings(doc = document) {
+export function gatherNumberRatings(doc = document) {
   let numberOfRatingsHTML;
   if(currPageType(doc) === "listing") {
     numberOfRatingsHTML = doc.querySelector('a[class="reviewer--reviews--cx7Zs_V"]');
@@ -149,8 +150,9 @@ function gatherNumberRatings(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {string} the opening date in string
 */
-function gatherOpenSinceDate(doc = document) {
+export function gatherOpenSinceDate(doc = document) {
   let date;
+  let ageHTML = null;
   if(currPageType(doc) === "listing") {
     ageHTML = doc.querySelector('div[class="store-detail--storeInfo--BMDFsTB"]');
   } else {
@@ -176,7 +178,7 @@ function gatherOpenSinceDate(doc = document) {
 *Calculating the age based on today dates and the store dates
 * @return {Number} the age rounded to the nearest 100th
 */
-function gatherAge(doc = document) {
+export function gatherAge(doc = document) {
   let age = 0;
   const dateStr = gatherOpenSinceDate(doc = document);
   if(dateStr !== "") {
@@ -198,7 +200,7 @@ function gatherAge(doc = document) {
 * @param {string} html element in string 
 * @return {number[]}
 */
-function gatherSearchedPrices(doc = document) {
+export function gatherSearchedPrices(doc = document) {
   //take the lowest html that contain all of the prices
   let priceArray = [];
   const allListingHTML = doc.querySelector('div[class="hr_hs"]');
@@ -252,7 +254,7 @@ function gatherSearchedPrices(doc = document) {
 * @param {string} html element in string 
 * @return {number} the average price of the whole page
 */
-function computeAveragePrice(doc = document) {
+export function computeAveragePrice(doc = document) {
   console.log("computing average price");
   const prices = gatherSearchedPrices(doc);
   if(!prices || prices.length === 0) {
@@ -272,8 +274,8 @@ function computeAveragePrice(doc = document) {
 * @return {string} a scaping url that is used based on the title
 * of the current listing
 */
-function createURLForSearchPage(url = window.location.href) {
-  let title = gatherTitle();
+export function createURLForSearchPage(doc, url = window.location.href) {
+  let title = gatherTitle(doc);
   if(title === "no value yet" || title === "") {
     console.log("can't find title element")
     return "error: can't find the title";
@@ -295,7 +297,7 @@ function createURLForSearchPage(url = window.location.href) {
 /**getting all the information for the simpleTrustAIg() class
 * @return {record}: things that are useful for simple AIg
 */
-function getAllInformationForAlg(doc = document) {
+export function getAllInformationForAlg(doc = document) {
   const infoForAlg = {listingPrice: gatherPrice(doc),
                       productRating: gatherRating(doc), 
                       numSold: gatherNumSold(doc), 
@@ -324,7 +326,7 @@ function getAllInformationForAlg(doc = document) {
 * listing: on a listing page
 * search: on a search page
 */
-function currPageType(doc = document) {
+export function currPageType(doc = document) {
   let elementType = doc.querySelector("body[data-spm='productlist']");
   if(!elementType) {elementType = doc.querySelector("body[data-spm='detail']");}
   if(!elementType) {elementType = doc.querySelector("body[data-spm='tm1000015626']");}
@@ -348,6 +350,7 @@ function currPageType(doc = document) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //button is pressed
   // this is for the current product page
+  console.log(request.action);
   let doc = document
   if(request.html) {
     const parser = new DOMParser();
@@ -369,24 +372,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({pageType: currPageType(doc)});
   //get the url that put the listing title into the search bar
   } else if(request.action === "getURLToScapeForListing") {
-    sendResponse({URLToScape: createURLForSearchPage()})
+    sendResponse({URLToScape: createURLForSearchPage(doc)})
   }
   return true;
 })
-
-module.exports = {
-  gatherTitle,
-  gatherRating,
-  gatherPrice,
-  gatherNumSold,
-  gatherReview,
-  gatherNumberImage,
-  gatherNumberRatings,
-  gatherAge,
-  gatherOpenSinceDate,
-  getAllInformationForAlg,
-  gatherSearchedPrices,
-  computeAveragePrice,
-  createURLForSearchPage,
-  currPageType
-}
