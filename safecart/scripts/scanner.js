@@ -212,7 +212,7 @@ export function gatherSearchedPrices(doc = document) {
         let newProductPriceStringWithDollar = eachInfo[i].getAttribute("aria-label");
         if(newProductPriceStringWithDollar) {
           //parse the string from the dollarsign
-          let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+\.\d{1,2}/);
+          let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+(\.\d{1,2})?/);
           //turn it into a float
           let newProductPrice = parseFloat( newProductPriceString[0].replace(/,/g, ''));
           priceArray.push(newProductPrice);
