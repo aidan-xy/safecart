@@ -26,6 +26,18 @@
       ],
       "js": ["dist/assets/contentScript.js"],
       "type": "module"
+    },
+    {
+      "js": ["scripts/scanner.js"],
+      "matches": [
+        "https://www.aliexpress.us/item/*",
+        "https://www.aliexpress.com/item/*",
+        "https://www.aliexpress.us/w/wholesale*",
+        "https://www.aliexpress.com/w/wholesale*",
+        "https://www.aliexpress.com/ssr/*",
+        "https://www.aliexpress.us/ssr/*"
+      ],
+      "type":"module"
     }
   ],  
   "content_security_policy": {
