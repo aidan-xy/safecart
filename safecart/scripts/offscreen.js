@@ -1,3 +1,12 @@
+/**
+ * Handles messages from content scripts or popup, specifically for loading a page in an offscreen document.
+ * Creates a hidden iframe, loads the provided URL, waits for it to load completely (including dynamic content),
+ * retrieves the document's outer HTML, cleans up the iframe, and sends the HTML back as a response.
+ * @param {Object} message - The message object containing action and url properties.
+ * @param {Object} sender - Information about the sender of the message.
+ * @param {Function} sendResponse - Function to send a response back to the sender.
+ * @returns {boolean} Returns true to keep the message port open for asynchronous response.
+ */
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     console.log("Offscreen: Received message", message);
 

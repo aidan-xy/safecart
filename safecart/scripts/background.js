@@ -1,3 +1,12 @@
+/**
+ * Handles messages from content scripts or popup, specifically for fetching full HTML of a URL.
+ * Creates a new tab with the provided URL, waits for it to load, executes a script to retrieve
+ * the document's outer HTML, closes the tab, and sends the HTML back as a response.
+ * @param {Object} message - The message object containing action and url properties.
+ * @param {Object} sender - Information about the sender of the message.
+ * @param {Function} sendResponse - Function to send a response back to the sender.
+ * @returns {boolean} Returns true to keep the message port open for asynchronous response.
+ */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message.action === "fetchFullHTML") {
