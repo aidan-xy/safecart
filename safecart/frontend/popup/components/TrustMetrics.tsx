@@ -9,8 +9,8 @@ interface TrustMetricsProps {
 
 export function TrustMetrics({ metrics }: TrustMetricsProps) {
   // gets status icon based on 
-  const positiveScore = 75;
-  const warningScore = 50;
+  const positiveScore = 50;
+  const warningScore = 25;
 
   const getStatusIcon = (score: number) => {
     if (score >= positiveScore) {
