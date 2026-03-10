@@ -249,23 +249,24 @@ export function gatherSearchedPrices(doc = document) {
 // }
 
 /** 
-*take the average of all the price in gatherSearchedPrices()
+*take the median of all the price in gatherSearchedPrices()
 * @param {string} html element in string 
-* @return {number} the average price of the whole page
+* @return {number} the median price of the whole page
 */
-export function computeAveragePrice(doc = document) {
-  console.log("computing average price");
+export function computeMedianPrice(doc = document) {
+  console.log("computing median price");
   const prices = gatherSearchedPrices(doc);
   if(!prices || prices.length === 0) {
     return -1;
   } else {
-    let total = 0;
-    const length = Math.min(prices.length, 5); // Limit to the first 5 prices
-    for(let i = 0; i < length; i++) {
-      total += prices[i];
-    }
-    const avgPrice = (total/ length).toFixed(2);
-    return parseFloat(avgPrice);
+    const limited = prices.slice(0, 10).sort((a, b) => a - b); // Limit to first 10 and sort
+    const mid = Math.floor(limited.length / 2);
+    
+    const median = limited.length % 2 !== 0
+      ? limited[mid]
+      : (limited[mid - 1] + limited[mid]) / 2;
+
+    return parseFloat(median.toFixed(2));
   }
 }
 
@@ -364,7 +365,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse(infoForSimpleAlg);
   //getting all the needed data for the search page
   } else if(request.action === "getDataFromSearch") {
-    const avgPrice = computeAveragePrice(doc);
+    const avgPrice = computeMedianPrice(doc);
     sendResponse({averagePrice: avgPrice});
   // get what type of page it is, if is a
   // and use this to first idenitfy what page,
