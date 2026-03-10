@@ -108,6 +108,10 @@ export function injectBadgeOnListing(card, link) {
         const reactRoot = document.createElement("div");
         modal.appendChild(reactRoot);
 
+        ReactDOM.createRoot(reactRoot).render(
+            "Please Wait..."
+        );
+
         // Run trust evaluation
 
         let productData = null;

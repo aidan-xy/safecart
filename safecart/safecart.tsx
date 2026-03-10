@@ -83,7 +83,12 @@ let searchUrl: any = null;
 let searchDoc: any = null;
 let marketPrice: any = null;
 
-
+const root = document.getElementById('root');
+if (root != null){
+    ReactDOM.createRoot(root).render(
+      "Please Wait..."
+    )
+}
 
 getProductData()
     .then((data) => {
