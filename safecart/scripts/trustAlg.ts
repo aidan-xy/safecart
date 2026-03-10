@@ -18,26 +18,29 @@
  * }}
  */
 export function trustScore(
-  listingPrice : number,
-  marketPrice : number,
-  productRating : number,
-  numSold : number,
-  ageYears : number,
-  numRating : number,
-  reviewImages : number
-) : {score: number;
-    metrics: {name: string;
-      score: number;}[]
-    }{
+  listingPrice: number,
+  marketPrice: number,
+  productRating: number,
+  numSold: number,
+  numRating: number,
+  reviewImages: number
+): {
+  score: number;
+  metrics: {
+    name: string;
+    score: number;
+  }[];
+} {
+
   // linear mapping
   const r = Math.max(1, productRating); // assume productRating <= 5
-  const reviewNorm = (r - 1) / 4; // [0,1] maps to 0, linear up to 5
+  const reviewNorm = (r - 1) / 4;
 
-  // quadratic
-  const priceDist = Math.abs(listingPrice - marketPrice) / marketPrice; // normalized dist
-  const priceNorm = Math.max(0.1, 1 - Math.pow(priceDist / 0.5, 2));  
+  // quadratic price similarity
+  const priceDist = Math.abs(listingPrice - marketPrice) / marketPrice;
+  const priceNorm = Math.max(0.1, 1 - Math.pow(priceDist / 0.5, 2));
 
-  // piecewise linear that penalizes < 100 sold higher
+  // piecewise linear sales score
   const n = Math.max(1, Math.floor(numSold));
   let soldNorm;
   if (n < 100) {
@@ -48,17 +51,8 @@ export function trustScore(
     soldNorm = 0.5 + 0.5 * (n - 100) / 900;
   }
 
-  let ageNorm;
-  if (ageYears < 1) {
-    ageNorm = 0.1 + 0.5 * ageYears;
-  } else if (ageYears < 5) {
-    ageNorm = 0.6 + 0.4 * ((ageYears - 1) / 4);
-  } else {
-    ageNorm = 1.0;
-  }
+  const priceWeight = 0.25;
 
-  const priceWeight = 0.25; // can change
-  
   const MAX_REVIEW_WEIGHT = 0.5;
   const MIN_REVIEW_WEIGHT = 0.3;
   const REVIEW_RATIO_TARGET = 0.4;
@@ -67,42 +61,34 @@ export function trustScore(
   const reviewRatio = numRating / n;
   const imageRatio = reviewImages / numRating;
 
-  // reviewWeight ranges from MIN_REVIEW_WEIGHT - MAX_REVIEW_WEIGHT. 
-  // A listing with >=REVIEW_RATIO_TARGET reviewRatio and >=IMAGE_RATIO_TARGET imageRatio will
-  // be weighted MAX_REVIEW_WEIGHT, scaled linearly.
-  
-  // Normalize the ratios to [0, 1]
   const reviewRatioNorm = Math.min(reviewRatio / REVIEW_RATIO_TARGET, 1);
   const imageRatioNorm = Math.min(imageRatio / IMAGE_RATIO_TARGET, 1);
 
-  // This equally values the two ratios. Can be weighted if needed.
   const combinedRatioNorm = (reviewRatioNorm + imageRatioNorm) / 2;
 
-  const reviewWeight = MIN_REVIEW_WEIGHT +
-                         (MAX_REVIEW_WEIGHT - MIN_REVIEW_WEIGHT) * combinedRatioNorm;
+  const reviewWeight =
+    MIN_REVIEW_WEIGHT +
+    (MAX_REVIEW_WEIGHT - MIN_REVIEW_WEIGHT) * combinedRatioNorm;
 
-  const remainingWeight = 1 - (priceWeight + reviewWeight);
-  const soldWeight = remainingWeight / 2; // this equally weights age/sold
-  const ageWeight = remainingWeight / 2;
+  // remaining weight goes entirely to sales volume
+  const soldWeight = 1 - (priceWeight + reviewWeight);
 
-  const trustNorm : number =
+  const trustNorm: number =
     reviewWeight * reviewNorm +
-    priceWeight  * priceNorm +
-    soldWeight   * soldNorm +
-    ageWeight    * ageNorm;
+    priceWeight * priceNorm +
+    soldWeight * soldNorm;
 
   return {
     score: normToPercent(trustNorm),
     metrics: [
-      {name: "Product Rating", score: normToPercent(reviewNorm)},
-      {name: "Price Ratio", score: normToPercent(priceNorm)},
-      {name: "Sales Volume", score: normToPercent(soldNorm)},
-      {name: "Seller Age", score: normToPercent(ageNorm)}
+      { name: "Product Rating", score: normToPercent(reviewNorm) },
+      { name: "Price Ratio", score: normToPercent(priceNorm) },
+      { name: "Sales Volume", score: normToPercent(soldNorm) }
     ]
   };
 }
 
-// Takes a norm [0, 1] -> [0, 100] rounded to the nearest integer
-function normToPercent(norm : number) : number  {
+// Takes a norm [0, 1] -> [0, 100]
+function normToPercent(norm: number): number {
   return Math.round(norm * 100);
 }
