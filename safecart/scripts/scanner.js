@@ -260,10 +260,11 @@ export function computeAveragePrice(doc = document) {
     return -1;
   } else {
     let total = 0;
-    for(let i = 0; i < prices.length; i++) {
+    const length = Math.min(prices.length, 5); // Limit to the first 5 prices
+    for(let i = 0; i < length; i++) {
       total += prices[i];
     }
-    const avgPrice = (total/ prices.length).toFixed(2);
+    const avgPrice = (total/ length).toFixed(2);
     return parseFloat(avgPrice);
   }
 }

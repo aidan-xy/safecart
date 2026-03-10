@@ -68,7 +68,7 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
           />
         </svg>
         <h3 className="font-semibold text-gray-900">
-          Trust Metrics Breakdown
+          Trust Metrics Contribution Breakdown
         </h3>
       </div>
 
@@ -130,9 +130,7 @@ export function TrustMetrics({ metrics }: TrustMetricsProps) {
             />
           </svg>
           <p className="text-xs text-blue-900 leading-relaxed">
-            Our algorithm evaluates price vs. market price, product ratings, sales volume, seller
-            age, review volume, and number of images to calculate a reliable trust score for the
-            listing. These metric scores do not imply trustworthiness on their own, but instead
+            These metric scores do not imply trustworthiness on their own, but instead
             encode how much each factor contributed to the overall trust score.
           </p>
         </div>

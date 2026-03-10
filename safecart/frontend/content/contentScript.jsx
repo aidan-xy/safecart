@@ -139,7 +139,6 @@ export function injectBadgeOnListing(card, link) {
             marketPrice,
             productData.productRating,
             productData.numSold,
-            productData.ageYears,
             productData.numRating,
             productData.reviewImages
         );

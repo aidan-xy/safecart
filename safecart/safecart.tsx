@@ -125,10 +125,10 @@ async function renderApp() {
         const listingData : ListingData = {
             price_dist: Math.abs(marketPrice.averagePrice - productData.listingPrice) / marketPrice.averagePrice,
             seller_age_years: productData.ageYears,
-            rating: productData.rating,
+            rating: productData.productRating,
             num_sold: productData.numSold,
             num_rating: productData.numRating,
-            num_images: productData.numImages
+            num_images: productData.reviewImages
         }
         const evaluation = await trustScore(listingData);
         console.log("Evaluation result:", evaluation);
