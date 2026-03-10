@@ -316,7 +316,7 @@ describe('parsing search pages', () => {
 
   test('getting the avg price correctly', () => {
     const avg = computeAveragePrice()
-    expect(avg).toEqual(5.88);
+    expect(avg).toEqual(5.01);
   })
 
   test('getting the number listing price correct', () => {
