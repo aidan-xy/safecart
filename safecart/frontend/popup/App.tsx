@@ -11,7 +11,7 @@ export default function App({trustData}: { trustData: TrustData}) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
-    <div className="w-[380px] bg-white">
+    <div className="w-[380px] max-h-[520px] overflow-y-auto bg-white">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3">
         <div className="flex items-center gap-2">

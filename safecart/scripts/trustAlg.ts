@@ -106,5 +106,3 @@ export function trustScore(
 function normToPercent(norm : number) : number  {
   return Math.round(norm * 100);
 }
-
-module.exports = trustScore;
