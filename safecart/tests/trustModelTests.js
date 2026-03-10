@@ -1,4 +1,4 @@
-const trustScore = require('../dist/safecart/scripts/trustScore.js');
+const { trustScore } = require("../dist/safecart/scripts/trustScore");
 
 // Helper function to convert raw listing data to the format expected by the model
 function toListingData(raw) {
