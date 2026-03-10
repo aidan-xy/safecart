@@ -59,7 +59,10 @@ export function trustScore(
   const IMAGE_RATIO_TARGET = 0.2;
 
   const reviewRatio = numRating / n;
-  const imageRatio = reviewImages / numRating;
+  let imageRatio = 0;
+  if (numRating > 0) {
+    imageRatio = reviewImages / numRating;
+  }
 
   const reviewRatioNorm = Math.min(reviewRatio / REVIEW_RATIO_TARGET, 1);
   const imageRatioNorm = Math.min(imageRatio / IMAGE_RATIO_TARGET, 1);
