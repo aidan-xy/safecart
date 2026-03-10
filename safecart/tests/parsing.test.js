@@ -69,17 +69,17 @@ describe('parsingTest on a page with all the information needed', () => {
 
   test('parsing title correctly', () => {
 
-    const rating = gatherTitle(document);
+    const rating = gatherTitle();
     expect(rating).toEqual("40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone");   
   })
 
   test('seeing if it dectect the page correctly', () => {
-    const pageType = currPageType(document);
+    const pageType = currPageType();
     expect(pageType).toEqual("listing")
   })
 
   test('sending back the correct link', () => {
-    const rating = createURLForSearchPage(document);
+    const rating = createURLForSearchPage();
     expect(rating).toEqual("https://www.aliexpress.com/w/wholesale-40W-2-Ports-USB-C-Type-C-GaN-Fast-Charger-with-Cha.html");   
   })
 
@@ -90,29 +90,29 @@ describe('parsingTest on a page with all the information needed', () => {
 
   test('parsing rating correctly', () => {
 
-    const rating = gatherRating(document);
+    const rating = gatherRating();
     expect(rating).toEqual(4.9);   
   })
 
   test('parsing number of ratings correctly', () => {
-    const rating = gatherNumberRatings(document);
+    const rating = gatherNumberRatings();
     expect(rating).toEqual(19);   
   })
 
   test('parsing price correctly', () => {
-    const price = gatherPrice(document);
+    const price = gatherPrice();
     expect(price).toEqual(0.99);  
   })
 
   test('parsing numberSold correctly', () => {
 
-    const numSold = gatherNumSold(document);
+    const numSold = gatherNumSold();
     expect(numSold).toEqual(184);
   })
 
   test('parsing reviews correctly', () => {
 
-    const reviews = gatherReview(document);
+    const reviews = gatherReview();
     
     const reviewsTest = [
       "Charger my phone quickly, as described.",
@@ -126,34 +126,40 @@ describe('parsingTest on a page with all the information needed', () => {
   })
   let openSinceDate;
   test('parsing open since date correctly', () => {
-    const openSinceDate = gatherOpenSinceDate(document);
+    const openSinceDate = gatherOpenSinceDate();
 
     expect(openSinceDate).toEqual("Sep 4, 2025")
   })
   test('parsing and calculating years old correctly', () => {
-    const yearsOldTest = gatherAge(document);
+    const yearsOldTest = gatherAge();
     //calulating the current years old from current date
+    const openSinceDate = gatherOpenSinceDate();
     const openSinceDateInDate = new Date(openSinceDate)
     const today = new Date()
+    let age = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+    age = Math.round(age * 100)/100;
 
-    expect(yearsOldTest).toEqual(0.51)
+    expect(yearsOldTest).toEqual(age)
   })
   test('parsing number of images correctly', () => {
-    const numberOfImage = gatherNumberImage(document);
+    const numberOfImage = gatherNumberImage();
 
     expect(numberOfImage).toEqual(2)
   })
 
-  test('putting together the information and send it to the AGI correctly', () => {
-    const recordToSend = getAllInformationForAlg(document);
+  test('putting together the information and send it to the ALG correctly', () => {
+    const recordToSend = getAllInformationForAlg();
 
+    const openSinceDate = gatherOpenSinceDate();
     const openSinceDateInDate = new Date(openSinceDate)
     const today = new Date()
+    let age = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+    age = Math.round(age * 100)/100;
 
     const expectedRecord = {productRating : 4.9,
                             listingPrice: 0.99, 
                             numSold: 184, 
-                            ageYears: 0.51,
+                            ageYears: age,
                             numRating: 19,
                             reviewImages: 2}
     expect(Object.keys(recordToSend).length).toEqual(Object.keys(expectedRecord).length)
@@ -164,102 +170,7 @@ describe('parsingTest on a page with all the information needed', () => {
   })
 });
 
-describe('parsingTest on a page with all the information needed', () => {
 
-  const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone - AliExpress.html"),"utf-8");
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-
-  test('seeing if it dectect the page correctly', () => {
-    const pageType = currPageType(doc);
-    expect(pageType).toEqual("listing")
-  })
-
-  test('sending back the correct link', () => {
-    const rating = createURLForSearchPage(doc);
-    expect(rating).toEqual("https://www.aliexpress.com/w/wholesale-40W-2-Ports-USB-C-Type-C-GaN-Fast-Charger-with-Cha.html");   
-  })
-
-  test('sending back the correct link', () => {
-    const rating = createURLForSearchPage(doc, "https://www.aliexpress.us/item/3256810119868316.html?spm=a2g0o.productlist.main.6.14b63cb23bjkOf&algo_pvid=fd01a302-8a5a-4a07-861d-e41e7c0fe29d&algo_exp_id=fd01a302-8a5a-4a07-861d-e41e7c0fe29d-5&pdp_ext_f=%7B%22order%22%3A%22184%22%2C%22eval%22%3A%221%22%2C%22fromPage%22%3A%22search%22%7D&pdp_npi=6%40dis%21USD%2116.80%210.99%21%21%21115.36%216.79%21%402103212317711971944063518ef621%2112000051873183901%21sea%21US%210%21ABX%211%210%21n_tag%3A-29910%3Bd%3Aacf72556%3Bm03_new_user%3A-29895%3BpisId%3A5000000201000927&curPageLogUid=UGx9dkDNIrCG&utparam-url=scene%3Asearch%7Cquery_from%3A%7Cx_object_id%3A1005010306183068%7C_p_origin_prod%3A");
-    expect(rating).toEqual("https://www.aliexpress.us/w/wholesale-40W-2-Ports-USB-C-Type-C-GaN-Fast-Charger-with-Cha.html");   
-  })
-
-  test('parsing rating correctly', () => {
-
-    const rating = gatherRating(doc);
-    expect(rating).toEqual(4.9);   
-  })
-
-  test('parsing number of ratings correctly', () => {
-    const rating = gatherNumberRatings(doc);
-    expect(rating).toEqual(19);   
-  })
-
-  test('parsing price correctly', () => {
-    const price = gatherPrice(doc);
-    expect(price).toEqual(0.99);  
-  })
-
-  test('parsing numberSold correctly', () => {
-
-    const numSold = gatherNumSold(doc);
-    expect(numSold).toEqual(184);
-  })
-
-  test('parsing reviews correctly', () => {
-
-    const reviews = gatherReview(doc);
-    
-    const reviewsTest = [
-      "Charger my phone quickly, as described.",
-      "Pretty good product. Recommended",
-      "Works well"
-    ];
-        
-    for(let i = 0; i < reviewsTest.length; i++){
-      expect(reviews[i]).toEqual(reviewsTest[i]);
-    }
-  })
-  let openSinceDate;
-  test('parsing open since date correctly', () => {
-    const openSinceDate = gatherOpenSinceDate(doc);
-
-    expect(openSinceDate).toEqual("Sep 4, 2025")
-  })
-  test('parsing and calculating years old correctly', () => {
-    const yearsOldTest = gatherAge(doc);
-    //calulating the current years old from current date
-    const openSinceDateInDate = new Date(openSinceDate)
-    const today = new Date()
-
-    expect(yearsOldTest).toEqual(0.51)
-  })
-  test('parsing number of images correctly', () => {
-    const numberOfImage = gatherNumberImage(doc);
-
-    expect(numberOfImage).toEqual(2)
-  })
-
-  test('putting together the information and send it to the AGI correctly', () => {
-    const recordToSend = getAllInformationForAlg(doc);
-
-    const openSinceDateInDate = new Date(openSinceDate)
-    const today = new Date()
-
-    const expectedRecord = {productRating : 4.9,
-                            listingPrice: 0.99, 
-                            numSold: 184, 
-                            ageYears: 0.51,
-                            numRating: 19,
-                            reviewImages: 2}
-    expect(Object.keys(recordToSend).length).toEqual(Object.keys(expectedRecord).length)
-     
-    for (const key in expectedRecord) {
-      expect(recordToSend[key]).toEqual(expectedRecord[key]);
-    }
-  })
-});
 
 describe('parsing a page with some information missing', () => {
 
@@ -410,6 +321,23 @@ describe('parsing search pages', () => {
     expect(listingPrices).toEqual(expectedListingPrice)
   })
 
+  test('getting the number listing price correct using default argument', () => {
+    const listingPrices = gatherSearchedPrices()
+    const expectedListingPrice = [
+      3.29, 5.49, 0.99, 2.94, 12.32, 
+      6.7, 0.99, 0.99, 0.99, 0.99, 
+      2.09, 13.99, 0.99, 1.88, 0.99, 
+      8.17, 3.81, 0.99, 2.48, 0.99,
+      0.99, 8.98, 8.28, 18.78, 20.68, 
+      16.7, 0.99, 9.83, 0.99, 11.05, 
+      17.92, 0.99
+    ]
+    if(listingPrices.length != expectedListingPrice.length) {
+      expect(listingPrices.length).toEqual(expectedListingPrice.length);
+    }
+    expect(listingPrices).toEqual(expectedListingPrice)
+  })
+
   test('seeing if it dectect the page correctly', () => {
     const pageType = currPageType();
     expect(pageType).toEqual("search")
@@ -465,6 +393,30 @@ test("testing what happend if we cannot get any info from listing", ()=> {
 
   const avgPrice = computeMedianPrice();
   expect(avgPrice).toEqual(-1);
+})
+
+test("test if the listing is an odd number", ()=> {
+  const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/wholesale-New-Original-zotac-4090-16GB-graphic-card.html"),"utf-8");
+  document.documentElement.innerHTML = html;
+
+  const avgPrice = computeMedianPrice();
+  expect(avgPrice).toEqual(223.57);
+})
+
+test("testing what happend if we cannot get number of images", ()=> {
+  const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Bundle Deals 3.0.html"),"utf-8");
+  document.documentElement.innerHTML = html;
+
+  const avgPrice = gatherNumberImage();
+  expect(avgPrice).toEqual(0);
+})
+
+test("testing what happend if we get number of images from popup", ()=> {
+  const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Bundle Deals 2.0.html"),"utf-8");
+  document.documentElement.innerHTML = html;
+
+  const avgPrice = gatherNumberImage();
+  expect(avgPrice).toEqual(404);
 })
 
 test("testing if the title is between 50 alphabet", () => {
@@ -537,4 +489,124 @@ describe('testing for the dollar express page', () => {
   })
 
 
+})
+
+describe('testing chrome listening, with input', () => {
+  let addListener;
+
+  beforeEach(() => {
+    jest.resetModules(); // clear module cache
+    
+    global.chrome = {
+      runtime: {
+        onMessage: { addListener: jest.fn() },
+        sendMessage: jest.fn(),
+        lastError: undefined,
+      },
+      tabs: {
+        query: jest.fn(),
+        sendMessage: jest.fn(),
+      },
+    };
+
+    require('../scripts/scanner'); // re-import AFTER mock is set up
+
+    addListener = chrome.runtime.onMessage.addListener;
+  });
+
+  test('if it sends the correct data', () => {
+    const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone - AliExpress.html"),"utf-8");
+    document.documentElement.innerHTML = html;
+    const openSinceDateInDate = new Date("Sep 4, 2025")
+    const today = new Date()
+    
+    let yearsOld = ((today.getTime() - openSinceDateInDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+    yearsOld = Math.round(yearsOld * 100)/100
+
+    const htmlString = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/40W 2 Ports USB-C Type-C GaN Fast Charger with Charging Light, Fast Charging Block with 3.3Ft Type-C Charging Cable For IPhone - AliExpress.html"),"utf-8");
+
+    const mockRequest = { action: "getData", html: htmlString};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {productRating : 4.9,
+                            listingPrice: 0.99, 
+                            numSold: 184, 
+                            ageYears: yearsOld,
+                            numRating: 19,
+                            reviewImages: 2}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+
+
+
+  test('if it sends the correct data in listing page', () => {
+
+    const htmlString = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/Sand-AliExpress.html"),"utf-8");
+    
+
+    const mockRequest = { action: "getDataFromSearch", html: htmlString};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {averagePrice: 1.96}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+
+
+  test('if it correctly sends the right info for pageType', () => {
+    const htmlString = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/MMS 1.5Ton Mini Excavator 13.5HP B&S Engine Trencher Digger Pilot Control Crawler Digger for Farm Garden Yard Full Payment - AliExpress.html"),"utf-8");
+
+    const mockRequest = { action: "pageType", html: htmlString};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {pageType: "listing"}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+
+  test('if it correctly sends the right info for pageType', () => {
+    const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/MMS 1.5Ton Mini Excavator 13.5HP B&S Engine Trencher Digger Pilot Control Crawler Digger for Farm Garden Yard Full Payment - AliExpress.html"),"utf-8");
+    document.documentElement.innerHTML = html;
+    const mockRequest = { action: "getURLToScapeForListing"};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+    
+    const expectedRecord = {URLToScape: "https://www.aliexpress.com/w/wholesale-MMS-1.5Ton-Mini-Excavator-13.5HP-B&S-Engine-Trench.html"}
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).toHaveBeenCalledWith(expectedRecord);
+  })
+
+  test('if totally different action gets picked up', () => {
+    const html = fs.readFileSync(path.resolve(__dirname, "localHTMLpage/MMS 1.5Ton Mini Excavator 13.5HP B&S Engine Trencher Digger Pilot Control Crawler Digger for Farm Garden Yard Full Payment - AliExpress.html"),"utf-8");
+    document.documentElement.innerHTML = html;
+    const mockRequest = { action: "nonsense"};
+    const mockSender = {};
+    const mockSendResponse = jest.fn();
+
+    const listener = chrome.runtime.onMessage.addListener.mock.calls[0][0];
+
+    listener(mockRequest, mockSender, mockSendResponse);
+
+    expect(mockSendResponse).not.toHaveBeenCalled();
+  })
 })

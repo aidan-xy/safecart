@@ -115,7 +115,7 @@ export function gatherNumberImage(doc = document) {
           break;
         }
       }
-      if(numberImage){return 0;}
+      if(!numberImageText){return 0;}
       numberImage = numberImageText.textContent.match(/\d+/);
     } else{
       console.log("could not see number of images element");
@@ -181,7 +181,7 @@ export function gatherOpenSinceDate(doc = document) {
 */
 export function gatherAge(doc = document) {
   let age = 0;
-  const dateStr = gatherOpenSinceDate(doc = document);
+  const dateStr = gatherOpenSinceDate(doc);
   if(dateStr !== "") {
     const targetDate = new Date(dateStr);
     const today = new Date();
@@ -211,43 +211,16 @@ export function gatherSearchedPrices(doc = document) {
     for (let i = 0; i < eachInfo.length; i++) {
         //grab the prices
         let newProductPriceStringWithDollar = eachInfo[i].getAttribute("aria-label");
-        if(newProductPriceStringWithDollar) {
-          //parse the string from the dollarsign
-          let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+(\.\d{1,2})?/);
-          //turn it into a float
-          let newProductPrice = parseFloat( newProductPriceString[0].replace(/,/g, ''));
-          priceArray.push(newProductPrice);
-          console.log("price element: " + newProductPrice);
-        }
+        //parse the string from the dollarsign
+        let newProductPriceString = newProductPriceStringWithDollar.match(/[\d,]+(\.\d{1,2})?/);
+        //turn it into a float
+        let newProductPrice = parseFloat( newProductPriceString[0].replace(/,/g, ''));
+        priceArray.push(newProductPrice);
+        console.log("price element: " + newProductPrice);
     }
   }
   return priceArray;
 }
-
-//potentially scrapped function
-/** 
-*take all the link for the search listing
-* @param {string} html element in string 
-* @return {string[]} all the link for each of the product on the page
-*/
-// function gatherProductLinks(doc = document) {
-//   //take the lowest html that contain all of the prices
-//   let productArray = [];
-//   const allListingHTML = doc.querySelector('div[class="hr_hs"]');
-//   if(allListingHTML) {
-//     //look into the html with the pirces
-//     const eachInfo = allListingHTML.querySelectorAll('a[class="l0_b im_ir search-card-item"]');
-//     for (let i = 0; i < eachInfo.length; i++) {
-//         //grab the prices
-//         let productLink = eachInfo[i].getAttribute("href");
-//         if(productLink) {
-//           productArray.push(productLink);
-//           console.log("link element: " + productLink);
-//         }
-//     }
-//   }
-//   return productArray;
-// }
 
 /** 
 *take the median of all the price in gatherSearchedPrices()
