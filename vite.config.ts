@@ -18,7 +18,7 @@ export default defineConfig({
         console.log('✓ Copied scanner.js to dist');
 
         // Copy trust_model.onnx to the dist safecart folder
-        const onnxSrc = path.resolve(__dirname, 'trust_model.onnx');
+        const onnxSrc = path.resolve(__dirname, 'safecart/model/trust_model.onnx');
         const onnxDestDir = path.resolve(__dirname, 'safecart/dist/safecart');
         mkdirSync(onnxDestDir, { recursive: true });
         copyFileSync(onnxSrc, path.join(onnxDestDir, 'trust_model.onnx'));
