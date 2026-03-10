@@ -10,11 +10,11 @@ describe("TrustMetrics component", () => {
     },
     {
       name: "Review Authenticity",
-      score: 60,
+      score: 49,
     },
     {
       name: "Seller History",
-      score: 30,
+      score: 10,
     },
   ];
 
@@ -35,11 +35,11 @@ describe("TrustMetrics component", () => {
     expect(positiveScore).toHaveClass("text-green-600");
 
     // warning metric should have yellow text
-    const warningScore = screen.getByText("60%");
+    const warningScore = screen.getByText("49%");
     expect(warningScore).toHaveClass("text-yellow-600");
 
     // negative metric should have red text
-    const negativeScore = screen.getByText("30%");
+    const negativeScore = screen.getByText("10%");
     expect(negativeScore).toHaveClass("text-red-600");
   });
 
