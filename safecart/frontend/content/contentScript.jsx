@@ -6,6 +6,8 @@
 
 import ReactDOM from "react-dom/client";
 import App from "../popup/App";
+import { trustScore } from "../../scripts/trustAlg";
+import { getAllInformationForAlg, createURLForSearchPage, computeAveragePrice } from "../../scripts/scanner"
 
 // Simple helper function: inject a badge into a single "card"
 export function injectBadgeOnListing(card, link) {
@@ -43,7 +45,7 @@ export function injectBadgeOnListing(card, link) {
     card.appendChild(badge);
 
     // Make the badge clickable
-    badge.addEventListener('click', (event) => {
+    badge.addEventListener('click', async (event) => {
         event.preventDefault();
         event.stopPropagation();
 
@@ -106,10 +108,45 @@ export function injectBadgeOnListing(card, link) {
         const reactRoot = document.createElement("div");
         modal.appendChild(reactRoot);
 
-        ReactDOM.createRoot(reactRoot).render(
-            <App trustData={{ score: 0, metrics: [] }} />
+        // Run trust evaluation
+
+        let productData = null;
+        let searchUrl = null;
+        let searchDoc = null;
+        let listingDoc = null;
+        let marketPrice = null;
+        const parser = new DOMParser();
+
+        const listingHTML = await fetchFullHTML(link);
+        listingDoc = parser.parseFromString(listingHTML, 'text/html');
+        console.log("Listing HTML retrieved:", listingDoc);
+
+        productData = getAllInformationForAlg(listingDoc);
+        console.log("Product Data:", productData);
+
+        searchUrl = createURLForSearchPage(listingDoc, link);
+        console.log("Search URL:", searchUrl);
+
+        const searchHTML = await fetchFullHTML(searchUrl);
+        searchDoc = parser.parseFromString(searchHTML, 'text/html')
+        console.log("Search HTML retrieved:", searchDoc);
+
+        marketPrice = computeAveragePrice(searchDoc);
+        console.log("Market Price:", marketPrice);
+
+        const evaluation = trustScore(
+            productData.listingPrice,
+            marketPrice,
+            productData.productRating,
+            productData.numSold,
+            productData.ageYears,
+            productData.numRating,
+            productData.reviewImages
         );
 
+        ReactDOM.createRoot(reactRoot).render(
+            <App trustData={evaluation} />
+        );
     });
 }
 
@@ -150,6 +187,21 @@ export function injectBadges() {
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
+}
+
+async function fetchFullHTML(url) {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage(
+            {action: "fetchFullHTML", url: url },
+            (response) => {
+                if (response?.success) {
+                    resolve(response.html);
+                } else {
+                    reject(response?.error);
+                }
+            }
+        );
+    });
 }
 
 // -------------------------------

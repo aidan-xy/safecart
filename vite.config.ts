@@ -32,7 +32,8 @@ export default defineConfig({
         entryFileNames: 'assets/[name].js',
         chunkFileNames: 'assets/[name].js',
         assetFileNames: 'assets/[name].css'
-      }
+      },
+      external: ['safecart/tests/**']
     }
   }
 });

@@ -1,5 +1,5 @@
-const trustAlg = require("../scripts/trustAlg");
 const simpleTrustAlg = require("../scripts/simpleTrustAlg");
+import {trustScore} from "../scripts/trustAlg";
 
 describe('full alg tests', () => {
   //  * @param {number} listingPrice - Listing price (> 0)
@@ -12,21 +12,21 @@ describe('full alg tests', () => {
 
   // "good" listings, expect above a certain score
   test('theoretical perfect listing', () => {
-    expect(trustAlg(100, 100, 5, 1000, 5, 1000, 1000).score).toBeGreaterThanOrEqual(90);
+    expect(trustScore(100, 100, 5, 1000, 5, 1000, 1000).score).toBeGreaterThanOrEqual(90);
   });
   test('excellent listing, Ajazz AK820 Mechanical Keyboard', () => {
-    expect(trustAlg(76.73, 90, 4.8, 10000, 2.993, 4661, 1223).score).toBeGreaterThanOrEqual(90);
+    expect(trustScore(76.73, 90, 4.8, 10000, 2.993, 4661, 1223).score).toBeGreaterThanOrEqual(90);
   });
   test('excellent listing, TACVASEN Summer Polo Tee Shirts ', () => {
-    expect(trustAlg(37.23, 30, 4.9, 600, 12, 132, 11).score).toBeGreaterThanOrEqual(85);
+    expect(trustScore(37.23, 30, 4.9, 600, 12, 132, 11).score).toBeGreaterThanOrEqual(85);
   });
 
   // "bad" listings, expect below a certain score
   test('clearly scam listing, New Original zotac 4090', () => {
-    expect(trustAlg(500, 1600, 1.6, 34, 1.253, 7, 0).score).toBeLessThanOrEqual(30);
+    expect(trustScore(500, 1600, 1.6, 34, 1.253, 7, 0).score).toBeLessThanOrEqual(30);
   });
   test('theoretical worst listing', () => {
-    expect(trustAlg(100, 50, 0, 1, 0, 1, 0).score).toBeLessThanOrEqual(5);
+    expect(trustScore(100, 50, 0, 1, 0, 1, 0).score).toBeLessThanOrEqual(5);
   });
 });
 
