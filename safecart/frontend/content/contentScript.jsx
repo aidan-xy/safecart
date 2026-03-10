@@ -7,7 +7,7 @@
 import ReactDOM from "react-dom/client";
 import App from "../popup/App";
 import { trustScore } from "../../scripts/trustAlg";
-import { getAllInformationForAlg, createURLForSearchPage, computeAveragePrice } from "../../scripts/scanner"
+import { getAllInformationForAlg, createURLForSearchPage, computeMedianPrice } from "../../scripts/scanner"
 
 // Simple helper function: inject a badge into a single "card"
 export function injectBadgeOnListing(card, link) {
@@ -135,7 +135,7 @@ export function injectBadgeOnListing(card, link) {
         searchDoc = parser.parseFromString(searchHTML, 'text/html')
         console.log("Search HTML retrieved:", searchDoc);
 
-        marketPrice = computeAveragePrice(searchDoc);
+        marketPrice = computeMedianPrice(searchDoc);
         console.log("Market Price:", marketPrice);
 
         const evaluation = trustScore(
