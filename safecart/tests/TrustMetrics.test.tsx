@@ -46,7 +46,7 @@ describe("TrustMetrics component", () => {
   test("renders the info box at the bottom", () => {
     render(<TrustMetrics metrics={metricsMock} />);
     expect(
-        screen.getByText(/Our algorithm evaluates product ratings, sales volume, and seller age/i)
+        screen.getByText(/Our algorithm evaluates price vs. market price, product ratings, sales volume, seller age, review volume, and number of images to calculate a reliable trust score for the listing. These metric scores do not imply trustworthiness on their own, but instead encode how much each factor contributed to the overall trust score./i)
     ).toBeInTheDocument();
   });
 });
