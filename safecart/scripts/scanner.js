@@ -108,13 +108,14 @@ export function gatherNumberImage(doc = document) {
     if(numberImageHTML) {
       const eachText = numberImageHTML.querySelectorAll('div[class="ae-filter-tab-item-text"]');
       const eachNumber = numberImageHTML.querySelectorAll('div[class="ae-filter-tab-item-num"]');
-      let numberImageText = null
+      let numberImageText;
       for (let i = 0; i < eachText.length; i++) {
         if (eachText[i].textContent.trim() === 'Pic review') {
-          let numberImageText = eachNumber[i];
+          numberImageText = eachNumber[i];
           break;
         }
       }
+      if(numberImage){return 0;}
       numberImage = numberImageText.textContent.match(/\d+/);
     } else{
       console.log("could not see number of images element");
