@@ -27,17 +27,19 @@ Note that SafeCart only functions on Google Chrome and AliExpress. It also may n
 
 1. Navigate to a product listing page of AliExpress (with "item" in the url) for example: `https://www.aliexpress.us/item/3256806256696105.html`.
 
-2. Click the extension icon in the toolbar of your browser.
+2. Click the extension icon in the toolbar of your browser. Wait a moment for safecart to compute and analyze metrics.
 
-3. The listing's trust score is given in the popup window of the extension.
+3. The listing's trust score is given in the popup window of the extension. 
 
-4. Additional information can be seen by expanding the dropdown menu.
+4. Additional information can be seen by expanding the dropdown menu. You may need to scroll to see all metrics being considered.
+
+
 
 ### On a Search Page
 
 1. Search for a product on AliExpress.
 
-2. Click the button (blue circle with white "S") on any listing.
+2. Click the button (blue circle with white "S") on any listing. Please keep track of the listing you selected for optimal use.
 
 3. The product's trust score can be seen in the popup by the button.
 
