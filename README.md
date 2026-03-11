@@ -14,7 +14,6 @@ SafeCart is a browser extension designed to help users safely navigate online ma
 - From a search page, a button will display to allow the user to see the trust score directly from the search page.
 - A machine learning algorithm is used to calculate trust scores.
 - An item's price is compared to the average price of similar items in determining a trust score.
-- 
 
 ---
 
