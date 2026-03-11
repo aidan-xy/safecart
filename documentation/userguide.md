@@ -7,7 +7,7 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
 1. Download the `safecart.zip` file from the latest [release](https://github.com/aidan-xy/safecart/releases) and unzip it anywhere on your computer (for example, your Downloads or Desktop folder).<br>
 **Important**: Do not delete the contents of this file after installing, or the extension will stop working. We recommend you unzip in a separate folder/directory on your device. <br>
 
-![Image failed to load](userguideImages/intsall_1_edit.png)
+![Image failed to load](documentation/userguideImages/install_1_edit.png)
 
 2. Navigate to [chrome://extensions](chrome://extensions/) and enable developer mode in the top right.
 
