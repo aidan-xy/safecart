@@ -19,7 +19,11 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
   
 5. Select the directory containing the unzipped contents to load the extension.
 
-![Image failed to load](userguideImages/intstall_4.png)
+![Image failed to load](userguideImages/intstall_4.png) <br>
+
+**Note**: We recommend pinning the extension for easier access when using. <br>
+
+![Image failed to load](userguideImages/pin_safecart.png)
 
 ## Using SafeCart
 Note that SafeCart only functions on Google Chrome and AliExpress. It also may not function properly on Brand+ or other abnormal listings.
@@ -31,17 +35,21 @@ Note that SafeCart only functions on Google Chrome and AliExpress. It also may n
 
 3. The listing's trust score is given in the popup window of the extension. 
 
-4. Additional information can be seen by expanding the dropdown menu. You may need to scroll to see all metrics being considered.
+4. Additional information can be seen by expanding the dropdown menu. You may need to scroll to see all metrics being considered. <br>
 
-
+![Image failed to load](userguideImages/click_extension.png)
 
 ### On a Search Page
 
 1. Search for a product on AliExpress.
 
-2. Click the button (blue circle with white "S") on any listing. Please keep track of the listing you selected for optimal use.
+2. Click the button (blue circle with white "S") on any listing. Please keep track of the listing you selected for optimal use. <br>
+
+![Image failed to load](userguideImages/see_buttons.png)
 
 3. The product's trust score can be seen in the popup by the button.
+
+![Image failed to load](userguideImages/button_score.png)
 
 ## Bug Reporting
 
