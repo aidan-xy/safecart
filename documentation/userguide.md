@@ -14,8 +14,10 @@ SafeCart is a browser extension for Google Chrome that assists in determining th
 ![Image failed to load](userguideImages/install_2.png)
 
 3. Click the `Load Unpacked` button.
+
+  ![Image failed to load](userguideImages/install_3.png)
   
-4. Select the directory containing the unzipped contents to load the extension.
+5. Select the directory containing the unzipped contents to load the extension.
 
 ## Using SafeCart
 Note that SafeCart only functions on Google Chrome and AliExpress. It also may not function properly on Brand+ or other abnormal listings.
